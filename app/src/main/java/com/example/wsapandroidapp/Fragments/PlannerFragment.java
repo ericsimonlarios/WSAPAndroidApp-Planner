@@ -67,7 +67,9 @@ public class PlannerFragment extends Fragment {
                 new MenuCategoryImage(getString(R.string.wedding_tips), R.drawable.topics, new Intent(context, WeddingTipsActivity.class)),
                 new MenuCategoryImage(getString(R.string.wedding_timeline), R.drawable.wedding_timeline, new Intent(context, WeddingTimelineActivity.class)),
                 new MenuCategoryImage(getString(R.string.suppliers_checklist), R.drawable.suppliers, new Intent(context, SuppliersChecklistActivity.class)),
-                new MenuCategoryImage(getString(R.string.suppliers_comparative_sheet), R.drawable.suppliers, new Intent(context, SuppliersComparativeSheetActivity.class))
+                new MenuCategoryImage(getString(R.string.suppliers_comparative_sheet), R.drawable.suppliers, new Intent(context, SuppliersComparativeSheetActivity.class)),
+                new MenuCategoryImage(getString(R.string.notes), R.drawable.suppliers, new Intent(context, SuppliersComparativeSheetActivity.class)),
+                new MenuCategoryImage(getString(R.string.todo_checklist), R.drawable.suppliers, new Intent(context, SuppliersComparativeSheetActivity.class))
         );
 
         GridLayoutManager gridLayoutManager = new GridLayoutManager(context, 2, GridLayoutManager.VERTICAL, false);

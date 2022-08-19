@@ -173,6 +173,8 @@
     <string name="wedding_timeline">Wedding Timeline Checklist</string>
     <string name="suppliers_checklist">Suppliers Checklist</string>
     <string name="suppliers_comparative_sheet">Suppliers Comparative Sheet</string>
+    <string name="notes">Notes</string>
+    <string name="todo_checklist">To-Do Checklist</string>
     <string name="checklist">Checklist</string>
     <string name="appointments">Appointments</string>
     <string name="schedules">Schedules</string>
