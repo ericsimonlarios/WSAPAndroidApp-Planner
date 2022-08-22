@@ -28,6 +28,33 @@
         <entry key="..\:/Github/WSAPAndroidApp-Planner/app/src/main/res/layout/fragment_todo_list.xml" value="0.33" />
         <entry key="..\:/Github/WSAPAndroidApp-Planner/app/src/main/res/menu/main_menu.xml" value="0.20416666666666666" />
         <entry key="..\:/Github/WSAPAndroidApp-Planner/app/src/main/res/menu/topbar_menu.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/jezre/StudioProjects/WSAPAndroidApp-Planner/app/src/main/res/drawable/ic_baseline_arrow_back_24.xml" value="0.1505" />
+        <entry key="..\:/Users/jezre/StudioProjects/WSAPAndroidApp-Planner/app/src/main/res/layout/activity_admin_exhibitor_categories.xml" value="0.17074275362318841" />
+        <entry key="..\:/Users/jezre/StudioProjects/WSAPAndroidApp-Planner/app/src/main/res/layout/activity_admin_expos.xml" value="0.17074275362318841" />
+        <entry key="..\:/Users/jezre/StudioProjects/WSAPAndroidApp-Planner/app/src/main/res/layout/activity_admin_supplier_categories.xml" value="0.17074275362318841" />
+        <entry key="..\:/Users/jezre/StudioProjects/WSAPAndroidApp-Planner/app/src/main/res/layout/activity_admin_supplier_details.xml" value="0.17074275362318841" />
+        <entry key="..\:/Users/jezre/StudioProjects/WSAPAndroidApp-Planner/app/src/main/res/layout/activity_admin_suppliers.xml" value="0.2" />
+        <entry key="..\:/Users/jezre/StudioProjects/WSAPAndroidApp-Planner/app/src/main/res/layout/activity_admin_topics.xml" value="0.17074275362318841" />
+        <entry key="..\:/Users/jezre/StudioProjects/WSAPAndroidApp-Planner/app/src/main/res/layout/activity_admin_users.xml" value="0.17074275362318841" />
+        <entry key="..\:/Users/jezre/StudioProjects/WSAPAndroidApp-Planner/app/src/main/res/layout/activity_budget_plan.xml" value="0.17074275362318841" />
+        <entry key="..\:/Users/jezre/StudioProjects/WSAPAndroidApp-Planner/app/src/main/res/layout/activity_checklist.xml" value="0.17074275362318841" />
+        <entry key="..\:/Users/jezre/StudioProjects/WSAPAndroidApp-Planner/app/src/main/res/layout/activity_dashboard.xml" value="0.17074275362318841" />
+        <entry key="..\:/Users/jezre/StudioProjects/WSAPAndroidApp-Planner/app/src/main/res/layout/activity_events.xml" value="0.17074275362318841" />
+        <entry key="..\:/Users/jezre/StudioProjects/WSAPAndroidApp-Planner/app/src/main/res/layout/activity_expos.xml" value="0.17074275362318841" />
+        <entry key="..\:/Users/jezre/StudioProjects/WSAPAndroidApp-Planner/app/src/main/res/layout/activity_guest_list.xml" value="0.17074275362318841" />
+        <entry key="..\:/Users/jezre/StudioProjects/WSAPAndroidApp-Planner/app/src/main/res/layout/activity_planner_notes.xml" value="0.22" />
+        <entry key="..\:/Users/jezre/StudioProjects/WSAPAndroidApp-Planner/app/src/main/res/layout/activity_planner_suppliers.xml" value="0.17074275362318841" />
+        <entry key="..\:/Users/jezre/StudioProjects/WSAPAndroidApp-Planner/app/src/main/res/layout/activity_post_sign_up.xml" value="0.17074275362318841" />
+        <entry key="..\:/Users/jezre/StudioProjects/WSAPAndroidApp-Planner/app/src/main/res/layout/activity_posts.xml" value="0.17074275362318841" />
+        <entry key="..\:/Users/jezre/StudioProjects/WSAPAndroidApp-Planner/app/src/main/res/layout/activity_profile.xml" value="0.17074275362318841" />
+        <entry key="..\:/Users/jezre/StudioProjects/WSAPAndroidApp-Planner/app/src/main/res/layout/activity_sign_in.xml" value="0.17074275362318841" />
+        <entry key="..\:/Users/jezre/StudioProjects/WSAPAndroidApp-Planner/app/src/main/res/layout/activity_splash_screen.xml" value="0.2" />
+        <entry key="..\:/Users/jezre/StudioProjects/WSAPAndroidApp-Planner/app/src/main/res/layout/activity_supplier_details.xml" value="0.17074275362318841" />
+        <entry key="..\:/Users/jezre/StudioProjects/WSAPAndroidApp-Planner/app/src/main/res/layout/custom_add_icon_layout.xml" value="0.17074275362318841" />
+        <entry key="..\:/Users/jezre/StudioProjects/WSAPAndroidApp-Planner/app/src/main/res/layout/custom_admin_expo_layout.xml" value="0.17074275362318841" />
+        <entry key="..\:/Users/jezre/StudioProjects/WSAPAndroidApp-Planner/app/src/main/res/layout/custom_category_image_layout.xml" value="0.17074275362318841" />
+        <entry key="..\:/Users/jezre/StudioProjects/WSAPAndroidApp-Planner/app/src/main/res/layout/dialog_exhibitor_form_layout.xml" value="0.17074275362318841" />
+        <entry key="..\:/Users/jezre/StudioProjects/WSAPAndroidApp-Planner/app/src/main/res/layout/dialog_expo_status_layout.xml" value="0.17074275362318841" />
         <entry key="..\:/Users/princ/AndroidStudioProjects/WSAPAndroidApp/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.1" />
         <entry key="..\:/Users/princ/AndroidStudioProjects/WSAPAndroidApp/app/src/main/res/drawable/bg_blac_50.xml" value="0.1" />
         <entry key="..\:/Users/princ/AndroidStudioProjects/WSAPAndroidApp/app/src/main/res/drawable/bg_corner.xml" value="0.1" />

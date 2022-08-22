@@ -17,6 +17,9 @@
         android:theme="@style/Theme.WSAPAndroidApp"
         tools:targetApi="31">
         <activity
+            android:name=".Planner_notes"
+            android:exported="false" />
+        <activity
             android:name=".SuppliersComparativeSheetActivity"
             android:exported="false" />
         <activity
@@ -154,8 +157,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".TodoListItemActivity"
-            android:exported="false"/>
+        <activity
+            android:name=".TodoListItemActivity"
+            android:exported="false" />
         <activity
             android:name=".MainActivity"
             android:exported="true"
