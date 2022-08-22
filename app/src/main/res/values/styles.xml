@@ -304,6 +304,10 @@
         <item name="cardCornerRadius">16dp</item>
     </style>
 
+    <style name="item_card_bordered">
+        <item name="cardElevation">5dp</item>
+    </style>
+
     <style name="flat_item_card_md">
         <item name="cardElevation">0dp</item>
         <item name="cardCornerRadius">8dp</item>
@@ -319,6 +323,11 @@
     <style name="item_text_title" parent="home_item_text_category">
         <item name="android:textSize">20sp</item>
         <item name="android:lineSpacingExtra">2dp</item>
+    </style>
+
+    <style name="date_text">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/black</item>
     </style>
 
     <style name="item_count" parent="item_text_title">

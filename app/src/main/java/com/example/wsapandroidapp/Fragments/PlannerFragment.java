@@ -10,11 +10,14 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.wsapandroidapp.Adapters.MenuCategoryImageAdapter;
+import com.example.wsapandroidapp.Classes.Enums;
 import com.example.wsapandroidapp.DataModel.MenuCategoryImage;
 import com.example.wsapandroidapp.DialogClasses.ConfirmationDialog;
+import com.example.wsapandroidapp.DialogClasses.MessageDialog;
 import com.example.wsapandroidapp.R;
 import com.example.wsapandroidapp.SuppliersChecklistActivity;
 import com.example.wsapandroidapp.SuppliersComparativeSheetActivity;
+import com.example.wsapandroidapp.TodoChecklistActivity;
 import com.example.wsapandroidapp.WeddingTimelineActivity;
 import com.example.wsapandroidapp.WeddingTipsActivity;
 import com.example.wsapandroidapp.WelcomeActivity;
@@ -36,6 +39,7 @@ public class PlannerFragment extends Fragment {
 
     Context context;
 
+    MessageDialog messageDialog;
     ConfirmationDialog confirmationDialog;
 
     FirebaseAuth firebaseAuth;
@@ -57,6 +61,7 @@ public class PlannerFragment extends Fragment {
 
         getSharedPreference();
 
+        messageDialog = new MessageDialog(context);
         confirmationDialog = new ConfirmationDialog(context);
 
         confirmationDialog.setDialogListener(this::signOut);
@@ -69,7 +74,7 @@ public class PlannerFragment extends Fragment {
                 new MenuCategoryImage(getString(R.string.suppliers_checklist), R.drawable.suppliers, new Intent(context, SuppliersChecklistActivity.class)),
                 new MenuCategoryImage(getString(R.string.suppliers_comparative_sheet), R.drawable.suppliers, new Intent(context, SuppliersComparativeSheetActivity.class)),
                 new MenuCategoryImage(getString(R.string.notes), R.drawable.suppliers, new Intent(context, SuppliersComparativeSheetActivity.class)),
-                new MenuCategoryImage(getString(R.string.todo_checklist), R.drawable.suppliers, new Intent(context, SuppliersComparativeSheetActivity.class))
+                new MenuCategoryImage(getString(R.string.todo_checklist), R.drawable.todo, new Intent(context, TodoChecklistActivity.class))
         );
 
         GridLayoutManager gridLayoutManager = new GridLayoutManager(context, 2, GridLayoutManager.VERTICAL, false);
@@ -81,6 +86,10 @@ public class PlannerFragment extends Fragment {
             if (isAnonymous && !menuCategoryImage.getCategory().equals(getString(R.string.wedding_tips))) {
                 confirmationDialog.setMessage(getString(R.string.non_anonymous_sign_in_prompt));
                 confirmationDialog.showDialog();
+            } else if (menuCategoryImage.getCategory().equals(getString(R.string.wedding_tips))) {
+                messageDialog.setMessage(getString(R.string.coming_soon));
+                messageDialog.setMessageType(Enums.INFO_MESSAGE);
+                messageDialog.showDialog();
             } else startActivity(menuCategoryImage.getIntent());
         });
 
