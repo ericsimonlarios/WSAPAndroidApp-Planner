@@ -15,6 +15,7 @@ import com.example.wsapandroidapp.DialogClasses.ConfirmationDialog;
 import com.example.wsapandroidapp.R;
 import com.example.wsapandroidapp.SuppliersChecklistActivity;
 import com.example.wsapandroidapp.SuppliersComparativeSheetActivity;
+import com.example.wsapandroidapp.TodoChecklistActivity;
 import com.example.wsapandroidapp.WeddingTimelineActivity;
 import com.example.wsapandroidapp.WeddingTipsActivity;
 import com.example.wsapandroidapp.WelcomeActivity;
@@ -69,7 +70,7 @@ public class PlannerFragment extends Fragment {
                 new MenuCategoryImage(getString(R.string.suppliers_checklist), R.drawable.suppliers, new Intent(context, SuppliersChecklistActivity.class)),
                 new MenuCategoryImage(getString(R.string.suppliers_comparative_sheet), R.drawable.suppliers, new Intent(context, SuppliersComparativeSheetActivity.class)),
                 new MenuCategoryImage(getString(R.string.notes), R.drawable.suppliers, new Intent(context, SuppliersComparativeSheetActivity.class)),
-                new MenuCategoryImage(getString(R.string.todo_checklist), R.drawable.suppliers, new Intent(context, SuppliersComparativeSheetActivity.class))
+                new MenuCategoryImage(getString(R.string.todo_checklist), R.drawable.todo, new Intent(context, TodoChecklistActivity.class))
         );
 
         GridLayoutManager gridLayoutManager = new GridLayoutManager(context, 2, GridLayoutManager.VERTICAL, false);

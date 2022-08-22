@@ -3,6 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.wsapandroidapp">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -101,6 +104,9 @@
             android:name=".WeddingTimelineActivity"
             android:exported="false" />
         <activity
+            android:name=".TodoChecklistActivity"
+            android:exported="false" />
+        <activity
             android:name=".BudgetPlanActivity"
             android:exported="false" />
         <activity
@@ -148,6 +154,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".TodoListItemActivity"
+            android:exported="false"/>
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -158,8 +166,5 @@
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
     </application>
-    <uses-permission android:name="android.permission.INTERNET" />
-
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
 </manifest>
