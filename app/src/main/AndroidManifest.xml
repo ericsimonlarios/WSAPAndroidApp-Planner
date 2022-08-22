@@ -17,6 +17,9 @@
         android:theme="@style/Theme.WSAPAndroidApp"
         tools:targetApi="31">
         <activity
+            android:name=".WeddingTipsDetailsActivity"
+            android:exported="false" />
+        <activity
             android:name=".SuppliersComparativeSheetActivity"
             android:exported="false" />
         <activity

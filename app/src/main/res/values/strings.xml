@@ -259,6 +259,11 @@
     <string name="unselected_exhibitors">Unselected Exhibitors</string>
     <string name="selected_exhibitors">Selected Exhibitors</string>
 
+    <string name="tips_title_dummy">Reception Tips</string>
+    <string name="date_created">August 19, 2022</string>
+    <string name="see_more"><u>See more</u></string>
+
+
     <string name="target_wedding_date">Target Wedding Date</string>
     <string name="target_wedding_date_dummy">January 01, 2023</string>
     <string name="wedding_date_time_left">%d Weeks, %d Days, %d Hrs, %d Mins &amp; %d Secs Left</string>
