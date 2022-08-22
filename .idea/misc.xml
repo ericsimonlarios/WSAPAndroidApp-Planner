@@ -3,6 +3,26 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/emman/Documents/GitHub/WSAPAndroidApp-Planner/app/src/main/res/layout/activity_supplier_details.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/emman/Documents/GitHub/WSAPAndroidApp-Planner/app/src/main/res/layout/activity_suppliers.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/emman/Documents/GitHub/WSAPAndroidApp-Planner/app/src/main/res/layout/activity_suppliers_checklist.xml" value="0.25" />
+        <entry key="..\:/Users/emman/Documents/GitHub/WSAPAndroidApp-Planner/app/src/main/res/layout/activity_suppliers_comparative_sheet.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/emman/Documents/GitHub/WSAPAndroidApp-Planner/app/src/main/res/layout/activity_topics.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/emman/Documents/GitHub/WSAPAndroidApp-Planner/app/src/main/res/layout/activity_wedding_timeline.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/emman/Documents/GitHub/WSAPAndroidApp-Planner/app/src/main/res/layout/activity_wedding_tips.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/emman/Documents/GitHub/WSAPAndroidApp-Planner/app/src/main/res/layout/activity_wedding_tips_details.xml" value="0.25" />
+        <entry key="..\:/Users/emman/Documents/GitHub/WSAPAndroidApp-Planner/app/src/main/res/layout/custom_expo_layout.xml" value="0.1" />
+        <entry key="..\:/Users/emman/Documents/GitHub/WSAPAndroidApp-Planner/app/src/main/res/layout/custom_supplier_checklist_category_layout.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/emman/Documents/GitHub/WSAPAndroidApp-Planner/app/src/main/res/layout/custom_supplier_checklist_layout.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/emman/Documents/GitHub/WSAPAndroidApp-Planner/app/src/main/res/layout/custom_supplier_comparative_sheet_input_layout.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/emman/Documents/GitHub/WSAPAndroidApp-Planner/app/src/main/res/layout/custom_supplier_comparative_sheet_layout.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/emman/Documents/GitHub/WSAPAndroidApp-Planner/app/src/main/res/layout/custom_supplier_comparative_sheet_layout_2.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/emman/Documents/GitHub/WSAPAndroidApp-Planner/app/src/main/res/layout/custom_supplier_layout.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/emman/Documents/GitHub/WSAPAndroidApp-Planner/app/src/main/res/layout/custom_user_layout.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/emman/Documents/GitHub/WSAPAndroidApp-Planner/app/src/main/res/layout/custom_wedding_timeline_layout.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/emman/Documents/GitHub/WSAPAndroidApp-Planner/app/src/main/res/layout/custom_wedding_timeline_task_layout.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/emman/Documents/GitHub/WSAPAndroidApp-Planner/app/src/main/res/layout/custom_wedding_tips_layout.xml" value="0.33" />
+        <entry key="..\:/Users/emman/Documents/GitHub/WSAPAndroidApp-Planner/app/src/main/res/layout/custom_wedding_tips_sm_layout.xml" value="0.33" />
         <entry key="..\:/Users/princ/AndroidStudioProjects/WSAPAndroidApp/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.1" />
         <entry key="..\:/Users/princ/AndroidStudioProjects/WSAPAndroidApp/app/src/main/res/drawable/bg_blac_50.xml" value="0.1" />
         <entry key="..\:/Users/princ/AndroidStudioProjects/WSAPAndroidApp/app/src/main/res/drawable/bg_corner.xml" value="0.1" />
