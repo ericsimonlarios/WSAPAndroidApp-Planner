@@ -113,7 +113,7 @@
     <string name="select">Select</string>
 
     <string name="no_record">No %s</string>
-
+    <string name="back_button">Back</string>
     <string name="expo_post_title">Tarlac Wedding Expo 2022</string>
     <string name="expo_post_schedule">%s\n<b>%d-%d</b>\n%d</string>
 
