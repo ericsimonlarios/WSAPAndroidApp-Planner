@@ -87,11 +87,13 @@ public class PlannerFragment extends Fragment {
             if (isAnonymous && !menuCategoryImage.getCategory().equals(getString(R.string.wedding_tips))) {
                 confirmationDialog.setMessage(getString(R.string.non_anonymous_sign_in_prompt));
                 confirmationDialog.showDialog();
-            } else if (menuCategoryImage.getCategory().equals(getString(R.string.wedding_tips))) {
-                messageDialog.setMessage(getString(R.string.coming_soon));
-                messageDialog.setMessageType(Enums.INFO_MESSAGE);
-                messageDialog.showDialog();
-            } else startActivity(menuCategoryImage.getIntent());
+            }
+//            else if (menuCategoryImage.getCategory().equals(getString(R.string.wedding_tips))) {
+//                messageDialog.setMessage(getString(R.string.coming_soon));
+//                messageDialog.setMessageType(Enums.INFO_MESSAGE);
+//                messageDialog.showDialog();
+//            }
+            else startActivity(menuCategoryImage.getIntent());
         });
 
         return view;
