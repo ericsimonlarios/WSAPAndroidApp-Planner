@@ -308,6 +308,10 @@
         <item name="cardElevation">5dp</item>
     </style>
 
+    <style name="transparent_edit_text" parent="activity_title">
+        <item name="android:background">@color/transparent</item>
+    </style>
+
     <style name="flat_item_card_md">
         <item name="cardElevation">0dp</item>
         <item name="cardCornerRadius">8dp</item>
