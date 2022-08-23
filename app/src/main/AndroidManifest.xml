@@ -38,6 +38,9 @@
             android:name=".WeddingTipsActivity"
             android:exported="false" />
         <activity
+            android:name=".WeddingTipsDetailsActivity"
+            android:exported="false" />
+        <activity
             android:name=".AdminExpoDivisionsActivity"
             android:exported="false" />
         <activity
