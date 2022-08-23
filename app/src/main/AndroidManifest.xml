@@ -155,7 +155,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".TodoListItemActivity"
-            android:exported="false"/>
+            android:exported="false"
+            android:parentActivityName=".TodoChecklistActivity"/>
         <activity
             android:name=".MainActivity"
             android:exported="true"

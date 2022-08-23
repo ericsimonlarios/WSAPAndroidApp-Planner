@@ -2,7 +2,7 @@
     <string name="app_name">WSAP</string>
     <string name="wsap">Wedding Suppliers Association of the Philippines</string>
 
-    <string name="firebase_RTDB_url">https://wsap-mobile-app-default-rtdb.asia-southeast1.firebasedatabase.app/</string>
+    <string name="firebase_RTDB_url">https://wsap-mobile-app-planner-default-rtdb.asia-southeast1.firebasedatabase.app/</string>
 
     <string name="lorem_ipsum">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.</string>
 
@@ -14,7 +14,8 @@
     <string name="live">Live</string>
     <string name="app_status_title">Under %s</string>
     <string name="app_status_prompt">We are sorry.\nPlease come back again later.</string>
-
+    <string name="title">Title</string>
+    <string name="item">item</string>
     <string name="fd_on_cancelled">Failed to get %s.</string>
 
     <string name="loading">Loading, please wait…</string>

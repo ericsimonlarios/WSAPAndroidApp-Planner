@@ -23,7 +23,7 @@
     <color name="secondary">#8E6B24</color>
     <color name="primary_text">#765126</color>
     <color name="secondary_text">#B88A2F</color>
-
+    <color name="transparent">#00FFFFFF</color>
     <color name="text_on_light">#151515</color>
     <color name="text_on_light_accent">#0C0C0C</color>
     <color name="text_on_light_accent_1">#5E5E5E</color>
