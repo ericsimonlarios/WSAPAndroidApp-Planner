@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -50,6 +51,7 @@ public class TodoListItemAdapter extends RecyclerView.Adapter<TodoListItemAdapte
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.custom_todo_checklist_items, parent, false);
         return new ViewHolder(view);
+
     }
 
     @Override
@@ -58,6 +60,7 @@ public class TodoListItemAdapter extends RecyclerView.Adapter<TodoListItemAdapte
         editTextListener(holder, position);
         chkBoxListener(holder, position);
         holder.clearTask.setOnClickListener(v-> holder.chklistItem.getText().clear());
+
     }
 
     @Override

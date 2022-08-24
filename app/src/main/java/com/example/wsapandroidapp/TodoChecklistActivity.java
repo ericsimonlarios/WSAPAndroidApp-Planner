@@ -40,6 +40,7 @@ public class TodoChecklistActivity extends AppCompatActivity {
         TodoChkListAdapter chkListAdapter = new TodoChkListAdapter(this,list);
         chkListRV.setAdapter(chkListAdapter);
 
+//        chkListAdapter.onCreateViewHolder()
         addList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
