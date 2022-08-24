@@ -3,12 +3,16 @@ package com.example.wsapandroidapp.DataModel;
 import java.util.ArrayList;
 
 public class Todo{
-    private String listTitle, listDesc;
+    private String listTitle, listDate;
     private ArrayList<ToDoChecklist> checklist;
 
-    public Todo(String listTitle, String listDesc, ArrayList<ToDoChecklist> checklist){
+    public Todo(String listTitle, String listDate){
         this.listTitle = listTitle;
-        this.listDesc = listDesc;
+        this.listDate = listDate;
+
+    }
+
+    public Todo(ArrayList<ToDoChecklist> checklist){
         this.checklist = checklist;
     }
 
@@ -16,8 +20,8 @@ public class Todo{
         this.listTitle = listTitle;
     }
 
-    public void setListDesc(String listDesc){
-        this.listDesc = listDesc;
+    public void setlistDate(String listDate){
+        this.listDate = listDate;
     }
 
     public void setChecklist(ArrayList<ToDoChecklist> checklist){
@@ -28,8 +32,8 @@ public class Todo{
         return listTitle;
     }
 
-    public String getListDesc(){
-        return listDesc;
+    public String getlistDate(){
+        return listDate;
     }
 
     public ArrayList<ToDoChecklist> getChecklist(){

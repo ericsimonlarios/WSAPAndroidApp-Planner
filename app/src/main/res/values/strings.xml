@@ -17,7 +17,8 @@
     <string name="title">Title</string>
     <string name="item">item</string>
     <string name="fd_on_cancelled">Failed to get %s.</string>
-
+    <string name="add_task">Add new task</string>
+    <string name="insert_text">Insert task here</string>
     <string name="loading">Loading, please wait…</string>
     <string name="sign_up_loading">Signing up, please wait…</string>
     <string name="message_prompt">This is a message prompt.</string>
