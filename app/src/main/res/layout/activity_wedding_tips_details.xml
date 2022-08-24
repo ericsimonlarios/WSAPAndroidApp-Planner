@@ -8,8 +8,8 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/backgroundLayout"
-        android:layout_width="412dp"
-        android:layout_height="730dp"
+        android:layout_width="411dp"
+        android:layout_height="724dp"
         android:backgroundTint="@color/primary"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -31,8 +31,8 @@
         <TextView
             android:id="@+id/tvTipDescription"
             style="@style/description_small_text"
-            android:layout_width="370dp"
-            android:layout_height="68dp"
+            android:layout_width="363dp"
+            android:layout_height="67dp"
             android:layout_marginTop="24dp"
             android:text="@string/lorem_ipsum"
             app:layout_constraintEnd_toEndOf="parent"
@@ -42,15 +42,15 @@
         <TextView
             android:id="@+id/tvTips"
             style="@style/description_small_text"
-            android:layout_width="372dp"
-            android:layout_height="183dp"
+            android:layout_width="365dp"
+            android:layout_height="174dp"
 
-            android:layout_marginTop="24dp"
-
+            android:layout_marginTop="28dp"
             android:text="@string/lorem_ipsum"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.6"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvTipDescription" />
+            app:layout_constraintTop_toBottomOf="@+id/imageView18" />
 
         <TextView
             android:id="@+id/tvTipTitle"
@@ -62,20 +62,29 @@
             android:textColor="@color/primary"
             android:textSize="18sp"
             app:layout_constraintEnd_toStartOf="@+id/tvDateCreated"
-            app:layout_constraintHorizontal_bias="0.205"
+            app:layout_constraintHorizontal_bias="0.214"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView2"
-            android:layout_width="367dp"
-            android:layout_height="312dp"
-            android:layout_marginTop="20dp"
+            android:layout_width="309dp"
+            android:layout_height="227dp"
+            android:layout_marginTop="24dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.511"
+            app:layout_constraintHorizontal_bias="0.504"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tvTips" />
 
+        <ImageView
+            android:id="@+id/imageView18"
+            android:layout_width="237dp"
+            android:layout_height="178dp"
+            android:layout_marginTop="24dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvTipDescription"
+            app:srcCompat="@drawable/events" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
