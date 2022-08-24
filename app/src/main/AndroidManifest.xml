@@ -17,6 +17,12 @@
         android:theme="@style/Theme.WSAPAndroidApp"
         tools:targetApi="31">
         <activity
+            android:name=".AddNotesActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AddNotesFragment"
+            android:exported="false" />
+        <activity
             android:name=".Planner_notes"
             android:exported="false" />
         <activity
