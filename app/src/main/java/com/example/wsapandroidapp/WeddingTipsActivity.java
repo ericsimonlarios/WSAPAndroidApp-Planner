@@ -73,8 +73,11 @@ public class WeddingTipsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_wedding_tips);
         List list = new ArrayList(); //placeholder
         list.add("Test title");
+        list.add("Test title2");
         List list2 = new ArrayList(); //placeholder
         list2.add("Test description");
+        list2.add("Test description2");
+
         etSearch = findViewById(R.id.etSearch);
         wedTipsTitle = findViewById(R.id.wedTipsTitle);
         tvMessage = findViewById(R.id.tvMessage);
@@ -98,6 +101,8 @@ public class WeddingTipsActivity extends AppCompatActivity {
         weddingTipsAdapter = new WeddingTipsAdapter(context, list, list2);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(weddingTipsAdapter);
+
+
 
     }
 }
