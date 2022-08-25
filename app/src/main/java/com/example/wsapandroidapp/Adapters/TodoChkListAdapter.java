@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
@@ -28,10 +29,8 @@ import java.util.List;
 public class TodoChkListAdapter extends RecyclerView.Adapter<TodoChkListAdapter.ViewHolder> {
     private List<Todo> dataSet;
     private Context context;
-
     public static class ViewHolder extends RecyclerView.ViewHolder{
         TextView listTitle, chkListDate;
-        RecyclerView listRV;
         MaterialCardView listTitleCV, listCV;
         ConstraintLayout conLayout1, conLayout2;
         CheckBox finTask;
@@ -64,10 +63,11 @@ public class TodoChkListAdapter extends RecyclerView.Adapter<TodoChkListAdapter.
     @Override
     public void onBindViewHolder(@NonNull TodoChkListAdapter.ViewHolder holder, int position) {
         holder.listTitle.setText(dataSet.get(position).getListTitle());
-        holder.chkListDate.setText(dataSet.get(position).getlistDate());
+        holder.chkListDate.setText(dataSet.get(position).getDateCreated());
         holder.listTitleCV.setOnClickListener(v -> {
             Intent intent = new Intent(context, TodoListItemActivity.class);
-            intent.putExtra("id", dataSet.get(position).getListTitle());
+            intent.putExtra("id", dataSet.get(position).getTitleKey());
+            intent.putExtra("listTitle", dataSet.get(position).getListTitle());
             context.startActivity(intent);
         });
         holder.finTask.setOnCheckedChangeListener((v, isChecked) ->{

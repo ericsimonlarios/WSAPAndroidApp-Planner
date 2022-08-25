@@ -1,27 +1,58 @@
 package com.example.wsapandroidapp.DataModel;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Todo{
-    private String listTitle, listDate;
-    private ArrayList<ToDoChecklist> checklist;
+    private String uid, listTitle, dateCreated, titleKey;
+    private List<ToDoChecklist> checklist = new ArrayList<>();
 
-    public Todo(String listTitle, String listDate){
+    public Todo(String listTitle, String dateCreated, String uid){
         this.listTitle = listTitle;
-        this.listDate = listDate;
+        this.dateCreated = dateCreated;
+        this.uid = uid;
+    }
 
+    public Todo(String listTitle, String dateCreated, String uid, String titleKey){
+        this.listTitle = listTitle;
+        this.dateCreated = dateCreated;
+        this.uid = uid;
+        this.titleKey=titleKey;
+    }
+
+    public Todo(){
+
+    }
+
+    public void setTitleKey(String titleKey){
+        this.titleKey = titleKey;
+    }
+
+    public String getTitleKey(){
+        return titleKey;
+    }
+    public void setListTitle(String listTitle) {
+        this.listTitle = listTitle;
+    }
+
+    public String getDateCreated() {
+        return dateCreated;
+    }
+
+    public void setDateCreated(String dateCreated) {
+        this.dateCreated = dateCreated;
     }
 
     public Todo(ArrayList<ToDoChecklist> checklist){
         this.checklist = checklist;
     }
 
-    public void setlistTitle(String listTitle){
-        this.listTitle = listTitle;
+    public String getUid() {
+        return uid;
     }
 
-    public void setlistDate(String listDate){
-        this.listDate = listDate;
+    public void setUid(String uid) {
+        this.uid = uid;
     }
 
     public void setChecklist(ArrayList<ToDoChecklist> checklist){
@@ -32,14 +63,8 @@ public class Todo{
         return listTitle;
     }
 
-    public String getlistDate(){
-        return listDate;
-    }
-
-    public ArrayList<ToDoChecklist> getChecklist(){
+    public List<ToDoChecklist> getChecklist() {
         return checklist;
     }
-
-
 }
 

@@ -12,20 +12,29 @@
     android:focusable="true"
     android:clickable="true"
     >
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar2"
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/colToolbar2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
-        android:minHeight="?attr/actionBarSize"
-        android:theme="?attr/actionBarTheme"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:focusableInTouchMode="true"
-        android:focusable="true"
-        android:clickable="true"
-        />
+        >
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/colorPrimary"
+            android:minHeight="?attr/actionBarSize"
+            android:theme="?attr/actionBarTheme"
+            android:focusableInTouchMode="true"
+            android:focusable="true"
+            android:clickable="true"
+            app:layout_scrollFlags="enterAlways"
+            />
+    </com.google.android.material.appbar.AppBarLayout>
+
+
 
 
     <!--        <androidx.constraintlayout.widget.ConstraintLayout-->
@@ -60,9 +69,8 @@
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar2"
+        app:layout_constraintTop_toBottomOf="@+id/colToolbar2"
         android:paddingHorizontal="20dp"
-
         >
 
         <EditText

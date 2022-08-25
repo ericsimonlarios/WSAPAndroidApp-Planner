@@ -62,6 +62,10 @@ public class DateTime {
         return DateFormat.format("MMMM dd, yyyy",new Date(dateTime)).toString();
     }
 
+    public String getDateTimeText(){
+        return DateFormat.format("MMMM dd, yyyy hh:mm:ss a",new Date(dateTime)).toString();
+    }
+
     public String getDate() {
         return DateFormat.format("yy/MM/dd",new Date(dateTime)).toString();
     }
