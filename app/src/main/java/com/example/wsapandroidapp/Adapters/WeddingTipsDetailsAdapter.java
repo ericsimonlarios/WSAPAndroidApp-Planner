@@ -19,14 +19,14 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class WeddingTipsChildAdapter extends RecyclerView.Adapter<WeddingTipsChildAdapter.ViewHolder> {
+public class WeddingTipsDetailsAdapter extends RecyclerView.Adapter<WeddingTipsDetailsAdapter.ViewHolder> {
 
-    // private final List<WeddingTips> weddingTips;
-    private List<Integer> ImageSet;
+    //
+    private final List<Integer> ImageSet;
     private final LayoutInflater layoutInflater;
     private final Context context;
     //public WeddingTipsAdapter(Context context, List<WeddingTips> weddingTips) {
-    public WeddingTipsChildAdapter(Context context, List<Integer> ImageSet) {
+    public WeddingTipsDetailsAdapter(Context context, List<Integer> ImageSet) {
         //this.weddingTips = weddingTips;
         this.ImageSet = ImageSet;
         this.layoutInflater = LayoutInflater.from(context);
@@ -36,16 +36,13 @@ public class WeddingTipsChildAdapter extends RecyclerView.Adapter<WeddingTipsChi
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = layoutInflater.inflate(R.layout.custom_wedding_tips_grid_photo_layout, parent, false);
+        View view = layoutInflater.inflate(R.layout.custom_wedding_tips_photo_layout, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull WeddingTipsChildAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull WeddingTipsDetailsAdapter.ViewHolder holder, int position) {
         ImageView tvTipsPhoto = holder.tvTipsPhoto;
-        // WeddingTips weddingTips = weddingTips.get(position)
-        //tvTipTitle.setText(weddingTips.getTopic());
-        //tvTipDescription.setText(weddingTips.getDescription());
         tvTipsPhoto.setImageResource(ImageSet.get(position));
     }
     @Override
@@ -54,7 +51,6 @@ public class WeddingTipsChildAdapter extends RecyclerView.Adapter<WeddingTipsChi
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-
         ImageView tvTipsPhoto;
 
         public ViewHolder(@NonNull View itemView) {

@@ -5,16 +5,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.speech.RecognizerIntent;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
-
+import android.speech.RecognizerIntent;
 
 import com.example.wsapandroidapp.Adapters.WeddingTipsAdapter;
+import com.example.wsapandroidapp.Adapters.WeddingTipsChildAdapter;
 import com.example.wsapandroidapp.Classes.ComponentManager;
 import com.example.wsapandroidapp.Classes.Enums;
 import com.example.wsapandroidapp.Classes.Units;
@@ -32,8 +31,6 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -49,34 +46,21 @@ public class WeddingTipsActivity extends AppCompatActivity {
     RecyclerView recyclerView;
 
     Context context;
-
-
     MessageDialog messageDialog;
 
     FirebaseDatabase firebaseDatabase;
 
-    //Query weddingTipsQuery;
+    Query weddingTipsQuery;
     boolean isListening;
 
-    //List<WeddingTips> weddingTips = new ArrayList<>(), weddingTipsCopy = new ArrayList<>();
+    List<WeddingTips> weddingTips = new ArrayList<>();
     WeddingTipsAdapter weddingTipsAdapter;
-
-    AppStatusPromptDialog appStatusPromptDialog;
-    NewVersionPromptDialog newVersionPromptDialog;
-    Query applicationQuery;
-    Application application = new Application();
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wedding_tips);
-        List list = new ArrayList(); //placeholder
-        list.add("Test title");
-        list.add("Test title2");
-        List list2 = new ArrayList(); //placeholder
-        list2.add("Test description");
-        list2.add("Test description2");
 
         etSearch = findViewById(R.id.etSearch);
         wedTipsTitle = findViewById(R.id.wedTipsTitle);
@@ -84,25 +68,70 @@ public class WeddingTipsActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.recyclerView);
 
         context = WeddingTipsActivity.this;
-
         messageDialog = new MessageDialog(context);
-        appStatusPromptDialog = new AppStatusPromptDialog(context);
-        newVersionPromptDialog = new NewVersionPromptDialog(context);
+
 
         firebaseDatabase = FirebaseDatabase.getInstance(getString(R.string.firebase_RTDB_url));
-        //weddingTipsQuery = firebaseDatabase.getReference("weddingTips");
-        //applicationQuery = firebaseDatabase.getReference("application");
+        weddingTipsQuery = firebaseDatabase.getReference("weddingTips");
+
         isListening = true;
-        //weddingTipsQuery.addValueEventListener(getWeddingTips());
-        //applicationQuery.addValueEventListener(getApplicationValue());
+        weddingTipsQuery.addValueEventListener(getWeddingTips());
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
-        //weddingTipsAdapter = new WeddingTipsAdapter(context, weddingTips);
-        weddingTipsAdapter = new WeddingTipsAdapter(context, list, list2);
+        weddingTipsAdapter = new WeddingTipsAdapter(context, weddingTips);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(weddingTipsAdapter);
 
+        weddingTipsAdapter.setAdapterListener(weddingTips -> {
+            Intent intent = new Intent(context, WeddingTipsDetailsActivity.class);
+            intent.putExtra("weddingTipsId", weddingTips.getId());
+            context.startActivity(intent);
+        });
+    }
 
+    private ValueEventListener getWeddingTips() {
+        return new ValueEventListener() {
+            @SuppressLint("NotifyDataSetChanged")
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (isListening) {
+                    weddingTips.clear();
 
+                    if (snapshot.exists())
+                        for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                            WeddingTips weddingTip = dataSnapshot.getValue(WeddingTips.class);
+
+                            if (weddingTip != null)
+                                weddingTips.add(weddingTip);
+                        }
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e("TAG: " + context.getClass(), "onCancelled", error.toException());
+
+                messageDialog.setMessage(getString(R.string.fd_on_cancelled, "WeddingTips"));
+                messageDialog.setMessageType(Enums.ERROR_MESSAGE);
+                messageDialog.showDialog();
+            }
+        };
+    }
+    @Override
+    public void onResume() {
+        isListening = true;
+        weddingTipsQuery.addListenerForSingleValueEvent(getWeddingTips());
+        super.onResume();
+    }
+    @Override
+    public void onStop() {
+        isListening = false;
+
+        super.onStop();
+    }
+    @Override
+    public void onDestroy() {
+        isListening = false;
+
+        super.onDestroy();
     }
 }
