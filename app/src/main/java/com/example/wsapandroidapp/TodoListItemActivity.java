@@ -36,6 +36,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
@@ -46,15 +47,19 @@ import java.util.Objects;
 
 public class TodoListItemActivity extends AppCompatActivity {
     private static final String TAG = "Error";
+
     Toolbar toolbar;
     EditText listEditTitle;
     RecyclerView listItemRV;
     ImageView clearTitle;
+
     String currentDate, userId, listTitle, key, passedKey, passedTitle;
     int counter;
+
     MaterialCardView addTask;
     TodoListItemAdapter todoListItemAdapter;
     List<Todo> item;
+
     private DatabaseReference mDatabase;
     private FirebaseAuth firebaseAuth;
     private FirebaseUser firebaseUser;
@@ -95,38 +100,47 @@ public class TodoListItemActivity extends AppCompatActivity {
             DatabaseReference getId = mDatabase.child("TodoListItem").child(userId);
             passedTitle = intent.getStringExtra("listTitle");
             passedKey = intent.getStringExtra("id");
-            getId.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    if(snapshot.exists()){
-                        for(DataSnapshot node: snapshot.getChildren()){
-                            ArrayList getData = new ArrayList<>();
-                            if(Objects.requireNonNull(node.child("titleKey").getValue()).toString().equals(passedKey)){
-
-                                getData.add(node.child("listName").getValue().toString());
-                                getData.add(node.child("isChecked").getValue().toString());
-                                getData.add(node.getKey());
-                                item.add(new Todo(getData));
-                                todoListItemAdapter.notifyItemInserted(counter);
-                                counter++;
-                            }
-                        }
-                    }else{
-                        Toast.makeText(TodoListItemActivity.this, "snapshot does not exist", Toast.LENGTH_SHORT).show();
-                    }
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-                    Log.w(TAG, "loadPost:onCancelled", error.toException());
-                }
-            });
+            getId.addListenerForSingleValueEvent(getDatabase()); // read from database
             listEditTitle.setText(passedTitle);
         }else{
             passedKey = mDatabase.child("TodoChecklist").child(userId).push().getKey(); // Generate random key for list
         }
         item = new ArrayList<Todo>();
-        listEditTitle.addTextChangedListener(new TextWatcher() {
+
+        listEditTitle.addTextChangedListener(getLatestInput());
+        editTextFocus(listEditTitle);
+        clearTitle.setOnClickListener(v -> listEditTitle.getText().clear());
+
+        key = passedKey;
+
+        // Adds new task
+        addTask.setOnClickListener(v ->{
+            addNewTask();
+        });
+
+        callAdapter(listItemRV, item, key);
+    }
+
+    public void addNewTask(){
+        String listKey = mDatabase.child("TodoChecklist").child(userId).push().getKey();
+        ArrayList test1 = new ArrayList();
+        test1.add("");
+        test1.add(true);
+        test1.add(listKey);
+        item.add(new Todo(test1));
+        todoListItemAdapter.notifyItemInserted(counter);
+        counter++;
+    }
+
+    public void callAdapter(RecyclerView listItemRV, List<Todo> item, String key){
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        listItemRV.setLayoutManager(linearLayoutManager);
+        todoListItemAdapter = new TodoListItemAdapter(item,TodoListItemActivity.this, key);
+        listItemRV.setAdapter(todoListItemAdapter);
+    }
+
+    public TextWatcher getLatestInput(){
+        return new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -144,35 +158,35 @@ public class TodoListItemActivity extends AppCompatActivity {
                 mDatabase.child("TodoCheckList").child(userId).child(key).setValue(data);
                 todoListItemAdapter.notifyItemInserted(counter);
             }
-        });
-
-        editTextFocus(listEditTitle);
-        clearTitle.setOnClickListener(v -> listEditTitle.getText().clear());
-        key = passedKey;
-        Toast.makeText(this, key, Toast.LENGTH_SHORT).show();
-        // Adds new task
-        addTask.setOnClickListener(v ->{
-            String listKey = mDatabase.child("TodoChecklist").child(userId).push().getKey();
-            ArrayList test1 = new ArrayList();
-            test1.add("");
-            test1.add(true);
-            test1.add(listKey);
-            item.add(new Todo(test1));
-            todoListItemAdapter.notifyItemInserted(counter);
-            counter++;
-        });
-        callAdapter(listItemRV, item, key);
+        };
     }
+    public ValueEventListener getDatabase(){
+        return new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.exists()){
+                    for(DataSnapshot node: snapshot.getChildren()){
+                        ArrayList getData = new ArrayList<>();
+                        if(Objects.requireNonNull(node.child("titleKey").getValue()).toString().equals(passedKey)){
 
-    public void callAdapter(RecyclerView listItemRV, List<Todo> item, String key){
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
-        listItemRV.setLayoutManager(linearLayoutManager);
-        todoListItemAdapter = new TodoListItemAdapter(item,TodoListItemActivity.this, key);
-        listItemRV.setAdapter(todoListItemAdapter);
-    }
+                            getData.add(node.child("listName").getValue().toString());
+                            getData.add(node.child("isChecked").getValue().toString());
+                            getData.add(node.getKey());
+                            item.add(new Todo(getData));
+                            todoListItemAdapter.notifyItemInserted(counter);
+                            counter++;
+                        }
+                    }
+                }else{
+                    Toast.makeText(TodoListItemActivity.this, "snapshot does not exist", Toast.LENGTH_SHORT).show();
+                }
+            }
 
-    public void getDatabase(DatabaseReference getId, List<Todo> item, String keyPass, String titlePassed){
-
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.w(TAG, "loadPost:onCancelled", error.toException());
+            }
+        };
     }
 
     public void editTextFocus(EditText listEditTitle){
