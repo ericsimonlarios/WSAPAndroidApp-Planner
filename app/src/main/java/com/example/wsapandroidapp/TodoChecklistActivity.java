@@ -29,12 +29,17 @@ import java.util.List;
 
 public class TodoChecklistActivity extends AppCompatActivity {
     private static final String TAG = "Error";
+
     EditText etSearch;
     TextView tvMessage;
     RecyclerView chkListRV;
     FloatingActionButton addList;
+
     String userId;
-    List<Todo> list;
+    List<Todo> list = new ArrayList<>();
+    TodoChkListAdapter chkListAdapter;
+    boolean isListening;
+
     private DatabaseReference mDatabase;
     private FirebaseAuth firebaseAuth;
     private FirebaseUser firebaseUser;
@@ -43,7 +48,6 @@ public class TodoChecklistActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_todo_checklist);
-
 
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
@@ -55,35 +59,9 @@ public class TodoChecklistActivity extends AppCompatActivity {
         tvMessage = findViewById(R.id.tvMessage);
         chkListRV = findViewById(R.id.chkListRV);
         addList = findViewById(R.id.addList);
-        list = new ArrayList<Todo>();
-        mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.exists()){
-                    List<String> keys = new ArrayList<>();
-                    for(DataSnapshot node: snapshot.getChildren()){
-                        List<String> getData = new ArrayList<>();
-                        keys.add(node.getKey());
-                        getData.add(node.child("listTitle").getValue().toString());
-                        getData.add(node.child("dateCreated").getValue().toString());
-                        getData.add(node.child("uid").getValue().toString());
-                        list.add(new Todo(getData.get(0),getData.get(1),getData.get(2), node.getKey()));
 
-                        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(TodoChecklistActivity.this, LinearLayoutManager.VERTICAL, false);
-                        chkListRV.setLayoutManager(linearLayoutManager);
-                        TodoChkListAdapter chkListAdapter = new TodoChkListAdapter(TodoChecklistActivity.this,list);
-                        chkListRV.setAdapter(chkListAdapter);
-                    }
-                }else{
-                    Toast.makeText(TodoChecklistActivity.this, "snapshot does not exist", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Log.w(TAG, "loadPost:onCancelled", error.toException());
-            }
-        });
+        isListening = true;
+        mDatabase.addListenerForSingleValueEvent(getListQuery());
 
         addList.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -92,6 +70,61 @@ public class TodoChecklistActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+    }
+    public ValueEventListener getListQuery(){
+        return new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(isListening){
+                    list.clear();
+                    if(snapshot.exists()){
+                        List<String> keys = new ArrayList<>();
+                        for(DataSnapshot node: snapshot.getChildren()){
+                            List<String> getData = new ArrayList<>();
+                            keys.add(node.getKey());
+                            getData.add(node.child("listTitle").getValue().toString());
+                            getData.add(node.child("dateCreated").getValue().toString());
+                            getData.add(node.child("uid").getValue().toString());
+                            list.add(new Todo(getData.get(0),getData.get(1),getData.get(2), node.getKey()));
+                            callAdapter(list);
+                        }
+                    }else{
+                        Toast.makeText(TodoChecklistActivity.this, "snapshot does not exist", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.w(TAG, "loadPost:onCancelled", error.toException());
+            }
+        };
+    }
+
+    public void callAdapter(List<Todo> list){
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(TodoChecklistActivity.this, LinearLayoutManager.VERTICAL, false);
+        chkListRV.setLayoutManager(linearLayoutManager);
+        chkListAdapter = new TodoChkListAdapter(TodoChecklistActivity.this,list);
+        chkListRV.setAdapter(chkListAdapter);
+
+    }
+    @Override
+    public void onResume() {
+        isListening = true;
+        mDatabase.addListenerForSingleValueEvent(getListQuery());
+        super.onResume();
+    }
+    @Override
+    public void onStop() {
+        isListening = false;
+
+        super.onStop();
+    }
+    @Override
+    public void onDestroy() {
+        isListening = false;
+
+        super.onDestroy();
     }
 
 }

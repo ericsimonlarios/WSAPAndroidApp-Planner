@@ -3,92 +3,113 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
 
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content">
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/backgroundLayout"
-        android:layout_width="411dp"
-        android:layout_height="724dp"
-        android:backgroundTint="@color/primary"
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:id="@+id/tvDateCreated"
-            style="@style/description_small_text"
-            android:layout_width="101dp"
-            android:layout_height="25dp"
-            android:layout_marginTop="24dp"
-            android:layout_marginEnd="32dp"
-            android:text="@string/date_created"
-            android:textStyle="bold"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/backgroundLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:backgroundTint="@color/primary"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintStart_toStartOf="parent">
 
-        <TextView
-            android:id="@+id/tvTipDescription"
-            style="@style/description_small_text"
-            android:layout_width="363dp"
-            android:layout_height="67dp"
-            android:layout_marginTop="24dp"
-            android:text="@string/lorem_ipsum"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvTipTitle" />
+            <TextView
+                android:id="@+id/tvDateCreated"
+                style="@style/description_small_text"
+                android:layout_width="101dp"
+                android:layout_height="25dp"
+                android:layout_marginEnd="24dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:text="@string/date_created"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvTipTitle" />
 
-        <TextView
-            android:id="@+id/tvTips"
-            style="@style/description_small_text"
-            android:layout_width="365dp"
-            android:layout_height="174dp"
+            <TextView
+                android:id="@+id/tvTipDescription"
+                style="@style/description_small_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="15dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:justificationMode="inter_word"
+                android:text="@string/lorem_ipsum"
+                app:layout_constraintEnd_toEndOf="@+id/tvDateCreated"
+                app:layout_constraintStart_toStartOf="@+id/tvTipTitle"
+                app:layout_constraintTop_toBottomOf="@+id/tvDateCreated" />
 
-            android:layout_marginTop="28dp"
-            android:text="@string/lorem_ipsum"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.6"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageView18" />
-
-        <TextView
-            android:id="@+id/tvTipTitle"
-            style="@style/common_card_title"
-            android:layout_width="167dp"
-            android:layout_height="22dp"
-            android:layout_marginTop="24dp"
-            android:text="@string/tips_title_dummy"
-            android:textColor="@color/primary"
-            android:textSize="18sp"
-            app:layout_constraintEnd_toStartOf="@+id/tvDateCreated"
-            app:layout_constraintHorizontal_bias="0.214"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerView2"
-            android:layout_width="309dp"
-            android:layout_height="227dp"
-            android:layout_marginTop="24dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.504"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvTips" />
-
-        <ImageView
-            android:id="@+id/imageView18"
-            android:layout_width="237dp"
-            android:layout_height="178dp"
-            android:layout_marginTop="24dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvTipDescription"
-            app:srcCompat="@drawable/events" />
+            <TextView
+                android:id="@+id/tvTipTitle"
+                style="@style/common_card_title"
+                android:layout_width="363dp"
+                android:layout_height="51dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="24dp"
+                android:gravity="center"
+                android:lines="2"
+                android:text="@string/tips_title_dummy"
+                android:textColor="@color/primary"
+                android:textSize="20dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/imageBgLayout"
+                style="@style/item_card_bordered"
+                android:layout_width="320dp"
+                android:layout_height="250dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginEnd="15dp"
+                android:layout_marginBottom="15dp"
+                app:layout_constraintBottom_toTopOf="@+id/tvTips"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvTipDescription">
 
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:backgroundTint="@color/primary">
+
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recyclerView2"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </com.google.android.material.card.MaterialCardView>
+            <TextView
+                android:id="@+id/tvTips"
+                style="@style/description_small_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="15dp"
+                android:justificationMode="inter_word"
+                android:text="@string/lorem_ipsum"
+                app:layout_constraintEnd_toEndOf="@+id/tvTipDescription"
+                app:layout_constraintStart_toStartOf="@+id/tvTipDescription"
+                app:layout_constraintTop_toBottomOf="@+id/imageBgLayout" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 
