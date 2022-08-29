@@ -6,25 +6,19 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.example.wsapandroidapp.Adapters.TodoChkListAdapter;
 import com.example.wsapandroidapp.Adapters.TodoListItemAdapter;
 import com.example.wsapandroidapp.Classes.DateTime;
 import com.example.wsapandroidapp.DataModel.ToDoChecklist;
@@ -38,26 +32,28 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
 public class TodoListItemActivity extends AppCompatActivity {
     private static final String TAG = "Error";
+
     Toolbar toolbar;
     EditText listEditTitle;
     RecyclerView listItemRV;
     ImageView clearTitle;
+
+    Boolean isNew;
+
     String currentDate, userId, listTitle, key, passedKey, passedTitle;
     int counter;
+
     MaterialCardView addTask;
     TodoListItemAdapter todoListItemAdapter;
     List<Todo> item;
-    private DatabaseReference mDatabase;
-    private FirebaseAuth firebaseAuth;
-    private FirebaseUser firebaseUser;
+
+    private final DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,10 +64,11 @@ public class TodoListItemActivity extends AppCompatActivity {
         counter = 0;
 
         // Firebase References
-        mDatabase = FirebaseDatabase.getInstance().getReference();
-        firebaseAuth = FirebaseAuth.getInstance();
-        firebaseUser = firebaseAuth.getCurrentUser();
-        userId = firebaseUser.getUid();
+        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+        FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+        if (firebaseUser != null) {
+            userId = firebaseUser.getUid();
+        }
 
         // Element Invocations
         toolbar = findViewById(R.id.toolbar2);
@@ -92,41 +89,55 @@ public class TodoListItemActivity extends AppCompatActivity {
         // Get passed values from TodoChecklistActivity
         Intent intent = getIntent();
         if(intent.getStringExtra("id") != null){
-            DatabaseReference getId = mDatabase.child("TodoListItem").child(userId);
-            passedTitle = intent.getStringExtra("listTitle");
-            passedKey = intent.getStringExtra("id");
-            getId.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    if(snapshot.exists()){
-                        for(DataSnapshot node: snapshot.getChildren()){
-                            ArrayList getData = new ArrayList<>();
-                            if(Objects.requireNonNull(node.child("titleKey").getValue()).toString().equals(passedKey)){
-
-                                getData.add(node.child("listName").getValue().toString());
-                                getData.add(node.child("isChecked").getValue().toString());
-                                getData.add(node.getKey());
-                                item.add(new Todo(getData));
-                                todoListItemAdapter.notifyItemInserted(counter);
-                                counter++;
-                            }
-                        }
-                    }else{
-                        Toast.makeText(TodoListItemActivity.this, "snapshot does not exist", Toast.LENGTH_SHORT).show();
-                    }
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-                    Log.w(TAG, "loadPost:onCancelled", error.toException());
-                }
-            });
-            listEditTitle.setText(passedTitle);
+            getPassedData(intent);
+            isNew = false;
         }else{
             passedKey = mDatabase.child("TodoChecklist").child(userId).push().getKey(); // Generate random key for list
+            isNew = true;
         }
-        item = new ArrayList<Todo>();
-        listEditTitle.addTextChangedListener(new TextWatcher() {
+
+        item = new ArrayList<>();
+
+        listEditTitle.addTextChangedListener(getLatestInput());
+        editTextFocus(listEditTitle);
+        clearTitle.setOnClickListener(v -> listEditTitle.getText().clear());
+
+        key = passedKey;
+
+        // Adds new task
+        addTask.setOnClickListener(v -> addNewTask());
+
+        callAdapter(listItemRV, item, key);
+    }
+
+    public void getPassedData(Intent intent){
+        DatabaseReference getId = mDatabase.child("TodoListItem").child(userId);
+        passedTitle = intent.getStringExtra("listTitle");
+        passedKey = intent.getStringExtra("id");
+        getId.addListenerForSingleValueEvent(getDatabase()); // read from database
+        listEditTitle.setText(passedTitle);
+    }
+
+    public void addNewTask(){
+        String listKey = mDatabase.child("TodoChecklist").child(userId).push().getKey();
+        ArrayList test1 = new ArrayList();
+        test1.add("");
+        test1.add(true);
+        test1.add(listKey);
+        item.add(new Todo(test1));
+        todoListItemAdapter.notifyItemInserted(counter);
+        counter++;
+    }
+
+    public void callAdapter(RecyclerView listItemRV, List<Todo> item, String key){
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        listItemRV.setLayoutManager(linearLayoutManager);
+        todoListItemAdapter = new TodoListItemAdapter(item,TodoListItemActivity.this, key);
+        listItemRV.setAdapter(todoListItemAdapter);
+    }
+
+    public TextWatcher getLatestInput(){
+        return new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -139,40 +150,85 @@ public class TodoListItemActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
+                isNew = false;
                 listTitle = listEditTitle.getText().toString();
                 Todo data = new Todo(listTitle, currentDate, userId);
                 mDatabase.child("TodoCheckList").child(userId).child(key).setValue(data);
                 todoListItemAdapter.notifyItemInserted(counter);
             }
-        });
-
-        editTextFocus(listEditTitle);
-        clearTitle.setOnClickListener(v -> listEditTitle.getText().clear());
-        key = passedKey;
-        Toast.makeText(this, key, Toast.LENGTH_SHORT).show();
-        // Adds new task
-        addTask.setOnClickListener(v ->{
-            String listKey = mDatabase.child("TodoChecklist").child(userId).push().getKey();
-            ArrayList test1 = new ArrayList();
-            test1.add("");
-            test1.add(true);
-            test1.add(listKey);
-            item.add(new Todo(test1));
-            todoListItemAdapter.notifyItemInserted(counter);
-            counter++;
-        });
-        callAdapter(listItemRV, item, key);
+        };
     }
 
-    public void callAdapter(RecyclerView listItemRV, List<Todo> item, String key){
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
-        listItemRV.setLayoutManager(linearLayoutManager);
-        todoListItemAdapter = new TodoListItemAdapter(item,TodoListItemActivity.this, key);
-        listItemRV.setAdapter(todoListItemAdapter);
+    public ValueEventListener getDatabase(){
+        return new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.exists()){
+                    for(DataSnapshot node: snapshot.getChildren()){
+                        ArrayList getData = new ArrayList<>();
+                        if(Objects.requireNonNull(node.child("titleKey").getValue()).toString().equals(passedKey)){
+
+                            getData.add(node.child("listName").getValue().toString());
+                            getData.add(node.child("isChecked").getValue().toString());
+                            getData.add(node.getKey());
+                            item.add(new Todo(getData));
+                            todoListItemAdapter.notifyItemInserted(counter);
+                            counter++;
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.w(TAG, "loadPost:onCancelled", error.toException());
+            }
+        };
     }
 
-    public void getDatabase(DatabaseReference getId, List<Todo> item, String keyPass, String titlePassed){
+    public ValueEventListener deleteTitle(){
+        return new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.exists()){
+                    for (DataSnapshot node: snapshot.getChildren()){
+                        String titleId = node.getRef().getKey();
+                        if(titleId.equals(passedKey)){
+                            node.getRef().removeValue();
+                            Intent intent = new Intent(TodoListItemActivity.this, TodoChecklistActivity.class);
+                            startActivity(intent);
+                        }
+                    }
+                }
+            }
 
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.w(TAG, "loadPost:onCancelled", error.toException());
+            }
+        };
+    }
+
+    public ValueEventListener deleteList(){
+        return new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.exists()){
+                    for (DataSnapshot node: snapshot.getChildren()){
+                        String titleKey = node.child("titleKey").getValue().toString();
+                        if(titleKey.equals(passedKey)){
+                            node.getRef().removeValue();
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.w(TAG, "loadPost:onCancelled", error.toException());
+
+            }
+        };
     }
 
     public void editTextFocus(EditText listEditTitle){
@@ -194,7 +250,30 @@ public class TodoListItemActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
-        return super.onOptionsItemSelected(item);
+        switch (id){
+            case R.id.deleteList:{
+                if(isNew){
+                    Intent intent = new Intent(TodoListItemActivity.this, TodoChecklistActivity.class);
+                    startActivity(intent);
+                }
+                DatabaseReference getId = mDatabase.child("TodoListItem").child(userId);
+                getId.addListenerForSingleValueEvent(deleteList());
+                getId = mDatabase.child("TodoCheckList").child(userId);
+                getId.addListenerForSingleValueEvent(deleteTitle());
+                return true;
+            }
+            case R.id.markDone:{
+                Toast.makeText(this, "Finished Task", Toast.LENGTH_SHORT).show();
+                return true;
+            }
+            case R.id.duplicateList:{
+                Toast.makeText(this, "Duplicate Task", Toast.LENGTH_SHORT).show();
+                return true;
+            }
+            default:{
+                return super.onOptionsItemSelected(item);
+            }
+        }
     }
 
 }

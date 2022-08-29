@@ -3,16 +3,13 @@ package com.example.wsapandroidapp.Adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Paint;
-import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -21,17 +18,15 @@ import com.example.wsapandroidapp.R;
 import com.example.wsapandroidapp.TodoListItemActivity;
 import com.google.android.material.card.MaterialCardView;
 
-import org.w3c.dom.Text;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class TodoChkListAdapter extends RecyclerView.Adapter<TodoChkListAdapter.ViewHolder> {
-    private List<Todo> dataSet;
-    private Context context;
+    private final List<Todo> dataSet;
+    private final Context context;
     public static class ViewHolder extends RecyclerView.ViewHolder{
         TextView listTitle, chkListDate;
-        MaterialCardView listTitleCV, listCV;
+        MaterialCardView listTitleCV;
         ConstraintLayout conLayout1, conLayout2;
         CheckBox finTask;
         public ViewHolder(View view){
@@ -39,9 +34,7 @@ public class TodoChkListAdapter extends RecyclerView.Adapter<TodoChkListAdapter.
 
             listTitle = view.findViewById(R.id.listTitle);
             chkListDate = view.findViewById(R.id.chkListDate);
-//          listRV = view.findViewById(R.id.listRV);
             listTitleCV = view.findViewById(R.id.listTitleCV);
-//          listCV = view.findViewById(R.id.listCV);
             conLayout1 = view.findViewById(R.id.conLayout1);
             conLayout2 = view.findViewById(R.id.conLayout2);
             finTask = view.findViewById(R.id.finTask);

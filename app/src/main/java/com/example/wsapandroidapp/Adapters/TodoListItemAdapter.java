@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Paint;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,37 +17,31 @@ import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.wsapandroidapp.DataModel.ToDoChecklist;
 import com.example.wsapandroidapp.DataModel.Todo;
 import com.example.wsapandroidapp.R;
 import com.google.android.material.card.MaterialCardView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class TodoListItemAdapter extends RecyclerView.Adapter<TodoListItemAdapter.ViewHolder> {
 
-    private List<Todo> item;
-    private String titleKey;
-    private Context context;
-    private List<String> arrayKey;
-
+    private static final String TAG = "Error";
+    private final List<Todo> item;
+    private final String titleKey;
+    private final Context context;
+    private CharSequence getID;
+    private String getKey, userId;
     DatabaseReference mDatabase;
     FirebaseAuth firebaseAuth;
     FirebaseUser firebaseUser;
-
-    public TodoListItemAdapter(List<Todo> item, Context context, String titleKey, List<String> arrayKey){
-        this.item = item;
-        this.context = context;
-        this.titleKey = titleKey;
-        this.arrayKey = arrayKey;
-    }
 
     public TodoListItemAdapter(List<Todo> item, Context context, String titleKey){
         this.item = item;
@@ -83,12 +78,16 @@ public class TodoListItemAdapter extends RecyclerView.Adapter<TodoListItemAdapte
         mDatabase = FirebaseDatabase.getInstance().getReference();
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
-        String userId = firebaseUser.getUid();
+        userId = firebaseUser.getUid();
         editTextListener(holder, position);
         chkBoxListener(holder, position);
-        holder.clearTask.setOnClickListener(v-> holder.chklistItem.getText().clear());
+        holder.clearTask.setOnClickListener(v-> removeTask(holder));
         holder.chklistItem.setText((CharSequence) item.get(position).getChecklist().get(0));
-        holder.chklistItem.addTextChangedListener(new TextWatcher() {
+        holder.chklistItem.addTextChangedListener(onTextChanged(holder, position, userId));
+    }
+
+    public TextWatcher onTextChanged(ViewHolder holder, int position, String userId){
+        return new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -101,22 +100,60 @@ public class TodoListItemAdapter extends RecyclerView.Adapter<TodoListItemAdapte
 
             @Override
             public void afterTextChanged(Editable s) {
+                int newPosition = holder.getAdapterPosition();
                 String listName = holder.chklistItem.getText().toString();
-                CharSequence getID = (CharSequence) item.get(position).getChecklist().get(2);
-
-                String getKey = getID.toString();
+                getID = (CharSequence) item.get(newPosition).getChecklist().get(2);
+                getKey = getID.toString();
                 HashMap<String, Object> result = new HashMap<>();
                 result.put("listName", listName);
                 result.put("isChecked", "true");
                 result.put("titleKey", gettitleKey());
                 mDatabase.child("TodoListItem").child(userId).child(getKey).updateChildren(result);
             }
-        });
+        };
     }
 
     @Override
     public int getItemCount() {
         return item.size();
+    }
+
+    public void removeTask(ViewHolder holder){
+        int newPosition = holder.getAdapterPosition();
+        getID = (CharSequence) item.get(newPosition).getChecklist().get(2);
+        getKey = getID.toString();
+        if(getKey != null){
+            DatabaseReference deleteID = mDatabase.child("TodoListItem").child(userId);
+            deleteID.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if(snapshot.exists()){
+                        for (DataSnapshot node: snapshot.getChildren()){
+                            String listId = node.getRef().getKey();
+                            if(listId.equals(getKey)){
+                                node.getRef().removeValue();
+                                updatePosition(holder);
+                            }
+                        }
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    Log.w(TAG, "loadPost:onCancelled", error.toException());
+                }
+            });
+        }else{
+            updatePosition(holder);
+        }
+    }
+
+    public void updatePosition(ViewHolder holder){
+        int newPosition = holder.getAdapterPosition();
+        item.remove(newPosition);
+        notifyItemRemoved(newPosition);
+//        notifyItemRangeChanged(newPosition, item.size());
+        Toast.makeText(context, "Task Deleted", Toast.LENGTH_SHORT).show();
     }
 
     public void editTextListener(@NonNull ViewHolder holder, int position){
@@ -146,15 +183,7 @@ public class TodoListItemAdapter extends RecyclerView.Adapter<TodoListItemAdapte
         return titleKey;
     }
 
-    public void settitleKey(String titleKey) {
-        this.titleKey = titleKey;
-    }
-
-    public List<String> getArrayKeyKey() {
-        return arrayKey;
-    }
-
-    public void setArrayKeyy(List<String> arrayKey) {
-        this.arrayKey = arrayKey;
+    public List<Todo> getItem() {
+        return item;
     }
 }
