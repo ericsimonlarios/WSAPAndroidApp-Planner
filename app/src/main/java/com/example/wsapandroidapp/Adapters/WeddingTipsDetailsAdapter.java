@@ -10,6 +10,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 
+import com.bumptech.glide.Glide;
+import com.example.wsapandroidapp.DataModel.TipsImages;
 import com.example.wsapandroidapp.DataModel.WeddingTips;
 import com.example.wsapandroidapp.WeddingTipsActivity;
 import com.example.wsapandroidapp.R;
@@ -23,12 +25,13 @@ public class WeddingTipsDetailsAdapter extends RecyclerView.Adapter<WeddingTipsD
 
     //
     private final List<Integer> ImageSet;
+    //private final List<TipsImages> images;
     private final LayoutInflater layoutInflater;
     private final Context context;
-    //public WeddingTipsAdapter(Context context, List<WeddingTips> weddingTips) {
     public WeddingTipsDetailsAdapter(Context context, List<Integer> ImageSet) {
-        //this.weddingTips = weddingTips;
+    //public WeddingTipsDetailsAdapter(Context context, List<TipsImages> images) {
         this.ImageSet = ImageSet;
+       // this.images = images;
         this.layoutInflater = LayoutInflater.from(context);
         this.context = context;
     }
@@ -43,11 +46,14 @@ public class WeddingTipsDetailsAdapter extends RecyclerView.Adapter<WeddingTipsD
     @Override
     public void onBindViewHolder(@NonNull WeddingTipsDetailsAdapter.ViewHolder holder, int position) {
         ImageView tvTipsPhoto = holder.tvTipsPhoto;
-        tvTipsPhoto.setImageResource(ImageSet.get(position));
+       // Glide.with(context).load(images.get(position).getImageUrl()).into(tvTipsPhoto);
+     // tvTipsPhoto.setImageResource(images.get(position));
+       tvTipsPhoto.setImageResource(ImageSet.get(position));
     }
     @Override
     public int getItemCount() {
         return ImageSet.size();
+        //return images.size();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

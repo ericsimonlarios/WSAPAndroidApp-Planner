@@ -3,27 +3,14 @@ package com.example.wsapandroidapp;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.speech.RecognizerIntent;
-
 import com.example.wsapandroidapp.Adapters.WeddingTipsAdapter;
-import com.example.wsapandroidapp.Adapters.WeddingTipsChildAdapter;
-import com.example.wsapandroidapp.Classes.ComponentManager;
 import com.example.wsapandroidapp.Classes.Enums;
-import com.example.wsapandroidapp.Classes.Units;
-import com.example.wsapandroidapp.DataModel.Application;
 import com.example.wsapandroidapp.DataModel.WeddingTips;
-import com.example.wsapandroidapp.DialogClasses.AppStatusPromptDialog;
 import com.example.wsapandroidapp.DialogClasses.MessageDialog;
-import com.example.wsapandroidapp.DialogClasses.NewVersionPromptDialog;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
@@ -34,7 +21,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -74,6 +60,7 @@ public class WeddingTipsActivity extends AppCompatActivity {
         firebaseDatabase = FirebaseDatabase.getInstance(getString(R.string.firebase_RTDB_url));
         weddingTipsQuery = firebaseDatabase.getReference("weddingTips");
 
+
         isListening = true;
         weddingTipsQuery.addValueEventListener(getWeddingTips());
 
@@ -87,6 +74,7 @@ public class WeddingTipsActivity extends AppCompatActivity {
             intent.putExtra("weddingTipsId", weddingTips.getId());
             context.startActivity(intent);
         });
+
     }
 
     private ValueEventListener getWeddingTips() {
@@ -96,7 +84,6 @@ public class WeddingTipsActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (isListening) {
                     weddingTips.clear();
-
                     if (snapshot.exists())
                         for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                             WeddingTips weddingTip = dataSnapshot.getValue(WeddingTips.class);
