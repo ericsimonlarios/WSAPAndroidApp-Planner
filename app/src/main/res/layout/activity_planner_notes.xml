@@ -22,6 +22,8 @@
         android:layout_width="match_parent"
         android:layout_height="650dp"
         android:layout_alignParentBottom="true"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
         android:scrollbars="vertical">
 
     </androidx.recyclerview.widget.RecyclerView>

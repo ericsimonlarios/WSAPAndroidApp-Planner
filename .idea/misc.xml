@@ -52,12 +52,13 @@
         <entry key="..\:/Users/jezre/StudioProjects/WSAPAndroidApp-Planner/app/src/main/res/layout/activity_checklist.xml" value="0.17074275362318841" />
         <entry key="..\:/Users/jezre/StudioProjects/WSAPAndroidApp-Planner/app/src/main/res/layout/activity_createnote.xml" value="0.21" />
         <entry key="..\:/Users/jezre/StudioProjects/WSAPAndroidApp-Planner/app/src/main/res/layout/activity_dashboard.xml" value="0.17074275362318841" />
+        <entry key="..\:/Users/jezre/StudioProjects/WSAPAndroidApp-Planner/app/src/main/res/layout/activity_edit_note.xml" value="0.20104166666666667" />
         <entry key="..\:/Users/jezre/StudioProjects/WSAPAndroidApp-Planner/app/src/main/res/layout/activity_events.xml" value="0.17074275362318841" />
         <entry key="..\:/Users/jezre/StudioProjects/WSAPAndroidApp-Planner/app/src/main/res/layout/activity_expo_details.xml" value="0.1" />
         <entry key="..\:/Users/jezre/StudioProjects/WSAPAndroidApp-Planner/app/src/main/res/layout/activity_expos.xml" value="0.17074275362318841" />
         <entry key="..\:/Users/jezre/StudioProjects/WSAPAndroidApp-Planner/app/src/main/res/layout/activity_guest_list.xml" value="0.17074275362318841" />
         <entry key="..\:/Users/jezre/StudioProjects/WSAPAndroidApp-Planner/app/src/main/res/layout/activity_main.xml" value="0.18" />
-        <entry key="..\:/Users/jezre/StudioProjects/WSAPAndroidApp-Planner/app/src/main/res/layout/activity_note_details.xml" value="0.22" />
+        <entry key="..\:/Users/jezre/StudioProjects/WSAPAndroidApp-Planner/app/src/main/res/layout/activity_note_details.xml" value="0.25" />
         <entry key="..\:/Users/jezre/StudioProjects/WSAPAndroidApp-Planner/app/src/main/res/layout/activity_notes_details.xml" value="0.1983695652173913" />
         <entry key="..\:/Users/jezre/StudioProjects/WSAPAndroidApp-Planner/app/src/main/res/layout/activity_planner_notes.xml" value="0.22" />
         <entry key="..\:/Users/jezre/StudioProjects/WSAPAndroidApp-Planner/app/src/main/res/layout/activity_planner_suppliers.xml" value="0.17074275362318841" />
@@ -73,6 +74,7 @@
         <entry key="..\:/Users/jezre/StudioProjects/WSAPAndroidApp-Planner/app/src/main/res/layout/activity_todo_checklist.xml" value="0.1716485507246377" />
         <entry key="..\:/Users/jezre/StudioProjects/WSAPAndroidApp-Planner/app/src/main/res/layout/activity_todo_info.xml" value="0.1716485507246377" />
         <entry key="..\:/Users/jezre/StudioProjects/WSAPAndroidApp-Planner/app/src/main/res/layout/activity_tutorials.xml" value="0.1716485507246377" />
+        <entry key="..\:/Users/jezre/StudioProjects/WSAPAndroidApp-Planner/app/src/main/res/layout/activity_wedding_tips.xml" value="0.20104166666666667" />
         <entry key="..\:/Users/jezre/StudioProjects/WSAPAndroidApp-Planner/app/src/main/res/layout/content_note_details.xml" value="0.11214953271028037" />
         <entry key="..\:/Users/jezre/StudioProjects/WSAPAndroidApp-Planner/app/src/main/res/layout/custom_add_icon_layout.xml" value="0.17074275362318841" />
         <entry key="..\:/Users/jezre/StudioProjects/WSAPAndroidApp-Planner/app/src/main/res/layout/custom_admin_expo_layout.xml" value="0.17074275362318841" />
@@ -82,7 +84,7 @@
         <entry key="..\:/Users/jezre/StudioProjects/WSAPAndroidApp-Planner/app/src/main/res/layout/fragment_first2.xml" value="0.1983695652173913" />
         <entry key="..\:/Users/jezre/StudioProjects/WSAPAndroidApp-Planner/app/src/main/res/layout/fragment_home_3.xml" value="0.1" />
         <entry key="..\:/Users/jezre/StudioProjects/WSAPAndroidApp-Planner/app/src/main/res/layout/fragment_planner.xml" value="0.22" />
-        <entry key="..\:/Users/jezre/StudioProjects/WSAPAndroidApp-Planner/app/src/main/res/layout/notes_layout.xml" value="0.25" />
+        <entry key="..\:/Users/jezre/StudioProjects/WSAPAndroidApp-Planner/app/src/main/res/layout/notes_layout.xml" value="0.33" />
         <entry key="..\:/Users/princ/AndroidStudioProjects/WSAPAndroidApp/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.1" />
         <entry key="..\:/Users/princ/AndroidStudioProjects/WSAPAndroidApp/app/src/main/res/drawable/bg_blac_50.xml" value="0.1" />
         <entry key="..\:/Users/princ/AndroidStudioProjects/WSAPAndroidApp/app/src/main/res/drawable/bg_corner.xml" value="0.1" />

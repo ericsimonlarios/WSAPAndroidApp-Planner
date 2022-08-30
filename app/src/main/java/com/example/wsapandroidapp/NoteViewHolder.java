@@ -20,4 +20,6 @@ public class NoteViewHolder extends RecyclerView.ViewHolder {
         mCardView = itemView.findViewById(R.id.noteCard);
         view = itemView;
     }
+
 }
+

@@ -16,7 +16,7 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
-        app:cardBackgroundColor="#7B1FA2"
+        app:cardBackgroundColor="@color/email_address"
         app:cardCornerRadius="10dp"
         app:cardElevation="5dp"
         app:contentPadding="0dp"
@@ -48,7 +48,9 @@
                 app:layout_constraintBottom_toTopOf="@+id/cardView"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                android:maxLines="20"
+                android:maxLength="200" />
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/cardView"
@@ -79,11 +81,17 @@
 
                     <TextView
                         android:id="@+id/titles"
+                        style="@style/activity_title"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:maxLength="30"
+                        android:maxLines="2"
                         android:padding="2dp"
+                        android:paddingLeft="20dp"
+                        android:paddingRight="20dp"
                         android:text="TextView"
-                        style="@style/activity_title"
                         android:textAlignment="viewStart"
                         android:textColor="@color/black"
                         android:textSize="16sp"

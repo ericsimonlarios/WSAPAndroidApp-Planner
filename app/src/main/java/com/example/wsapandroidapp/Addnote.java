@@ -3,6 +3,7 @@ package com.example.wsapandroidapp;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -13,6 +14,8 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -26,6 +29,7 @@ public class Addnote extends AppCompatActivity {
     ImageView back,close;
     EditText noteTitle,noteContent;
     ProgressBar progressBarSave;
+    FirebaseUser user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +37,8 @@ public class Addnote extends AppCompatActivity {
         setContentView(R.layout.activity_addnote);
 
         fstore = FirebaseFirestore.getInstance();
+        user = FirebaseAuth.getInstance().getCurrentUser();
+
         savenote = findViewById(R.id.save_note);
         back = findViewById(R.id.back_addnote);
         noteTitle=findViewById(R.id.addnotetitle);
@@ -52,9 +58,11 @@ public class Addnote extends AppCompatActivity {
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onBackPressed();
+                Toast.makeText(Addnote.this,"Not Saved", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(getApplicationContext(), Planner_notes.class));
             }
         });
+
         //save note
 
         savenote.setOnClickListener(new View.OnClickListener() {
@@ -70,7 +78,7 @@ public class Addnote extends AppCompatActivity {
                 progressBarSave.setVisibility(View.VISIBLE);
 
                 // save note firebase
-                DocumentReference docref = fstore.collection("notes").document();
+                DocumentReference docref = fstore.collection("notes").document(user.getUid()).collection("myNotes").document();
                 Map<String,Object> note = new HashMap<>();
                 note.put("title",nTitle);
                 note.put("content",nContent);
