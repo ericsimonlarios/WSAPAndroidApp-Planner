@@ -10,14 +10,13 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.speech.RecognizerIntent;
 
 import com.example.wsapandroidapp.Adapters.WeddingTipsAdapter;
 import com.example.wsapandroidapp.Adapters.WeddingTipsChildAdapter;
 import com.example.wsapandroidapp.Classes.ComponentManager;
 import com.example.wsapandroidapp.Classes.Enums;
-import com.example.wsapandroidapp.Classes.Units;
-import com.example.wsapandroidapp.DataModel.Application;
+import com.example.wsapandroidapp.DataModel.ContactInfo;
+import com.example.wsapandroidapp.DataModel.TipsImages;
 import com.example.wsapandroidapp.DataModel.WeddingTips;
 import com.example.wsapandroidapp.DialogClasses.AppStatusPromptDialog;
 import com.example.wsapandroidapp.DialogClasses.MessageDialog;
@@ -54,8 +53,10 @@ public class WeddingTipsActivity extends AppCompatActivity {
     boolean isListening;
 
     List<WeddingTips> weddingTips = new ArrayList<>();
+    List tipsImagesArrayList = new ArrayList<>();
     WeddingTipsAdapter weddingTipsAdapter;
 
+    TipsImages tipsImages;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,41 +71,39 @@ public class WeddingTipsActivity extends AppCompatActivity {
         context = WeddingTipsActivity.this;
         messageDialog = new MessageDialog(context);
 
-
         firebaseDatabase = FirebaseDatabase.getInstance(getString(R.string.firebase_RTDB_url));
         weddingTipsQuery = firebaseDatabase.getReference("weddingTips");
 
         isListening = true;
         weddingTipsQuery.addValueEventListener(getWeddingTips());
 
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
-        weddingTipsAdapter = new WeddingTipsAdapter(context, weddingTips);
-        recyclerView.setLayoutManager(linearLayoutManager);
-        recyclerView.setAdapter(weddingTipsAdapter);
-
-        weddingTipsAdapter.setAdapterListener(weddingTips -> {
-            Intent intent = new Intent(context, WeddingTipsDetailsActivity.class);
-            intent.putExtra("weddingTipsId", weddingTips.getId());
-            context.startActivity(intent);
-        });
     }
-
     private ValueEventListener getWeddingTips() {
         return new ValueEventListener() {
             @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                tipsImagesArrayList = new ArrayList();
                 if (isListening) {
                     weddingTips.clear();
-
                     if (snapshot.exists())
                         for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                             WeddingTips weddingTip = dataSnapshot.getValue(WeddingTips.class);
-
                             if (weddingTip != null)
                                 weddingTips.add(weddingTip);
                         }
                 }
+
+                LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
+                weddingTipsAdapter = new WeddingTipsAdapter(context, weddingTips);
+                recyclerView.setLayoutManager(linearLayoutManager);
+                recyclerView.setAdapter(weddingTipsAdapter);
+
+                weddingTipsAdapter.setAdapterListener(weddingTips -> {
+                    Intent intent = new Intent(context, WeddingTipsDetailsActivity.class);
+                    intent.putExtra("weddingTipsId", weddingTips.getId());
+                    context.startActivity(intent);
+                });
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {

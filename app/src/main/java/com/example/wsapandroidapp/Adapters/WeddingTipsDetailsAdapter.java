@@ -8,27 +8,29 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
+import com.bumptech.glide.Glide;
 import com.example.wsapandroidapp.DataModel.WeddingTips;
 import com.example.wsapandroidapp.WeddingTipsActivity;
 import com.example.wsapandroidapp.R;
 import com.example.wsapandroidapp.WeddingTipsDetailsActivity;
 
+import java.util.ArrayList;
 import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class WeddingTipsDetailsAdapter extends RecyclerView.Adapter<WeddingTipsDetailsAdapter.ViewHolder> {
 
-    //
-    private final List<Integer> ImageSet;
+
+    private List<String> tipsImagesArrayList;
     private final LayoutInflater layoutInflater;
     private final Context context;
-    //public WeddingTipsAdapter(Context context, List<WeddingTips> weddingTips) {
-    public WeddingTipsDetailsAdapter(Context context, List<Integer> ImageSet) {
-        //this.weddingTips = weddingTips;
-        this.ImageSet = ImageSet;
+    public WeddingTipsDetailsAdapter(Context context, List<String> tipsImagesArrayList) {
+        this.tipsImagesArrayList = tipsImagesArrayList;
+
         this.layoutInflater = LayoutInflater.from(context);
         this.context = context;
     }
@@ -43,11 +45,12 @@ public class WeddingTipsDetailsAdapter extends RecyclerView.Adapter<WeddingTipsD
     @Override
     public void onBindViewHolder(@NonNull WeddingTipsDetailsAdapter.ViewHolder holder, int position) {
         ImageView tvTipsPhoto = holder.tvTipsPhoto;
-        tvTipsPhoto.setImageResource(ImageSet.get(position));
+        Glide.with(context).load(tipsImagesArrayList.get(position)).into(tvTipsPhoto);
     }
+
     @Override
     public int getItemCount() {
-        return ImageSet.size();
+        return tipsImagesArrayList.size();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

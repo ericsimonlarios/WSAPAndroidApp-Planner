@@ -10,28 +10,29 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 
+import com.bumptech.glide.Glide;
 import com.example.wsapandroidapp.DataModel.WeddingTips;
+import com.example.wsapandroidapp.DataModel.TipsImages;
 import com.example.wsapandroidapp.WeddingTipsActivity;
 import com.example.wsapandroidapp.R;
 import com.example.wsapandroidapp.WeddingTipsDetailsActivity;
 
+import java.util.ArrayList;
 import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class WeddingTipsChildAdapter extends RecyclerView.Adapter<WeddingTipsChildAdapter.ViewHolder> {
 
-    // private final List<WeddingTips> weddingTips;
-    private List<Integer> ImageSet;
+    private List<String> tipsImagesArrayList;
     private final LayoutInflater layoutInflater;
     private final Context context;
-    //public WeddingTipsAdapter(Context context, List<WeddingTips> weddingTips) {
-    public WeddingTipsChildAdapter(Context context, List<Integer> ImageSet) {
-        //this.weddingTips = weddingTips;
-        this.ImageSet = ImageSet;
+
+    public WeddingTipsChildAdapter(Context context, List<String> tipsImagesArrayList) {
+        this.tipsImagesArrayList = tipsImagesArrayList;
         this.layoutInflater = LayoutInflater.from(context);
         this.context = context;
-    }
+      }
 
     @NonNull
     @Override
@@ -43,14 +44,12 @@ public class WeddingTipsChildAdapter extends RecyclerView.Adapter<WeddingTipsChi
     @Override
     public void onBindViewHolder(@NonNull WeddingTipsChildAdapter.ViewHolder holder, int position) {
         ImageView tvTipsPhoto = holder.tvTipsPhoto;
-        // WeddingTips weddingTips = weddingTips.get(position)
-        //tvTipTitle.setText(weddingTips.getTopic());
-        //tvTipDescription.setText(weddingTips.getDescription());
-        tvTipsPhoto.setImageResource(ImageSet.get(position));
+        Glide.with(context).load(tipsImagesArrayList.get(position)).into(tvTipsPhoto);
+
     }
     @Override
-    public int getItemCount() {
-        return ImageSet.size();
+     public int getItemCount() {
+        return tipsImagesArrayList.size();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

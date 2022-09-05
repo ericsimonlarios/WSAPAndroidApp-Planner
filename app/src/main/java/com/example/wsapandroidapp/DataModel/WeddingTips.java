@@ -1,26 +1,27 @@
 package com.example.wsapandroidapp.DataModel;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class WeddingTips {
 
-    private String id, topic, description, tips, image;
+    private String id, topic, description, tips;
     private String dateCreated;
 
     public WeddingTips() {
     }
 
-    public WeddingTips(String id, String topic, String description, String image, String dateCreated) {
+    public WeddingTips(String id, String topic, String description, String dateCreated) {
         this.id = id;
         this.topic = topic;
         this.description = description;
-        this.image = image;
         this.dateCreated = dateCreated;
     }
-    public WeddingTips(String id, String topic, String description, String tips, String image, String dateCreated) {
+    public WeddingTips(String id, String topic, String description, String tips, String dateCreated) {
         this.id = id;
         this.topic = topic;
         this.description = description;
         this.tips = tips;
-        this.image = image;
         this.dateCreated = dateCreated;
     }
 
@@ -35,9 +36,6 @@ public class WeddingTips {
     }
     public String getTips() {
         return tips;
-    }
-    public String getImage() {
-        return image;
     }
     public String getDateCreated() {
         return dateCreated;
@@ -54,9 +52,6 @@ public class WeddingTips {
     }
     public void setTips(String tips) {
         this.tips = tips;
-    }
-    public void setImage(String image) {
-        this.image = image;
     }
     public void setDateCreated(String dateCreated) {
         this.dateCreated = dateCreated;
