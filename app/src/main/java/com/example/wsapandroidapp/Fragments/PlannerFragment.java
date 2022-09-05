@@ -14,6 +14,7 @@ import com.example.wsapandroidapp.Classes.Enums;
 import com.example.wsapandroidapp.DataModel.MenuCategoryImage;
 import com.example.wsapandroidapp.DialogClasses.ConfirmationDialog;
 import com.example.wsapandroidapp.DialogClasses.MessageDialog;
+import com.example.wsapandroidapp.Planner_notes;
 import com.example.wsapandroidapp.R;
 import com.example.wsapandroidapp.SuppliersChecklistActivity;
 import com.example.wsapandroidapp.SuppliersComparativeSheetActivity;
@@ -73,7 +74,7 @@ public class PlannerFragment extends Fragment {
                 new MenuCategoryImage(getString(R.string.wedding_timeline), R.drawable.wedding_timeline, new Intent(context, WeddingTimelineActivity.class)),
                 new MenuCategoryImage(getString(R.string.suppliers_checklist), R.drawable.suppliers, new Intent(context, SuppliersChecklistActivity.class)),
                 new MenuCategoryImage(getString(R.string.suppliers_comparative_sheet), R.drawable.suppliers, new Intent(context, SuppliersComparativeSheetActivity.class)),
-                new MenuCategoryImage(getString(R.string.notes), R.drawable.suppliers, new Intent(context, SuppliersComparativeSheetActivity.class)),
+                new MenuCategoryImage(getString(R.string.notes), R.drawable.suppliers, new Intent(context, Planner_notes.class)),
                 new MenuCategoryImage(getString(R.string.todo_checklist), R.drawable.todo, new Intent(context, TodoChecklistActivity.class))
         );
 

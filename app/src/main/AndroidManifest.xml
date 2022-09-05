@@ -17,7 +17,16 @@
         android:theme="@style/Theme.WSAPAndroidApp"
         tools:targetApi="31">
         <activity
-            android:name=".WeddingTipsDetailsActivity"
+            android:name=".EditNote"
+            android:exported="false" />
+        <activity
+            android:name=".Addnote"
+            android:exported="false" />
+        <activity
+            android:name=".NoteDetails"
+            android:exported="false" />
+        <activity
+            android:name=".Planner_notes"
             android:exported="false" />
         <activity
             android:name=".SuppliersComparativeSheetActivity"
@@ -160,8 +169,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".TodoListItemActivity"
-            android:exported="false"/>
+        <activity
+            android:name=".TodoListItemActivity"
+            android:exported="false"
+            android:parentActivityName=".TodoChecklistActivity"
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".MainActivity"
             android:exported="true"

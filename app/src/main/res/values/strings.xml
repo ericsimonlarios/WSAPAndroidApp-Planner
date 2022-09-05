@@ -14,9 +14,11 @@
     <string name="live">Live</string>
     <string name="app_status_title">Under %s</string>
     <string name="app_status_prompt">We are sorry.\nPlease come back again later.</string>
-
+    <string name="title">Title</string>
+    <string name="item">item</string>
     <string name="fd_on_cancelled">Failed to get %s.</string>
-
+    <string name="add_task">Add new task</string>
+    <string name="insert_text">Insert task here</string>
     <string name="loading">Loading, please wait…</string>
     <string name="sign_up_loading">Signing up, please wait…</string>
     <string name="message_prompt">This is a message prompt.</string>
@@ -342,4 +344,13 @@
         <item>resendLinkCountdown</item>
         <item>isAnonymous</item>
     </string-array>
+    <string name="title_activity_note_details">NoteDetails</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+    <string name="hello_first_fragment">Hello first fragment</string>
+    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
 </resources>
