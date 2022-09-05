@@ -1,5 +1,8 @@
 package com.example.wsapandroidapp.DataModel;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class WeddingTips {
 
     private String id, topic, description, tips;

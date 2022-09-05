@@ -2,20 +2,32 @@ package com.example.wsapandroidapp.Adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import androidx.recyclerview.widget.GridLayoutManager;
 
 import com.example.wsapandroidapp.Adapters.WeddingTipsChildAdapter;
+import com.example.wsapandroidapp.Classes.Enums;
+import com.example.wsapandroidapp.DataModel.TipsImages;
 import com.example.wsapandroidapp.DataModel.WeddingTips;
 import com.example.wsapandroidapp.WeddingTipsActivity;
 import com.example.wsapandroidapp.R;
 import com.example.wsapandroidapp.WeddingTipsDetailsActivity;
+import com.example.wsapandroidapp.DialogClasses.MessageDialog;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,22 +38,29 @@ public class WeddingTipsAdapter extends RecyclerView.Adapter<WeddingTipsAdapter.
 
 
     private final List<WeddingTips> weddingTips;
-
     private final LayoutInflater layoutInflater;
 
     private final Context context;
 
+    FirebaseDatabase firebaseDatabase;
+    Query tipsImagesQuery;
+    MessageDialog messageDialog;
+
+
     public WeddingTipsAdapter(Context context, List<WeddingTips> weddingTips) {
+
         this.weddingTips = weddingTips;
         this.layoutInflater = LayoutInflater.from(context);
         this.context = context;
     }
+
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = layoutInflater.inflate(R.layout.custom_wedding_tips_layout, parent, false);
         return new ViewHolder(view);
+
     }
 
     @Override
@@ -50,6 +69,11 @@ public class WeddingTipsAdapter extends RecyclerView.Adapter<WeddingTipsAdapter.
                 tvTipDescription = holder.tvTipDescription,
                 tvDateCreated = holder.tvDateCreated,
                 tvSeeMore = holder.tvSeeMore;
+
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        tipsImagesQuery = firebaseDatabase.getReference("weddingTips");
+        List<String> tipsImagesArrayList = new ArrayList<>();
+
 
         WeddingTips weddingTip = weddingTips.get(position);
         tvTipTitle.setText(weddingTip.getTopic());
@@ -62,22 +86,34 @@ public class WeddingTipsAdapter extends RecyclerView.Adapter<WeddingTipsAdapter.
             context.startActivity(intent);
         });
 
-        List image = new ArrayList(); //placeholder
-        image.add(R.drawable.expos);
-        image.add(R.drawable.guests);
-        image.add(R.drawable.exhibitors);
-
-        //nested recycler view
-        StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
-        holder.childRecyclerView.setLayoutManager(staggeredGridLayoutManager);
-        WeddingTipsChildAdapter  weddingTipsChildAdapter = new WeddingTipsChildAdapter(context, image);
-        holder.childRecyclerView.setAdapter(weddingTipsChildAdapter);
-
-
+        tipsImagesQuery.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.exists())
+                {
+                    for(DataSnapshot dataSnapshot : snapshot.getChildren())
+                    {
+                        dataSnapshot.getKey();
+                        if(dataSnapshot.getKey().equals(weddingTip.getId()))
+                            for (DataSnapshot imgSnapshot : dataSnapshot.child("image").getChildren()) {
+                               tipsImagesArrayList.add(imgSnapshot.getValue().toString());
+                            }
+                    }
+                    StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
+                    holder.childRecyclerView.setLayoutManager(staggeredGridLayoutManager);
+                    WeddingTipsChildAdapter  weddingTipsChildAdapter = new WeddingTipsChildAdapter(context, tipsImagesArrayList);
+                    holder.childRecyclerView.setAdapter(weddingTipsChildAdapter);
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
+        });
     }
+
     @Override
     public int getItemCount() {
-         return weddingTips.size();
+        return weddingTips.size();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -87,13 +123,11 @@ public class WeddingTipsAdapter extends RecyclerView.Adapter<WeddingTipsAdapter.
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-
             tvTipTitle = itemView.findViewById(R.id.tvTipTitle);
             tvTipDescription = itemView.findViewById(R.id.tvTipDescription);
             tvDateCreated = itemView.findViewById(R.id.tvDateCreated);
             tvSeeMore= itemView.findViewById(R.id.tvSeeMore);
             childRecyclerView = itemView.findViewById(R.id.child_recyclerView);
-
         }
     }
     private WeddingTipsAdapter.AdapterListener adapterListener;
@@ -105,3 +139,6 @@ public class WeddingTipsAdapter extends RecyclerView.Adapter<WeddingTipsAdapter.
         this.adapterListener = adapterListener;
     }
 }
+
+
+
