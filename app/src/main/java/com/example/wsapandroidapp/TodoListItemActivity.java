@@ -6,6 +6,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -21,7 +22,6 @@ import android.widget.Toast;
 
 import com.example.wsapandroidapp.Adapters.TodoListItemAdapter;
 import com.example.wsapandroidapp.Classes.DateTime;
-import com.example.wsapandroidapp.DataModel.ToDoChecklist;
 import com.example.wsapandroidapp.DataModel.Todo;
 import com.google.android.material.card.MaterialCardView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -43,8 +43,8 @@ public class TodoListItemActivity extends AppCompatActivity {
     EditText listEditTitle;
     RecyclerView listItemRV;
     ImageView clearTitle;
-
-    Boolean isNew;
+    ConstraintLayout mainConLayout;
+    Boolean isNew, isChecked;
 
     String currentDate, userId, listTitle, key, passedKey, passedTitle;
     int counter;
@@ -76,6 +76,7 @@ public class TodoListItemActivity extends AppCompatActivity {
         listItemRV = findViewById(R.id.listItemRV);
         clearTitle = findViewById(R.id.clearTitle);
         addTask = findViewById(R.id.addTask);
+        mainConLayout = findViewById(R.id.mainConLayout);
 
         // Invocation of Appbar and its properties
         setSupportActionBar(toolbar);
@@ -88,6 +89,16 @@ public class TodoListItemActivity extends AppCompatActivity {
 
         // Get passed values from TodoChecklistActivity
         Intent intent = getIntent();
+        isChecked = intent.getBooleanExtra("checked", false);
+
+        if(isChecked){
+            for (int i = 0; i < mainConLayout.getChildCount(); i++) {
+                View child = mainConLayout.getChildAt(i);
+                child.setEnabled(false);
+            }
+           listEditTitle.setTextColor(this.getColor(R.color.light_gray));
+
+        }
         if(intent.getStringExtra("id") != null){
             getPassedData(intent);
             isNew = false;
@@ -99,6 +110,7 @@ public class TodoListItemActivity extends AppCompatActivity {
         item = new ArrayList<>();
 
         listEditTitle.addTextChangedListener(getLatestInput());
+
         editTextFocus(listEditTitle);
         clearTitle.setOnClickListener(v -> listEditTitle.getText().clear());
 
@@ -114,6 +126,7 @@ public class TodoListItemActivity extends AppCompatActivity {
         DatabaseReference getId = mDatabase.child("TodoListItem").child(userId);
         passedTitle = intent.getStringExtra("listTitle");
         passedKey = intent.getStringExtra("id");
+
         getId.addListenerForSingleValueEvent(getDatabase()); // read from database
         listEditTitle.setText(passedTitle);
     }
@@ -122,8 +135,9 @@ public class TodoListItemActivity extends AppCompatActivity {
         String listKey = mDatabase.child("TodoChecklist").child(userId).push().getKey();
         ArrayList test1 = new ArrayList();
         test1.add("");
-        test1.add(true);
+        test1.add(false);
         test1.add(listKey);
+        test1.add(false);
         item.add(new Todo(test1));
         todoListItemAdapter.notifyItemInserted(counter);
         counter++;
@@ -150,11 +164,13 @@ public class TodoListItemActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                isNew = false;
                 listTitle = listEditTitle.getText().toString();
-                Todo data = new Todo(listTitle, currentDate, userId);
-                mDatabase.child("TodoCheckList").child(userId).child(key).setValue(data);
-                todoListItemAdapter.notifyItemInserted(counter);
+                if(!listTitle.equals("")){
+                    isNew = false;
+                    Todo data = new Todo(listTitle, currentDate, userId, isChecked);
+                    mDatabase.child("TodoCheckList").child(userId).child(key).setValue(data);
+                    todoListItemAdapter.notifyItemInserted(counter);
+                }
             }
         };
     }
@@ -169,8 +185,13 @@ public class TodoListItemActivity extends AppCompatActivity {
                         if(Objects.requireNonNull(node.child("titleKey").getValue()).toString().equals(passedKey)){
 
                             getData.add(node.child("listName").getValue().toString());
-                            getData.add(node.child("isChecked").getValue().toString());
+                            getData.add(node.child("isChecked").getValue());
                             getData.add(node.getKey());
+                            if(isChecked){
+                                getData.add(true);
+                            }else{
+                                getData.add(false);
+                            }
                             item.add(new Todo(getData));
                             todoListItemAdapter.notifyItemInserted(counter);
                             counter++;
@@ -235,6 +256,9 @@ public class TodoListItemActivity extends AppCompatActivity {
         listEditTitle.setOnFocusChangeListener((v, hasFocus) -> {
             if(!hasFocus){
                 clearTitle.setVisibility(View.GONE);
+                if(!isNew){
+                    listEditTitle.setText(listTitle);
+                }
             }else{
                 clearTitle.setVisibility(View.VISIBLE);
             }
@@ -263,11 +287,13 @@ public class TodoListItemActivity extends AppCompatActivity {
                 return true;
             }
             case R.id.markDone:{
-                Toast.makeText(this, "Finished Task", Toast.LENGTH_SHORT).show();
-                return true;
-            }
-            case R.id.duplicateList:{
-                Toast.makeText(this, "Duplicate Task", Toast.LENGTH_SHORT).show();
+                if(!isNew){
+                    mDatabase.child("TodoCheckList").child(userId).child(passedKey).child("checked").setValue(true);
+                    Intent intent = new Intent(TodoListItemActivity.this, TodoChecklistActivity.class);
+                    startActivity(intent);
+                }else{
+                    Toast.makeText(this, "Enter a title first", Toast.LENGTH_SHORT).show();
+                }
                 return true;
             }
             default:{
@@ -275,5 +301,9 @@ public class TodoListItemActivity extends AppCompatActivity {
             }
         }
     }
-
+    @Override
+    public void onBackPressed() {
+        startActivity(new Intent(this, TodoChecklistActivity.class));
+        finish();
+    }
 }

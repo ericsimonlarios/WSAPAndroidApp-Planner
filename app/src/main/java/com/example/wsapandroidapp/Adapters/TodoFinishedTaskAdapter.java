@@ -22,15 +22,20 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-
 import java.util.List;
 
-public class TodoChkListAdapter extends RecyclerView.Adapter<TodoChkListAdapter.ViewHolder> {
+public class TodoFinishedTaskAdapter extends RecyclerView.Adapter<TodoFinishedTaskAdapter.ViewHolder>{
+
     private final List<Todo> dataSet;
     private final Context context;
     private String titleKey;
     private Boolean checked;
     DatabaseReference mDatabase;
+
+    public TodoFinishedTaskAdapter(List<Todo> dataSet, Context context) {
+        this.dataSet = dataSet;
+        this.context = context;
+    }
 
     public static class ViewHolder extends RecyclerView.ViewHolder{
         TextView listTitle, chkListDate;
@@ -49,20 +54,15 @@ public class TodoChkListAdapter extends RecyclerView.Adapter<TodoChkListAdapter.
         }
     }
 
-    public TodoChkListAdapter(Context context, List<Todo> dataSet) {
-        this.dataSet = dataSet;
-        this.context = context;
-    }
-
     @NonNull
     @Override
-    public TodoChkListAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public TodoFinishedTaskAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.custom_todo_checklist_title, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull TodoChkListAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull TodoFinishedTaskAdapter.ViewHolder holder, int position) {
         int newPos = holder.getAdapterPosition();
         holder.listTitle.setText(dataSet.get(newPos).getListTitle());
         holder.chkListDate.setText(dataSet.get(newPos).getDateCreated());
@@ -78,7 +78,12 @@ public class TodoChkListAdapter extends RecyclerView.Adapter<TodoChkListAdapter.
         checked = dataSet.get(newPos).isChecked();
     }
 
-    public void chkboxManager(ViewHolder holder, int position){
+    @Override
+    public int getItemCount() {
+        return dataSet.size();
+    }
+
+    public void chkboxManager(TodoFinishedTaskAdapter.ViewHolder holder, int position){
         if (dataSet.get(position).isChecked()){
             holder.listTitle.setPaintFlags(holder.listTitle.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
             holder.listTitle.setTextColor(context.getColor(R.color.gray));
@@ -88,18 +93,19 @@ public class TodoChkListAdapter extends RecyclerView.Adapter<TodoChkListAdapter.
             int newPos = holder.getAdapterPosition();
             titleKey = dataSet.get(newPos).getTitleKey();
             if(isChecked){
-               updatePosition(holder);
-//                holder.listTitle.setPaintFlags(holder.listTitle.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-//                holder.listTitle.setTextColor(context.getColor(R.color.gray));
-//                holder.conLayout2.setBackgroundColor(context.getColor(R.color.light_gray));
-//                dataSet.get(position).setChecked(true);
+                holder.listTitle.setPaintFlags(holder.listTitle.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                holder.listTitle.setTextColor(context.getColor(R.color.gray));
+                holder.conLayout2.setBackgroundColor(context.getColor(R.color.light_gray));
                 checked = true;
+            }else{
+                updatePosition(holder);
+                checked = false;
             }
             updateChkboxDB(titleKey);
         });
     }
 
-    public void updatePosition(TodoChkListAdapter.ViewHolder holder){
+    public void updatePosition(TodoFinishedTaskAdapter.ViewHolder holder){
         int newPosition = holder.getAdapterPosition();
         dataSet.remove(newPosition);
         notifyItemRemoved(newPosition);
@@ -115,10 +121,5 @@ public class TodoChkListAdapter extends RecyclerView.Adapter<TodoChkListAdapter.
     }
 
 
-    @Override
-    public int getItemCount() {
-        return dataSet.size();
-    }
-
-
+    
 }
