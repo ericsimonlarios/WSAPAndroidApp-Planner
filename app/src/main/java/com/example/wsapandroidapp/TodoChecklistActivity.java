@@ -75,7 +75,7 @@ public class TodoChecklistActivity extends AppCompatActivity {
         userId = firebaseUser.getUid();
 
         mDatabase = FirebaseDatabase.getInstance().getReference("TodoCheckList").child(userId);
-        cleanListItems = FirebaseDatabase.getInstance().getReference().child("TodoListItem");
+        cleanListItems = FirebaseDatabase.getInstance().getReference().child("TodoListItem").child(userId);
         etSearch = findViewById(R.id.etSearch);
         tvMessage = findViewById(R.id.tvMessage);
         textView27 = findViewById(R.id.textView27);
@@ -230,14 +230,14 @@ public class TodoChecklistActivity extends AppCompatActivity {
 
                 if(snapshot.exists()){
                     for(DataSnapshot node: snapshot.getChildren()){
-                        for (DataSnapshot nodeChild: node.getChildren()){
-                                if(!keys.contains(nodeChild.child("titleKey").getValue().toString())){
-                                    nodeChild.getRef().removeValue();
-                                }
+
+                        if(!keys.contains(node.child("titleKey").getValue().toString())){
+                            node.getRef().removeValue();
                         }
+
                     }
-                    loadingDialog.dismissDialog();
                 }
+                loadingDialog.dismissDialog();
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
@@ -269,11 +269,11 @@ public class TodoChecklistActivity extends AppCompatActivity {
                                 list.add(new Todo(getData.get(0), getData.get(1), getData.get(2), node.getKey(), isChecked));
                             }
                         }
-                        loadingDialog.dismissDialog();
                         callAdapter(list);
                         callFinAdapter(finItems);
                         getPos();
                     }
+                loadingDialog.dismissDialog();
             }
 
             @Override

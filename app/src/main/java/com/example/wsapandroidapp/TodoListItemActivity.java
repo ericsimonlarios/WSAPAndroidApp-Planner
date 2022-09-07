@@ -90,8 +90,6 @@ public class TodoListItemActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
-        loadingDialog.showDialog();
-
         //Other class calls
         DateTime getDate = new DateTime();
         currentDate = getDate.getDateTimeText();
@@ -110,6 +108,7 @@ public class TodoListItemActivity extends AppCompatActivity {
 
         }
         if(intent.getStringExtra("id") != null){
+            loadingDialog.showDialog();
             getPassedData(intent);
             isNew = false;
         }else{
@@ -207,8 +206,8 @@ public class TodoListItemActivity extends AppCompatActivity {
                             counter++;
                         }
                     }
-                    loadingDialog.dismissDialog();
                 }
+                loadingDialog.dismissDialog();
             }
 
             @Override
@@ -232,8 +231,8 @@ public class TodoListItemActivity extends AppCompatActivity {
                             startActivity(intent);
                         }
                     }
-                    loadingDialog.dismissDialog();
                 }
+                loadingDialog.dismissDialog();
             }
 
             @Override
@@ -255,8 +254,8 @@ public class TodoListItemActivity extends AppCompatActivity {
                             node.getRef().removeValue();
                         }
                     }
-                    loadingDialog.dismissDialog();
                 }
+                loadingDialog.dismissDialog();
             }
 
             @Override
