@@ -1,5 +1,6 @@
 package com.example.wsapandroidapp.Adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Paint;
@@ -62,7 +63,7 @@ public class TodoChkListAdapter extends RecyclerView.Adapter<TodoChkListAdapter.
     }
 
     @Override
-    public void onBindViewHolder(@NonNull TodoChkListAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         int newPos = holder.getAdapterPosition();
         holder.listTitle.setText(dataSet.get(newPos).getListTitle());
         holder.chkListDate.setText(dataSet.get(newPos).getDateCreated());
@@ -73,6 +74,7 @@ public class TodoChkListAdapter extends RecyclerView.Adapter<TodoChkListAdapter.
             intent.putExtra("listTitle", dataSet.get(newPos).getListTitle());
             intent.putExtra("checked", dataSet.get(newPos).isChecked());
             context.startActivity(intent);
+           ((Activity)context).finish();
         });
         chkboxManager(holder, position);
         checked = dataSet.get(newPos).isChecked();

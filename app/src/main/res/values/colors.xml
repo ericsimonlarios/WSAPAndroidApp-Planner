@@ -16,7 +16,7 @@
     <color name="yellow">#f1ce36</color>
     <color name="black_50">#88000000</color>
     <color name="black_85">#DD000000</color>
-
+    <color name="transparent_light_gray">#B3FFFFFF</color>
     <color name="splash_screen_background">#FEFEFD</color>
     <color name="primary">#CC9933</color>
     <color name="primary_75">#BBCC9933</color>

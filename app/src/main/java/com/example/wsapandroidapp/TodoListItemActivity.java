@@ -23,6 +23,7 @@ import android.widget.Toast;
 import com.example.wsapandroidapp.Adapters.TodoListItemAdapter;
 import com.example.wsapandroidapp.Classes.DateTime;
 import com.example.wsapandroidapp.DataModel.Todo;
+import com.example.wsapandroidapp.DialogClasses.LoadingDialog;
 import com.google.android.material.card.MaterialCardView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -45,6 +46,7 @@ public class TodoListItemActivity extends AppCompatActivity {
     ImageView clearTitle;
     ConstraintLayout mainConLayout;
     Boolean isNew, isChecked;
+    View disableOverlay;
 
     String currentDate, userId, listTitle, key, passedKey, passedTitle;
     int counter;
@@ -52,6 +54,8 @@ public class TodoListItemActivity extends AppCompatActivity {
     MaterialCardView addTask;
     TodoListItemAdapter todoListItemAdapter;
     List<Todo> item;
+
+    LoadingDialog loadingDialog;
 
     private final DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
 
@@ -76,12 +80,17 @@ public class TodoListItemActivity extends AppCompatActivity {
         listItemRV = findViewById(R.id.listItemRV);
         clearTitle = findViewById(R.id.clearTitle);
         addTask = findViewById(R.id.addTask);
+        disableOverlay = findViewById(R.id.disableOverlay);
         mainConLayout = findViewById(R.id.mainConLayout);
+
+        loadingDialog = new LoadingDialog(this);
 
         // Invocation of Appbar and its properties
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
+
+        loadingDialog.showDialog();
 
         //Other class calls
         DateTime getDate = new DateTime();
@@ -96,6 +105,7 @@ public class TodoListItemActivity extends AppCompatActivity {
                 View child = mainConLayout.getChildAt(i);
                 child.setEnabled(false);
             }
+           disableOverlay.setVisibility(View.VISIBLE);
            listEditTitle.setTextColor(this.getColor(R.color.light_gray));
 
         }
@@ -197,11 +207,13 @@ public class TodoListItemActivity extends AppCompatActivity {
                             counter++;
                         }
                     }
+                    loadingDialog.dismissDialog();
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
+                loadingDialog.dismissDialog();
                 Log.w(TAG, "loadPost:onCancelled", error.toException());
             }
         };
@@ -220,11 +232,13 @@ public class TodoListItemActivity extends AppCompatActivity {
                             startActivity(intent);
                         }
                     }
+                    loadingDialog.dismissDialog();
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
+                loadingDialog.dismissDialog();
                 Log.w(TAG, "loadPost:onCancelled", error.toException());
             }
         };
@@ -241,13 +255,14 @@ public class TodoListItemActivity extends AppCompatActivity {
                             node.getRef().removeValue();
                         }
                     }
+                    loadingDialog.dismissDialog();
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 Log.w(TAG, "loadPost:onCancelled", error.toException());
-
+                loadingDialog.dismissDialog();
             }
         };
     }

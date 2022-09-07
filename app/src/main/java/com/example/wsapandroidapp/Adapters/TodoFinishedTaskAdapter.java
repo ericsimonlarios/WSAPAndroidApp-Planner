@@ -1,5 +1,6 @@
 package com.example.wsapandroidapp.Adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Paint;
@@ -73,6 +74,7 @@ public class TodoFinishedTaskAdapter extends RecyclerView.Adapter<TodoFinishedTa
             intent.putExtra("listTitle", dataSet.get(newPos).getListTitle());
             intent.putExtra("checked", dataSet.get(newPos).isChecked());
             context.startActivity(intent);
+            ((Activity)context).finish();
         });
         chkboxManager(holder, position);
         checked = dataSet.get(newPos).isChecked();
@@ -120,6 +122,4 @@ public class TodoFinishedTaskAdapter extends RecyclerView.Adapter<TodoFinishedTa
         mDatabase.child("TodoCheckList").child(userId).child(titleKey).child("checked").setValue(checked);
     }
 
-
-    
 }

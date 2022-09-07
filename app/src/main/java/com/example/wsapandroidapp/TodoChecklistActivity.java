@@ -25,6 +25,7 @@ import com.example.wsapandroidapp.Adapters.TodoFinishedTaskAdapter;
 import com.example.wsapandroidapp.Classes.ComponentManager;
 import com.example.wsapandroidapp.Classes.Enums;
 import com.example.wsapandroidapp.DataModel.Todo;
+import com.example.wsapandroidapp.DialogClasses.LoadingDialog;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -46,6 +47,8 @@ public class TodoChecklistActivity extends AppCompatActivity {
     Spinner sortSpinner;
     FloatingActionButton addList;
 
+    LoadingDialog loadingDialog;
+
     String userId;
     List<Todo> list = new ArrayList<>();
     List<String> keys = new ArrayList<>();
@@ -55,6 +58,7 @@ public class TodoChecklistActivity extends AppCompatActivity {
     TodoChkListAdapter chkListAdapter;
     TodoFinishedTaskAdapter finListAdapter;
     ComponentManager componentManager;
+
     int pos = 0;
     String searchSupplier = "";
     boolean isSearched;
@@ -80,6 +84,8 @@ public class TodoChecklistActivity extends AppCompatActivity {
         addList = findViewById(R.id.addList);
         sortSpinner = findViewById(R.id.sortSpinner);
 
+        loadingDialog = new LoadingDialog(this);
+
         ArrayAdapter <CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.todoSortArray, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         sortSpinner.setAdapter(adapter);
@@ -89,8 +95,10 @@ public class TodoChecklistActivity extends AppCompatActivity {
         componentManager.setInputRightDrawable(etSearch, true, Enums.VOICE_RECOGNITION);
         componentManager.setVoiceRecognitionListener(() -> startActivityForResult(componentManager.voiceRecognitionIntent(), Enums.VOICE_RECOGNITION_REQUEST_CODE));
 
+        loadingDialog.showDialog();
         mDatabase.addValueEventListener(getListQuery());
         cleanListItems.addListenerForSingleValueEvent(cleanItems());
+
         isSearched = false;
         etSearch.addTextChangedListener(new TextWatcher() {
             @Override
@@ -109,6 +117,7 @@ public class TodoChecklistActivity extends AppCompatActivity {
                 if(s.toString().equals("")){
                     items.clear();
                     isSearched = false;
+                    getPos();
                     callAdapter(list);
                     callFinAdapter(finItems);
                 }else{
@@ -218,6 +227,7 @@ public class TodoChecklistActivity extends AppCompatActivity {
         return new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+
                 if(snapshot.exists()){
                     for(DataSnapshot node: snapshot.getChildren()){
                         for (DataSnapshot nodeChild: node.getChildren()){
@@ -226,10 +236,12 @@ public class TodoChecklistActivity extends AppCompatActivity {
                                 }
                         }
                     }
+                    loadingDialog.dismissDialog();
                 }
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
+                loadingDialog.dismissDialog();
                 Log.w(TAG, "loadPost:onCancelled", error.toException());
             }
         };
@@ -257,7 +269,7 @@ public class TodoChecklistActivity extends AppCompatActivity {
                                 list.add(new Todo(getData.get(0), getData.get(1), getData.get(2), node.getKey(), isChecked));
                             }
                         }
-
+                        loadingDialog.dismissDialog();
                         callAdapter(list);
                         callFinAdapter(finItems);
                         getPos();
@@ -266,6 +278,7 @@ public class TodoChecklistActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
+                loadingDialog.dismissDialog();
                 Log.w(TAG, "loadPost:onCancelled", error.toException());
             }
         };
@@ -282,7 +295,6 @@ public class TodoChecklistActivity extends AppCompatActivity {
 
     @SuppressLint("NotifyDataSetChanged")
     public void callFinAdapter(List<Todo> finList){
-
         if(finList.size() != 0){
             finishedTaskRV.setVisibility(View.VISIBLE);
             textView27.setVisibility(View.VISIBLE);
@@ -307,6 +319,19 @@ public class TodoChecklistActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
 
+    @Override
+    public void onStop() {
+        super.onStop();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+    }
 
 }
