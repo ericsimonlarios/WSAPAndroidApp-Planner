@@ -2,24 +2,18 @@ package com.example.wsapandroidapp.Adapters;
 
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.cardview.widget.CardView;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
-import androidx.recyclerview.widget.GridLayoutManager;
-
-import com.example.wsapandroidapp.Adapters.WeddingTipsChildAdapter;
-import com.example.wsapandroidapp.Classes.Enums;
-import com.example.wsapandroidapp.DataModel.TipsImages;
 import com.example.wsapandroidapp.DataModel.WeddingTips;
-import com.example.wsapandroidapp.WeddingTipsActivity;
 import com.example.wsapandroidapp.R;
+import com.example.wsapandroidapp.TipsImagesActivity;
 import com.example.wsapandroidapp.WeddingTipsDetailsActivity;
 import com.example.wsapandroidapp.DialogClasses.MessageDialog;
 
@@ -44,7 +38,6 @@ public class WeddingTipsAdapter extends RecyclerView.Adapter<WeddingTipsAdapter.
 
     FirebaseDatabase firebaseDatabase;
     Query tipsImagesQuery;
-    MessageDialog messageDialog;
 
 
     public WeddingTipsAdapter(Context context, List<WeddingTips> weddingTips) {
@@ -69,15 +62,17 @@ public class WeddingTipsAdapter extends RecyclerView.Adapter<WeddingTipsAdapter.
                 tvTipDescription = holder.tvTipDescription,
                 tvDateCreated = holder.tvDateCreated,
                 tvSeeMore = holder.tvSeeMore;
+                CardView cardView = holder.cardView;
+
+
 
         firebaseDatabase = FirebaseDatabase.getInstance();
         tipsImagesQuery = firebaseDatabase.getReference("weddingTips");
         List<String> tipsImagesArrayList = new ArrayList<>();
 
-
         WeddingTips weddingTip = weddingTips.get(position);
         tvTipTitle.setText(weddingTip.getTopic());
-        tvTipDescription.setText(weddingTip.getDescription());
+        tvTipDescription.setText("\t\t\t" + weddingTip.getDescription());
         tvDateCreated.setText(weddingTip.getDateCreated());
 
         tvSeeMore.setOnClickListener(view -> {
@@ -85,6 +80,13 @@ public class WeddingTipsAdapter extends RecyclerView.Adapter<WeddingTipsAdapter.
             intent.putExtra("weddingTipsId", weddingTip.getId());
             context.startActivity(intent);
         });
+
+        cardView.setOnClickListener(view -> {
+            Intent intent = new Intent(context, WeddingTipsDetailsActivity.class);
+            intent.putExtra("weddingTipsId", weddingTip.getId());
+            context.startActivity(intent);
+        });
+
 
         tipsImagesQuery.addValueEventListener(new ValueEventListener() {
             @Override
@@ -101,7 +103,7 @@ public class WeddingTipsAdapter extends RecyclerView.Adapter<WeddingTipsAdapter.
                     }
                     StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
                     holder.childRecyclerView.setLayoutManager(staggeredGridLayoutManager);
-                    WeddingTipsChildAdapter  weddingTipsChildAdapter = new WeddingTipsChildAdapter(context, tipsImagesArrayList);
+                    WeddingTipsChildAdapter  weddingTipsChildAdapter = new WeddingTipsChildAdapter(context, weddingTips, tipsImagesArrayList, holder);
                     holder.childRecyclerView.setAdapter(weddingTipsChildAdapter);
                 }
             }
@@ -114,13 +116,18 @@ public class WeddingTipsAdapter extends RecyclerView.Adapter<WeddingTipsAdapter.
     @Override
     public int getItemCount() {
         return weddingTips.size();
+
     }
 
+    public int getItems(){
+        return weddingTips.size();
+    }
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
         TextView tvTipTitle, tvTipDescription, tvDateCreated, tvSeeMore;
         RecyclerView childRecyclerView;
-
+        CardView cardView;
+        ConstraintLayout childRV;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             tvTipTitle = itemView.findViewById(R.id.tvTipTitle);
@@ -128,6 +135,7 @@ public class WeddingTipsAdapter extends RecyclerView.Adapter<WeddingTipsAdapter.
             tvDateCreated = itemView.findViewById(R.id.tvDateCreated);
             tvSeeMore= itemView.findViewById(R.id.tvSeeMore);
             childRecyclerView = itemView.findViewById(R.id.child_recyclerView);
+            cardView = itemView.findViewById(R.id.cardView4);
         }
     }
     private WeddingTipsAdapter.AdapterListener adapterListener;

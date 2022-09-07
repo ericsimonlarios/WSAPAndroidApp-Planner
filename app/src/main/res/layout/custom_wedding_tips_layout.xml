@@ -50,7 +50,6 @@
                 android:layout_marginTop="5dp"
                 android:layout_marginBottom="5dp"
                 android:text="@string/see_more"
-                app:layout_constraintBottom_toTopOf="@+id/child_recyclerView"
                 app:layout_constraintEnd_toEndOf="@+id/tvDateCreated"
                 app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toStartOf="@+id/tvTipDescription"
@@ -58,7 +57,7 @@
 
             <TextView
                 android:id="@+id/tvTipDescription"
-                style="@style/description_small_text"
+                style="@style/description_tips"
                 android:justificationMode="inter_word"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -66,6 +65,8 @@
                 android:layout_marginTop="20dp"
                 android:layout_marginEnd="15dp"
                 android:text="@string/lorem_ipsum"
+                android:ellipsize="end"
+                android:maxLines="2"
                 app:layout_constraintEnd_toEndOf="@+id/tvDateCreated"
                 app:layout_constraintHorizontal_bias="0.514"
                 app:layout_constraintStart_toStartOf="@+id/tvTipTitle"
@@ -87,18 +88,30 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/child_recyclerView"
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
                 android:layout_marginStart="15dp"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="15dp"
                 android:layout_marginEnd="15dp"
                 android:layout_marginBottom="10dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="@+id/tvTipDescription"
                 app:layout_constraintStart_toStartOf="@+id/tvTipDescription"
-                app:layout_constraintTop_toBottomOf="@+id/tvTipDescription" />
+                app:layout_constraintTop_toBottomOf="@+id/tvSeeMore">
+
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/child_recyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf ="parent"
+                    app:layout_constraintStart_toEndOf="parent"/>
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

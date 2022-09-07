@@ -15,6 +15,7 @@ import com.bumptech.glide.Glide;
 
 import com.example.wsapandroidapp.DataModel.TipsImages;
 import com.example.wsapandroidapp.DataModel.WeddingTips;
+import com.example.wsapandroidapp.TipsImagesActivity;
 import com.example.wsapandroidapp.WeddingTipsActivity;
 import com.example.wsapandroidapp.R;
 import com.example.wsapandroidapp.WeddingTipsDetailsActivity;
@@ -29,9 +30,11 @@ public class WeddingTipsDetailsAdapter extends RecyclerView.Adapter<WeddingTipsD
 
 
     private List<String> tipsImagesArrayList;
+    private final String selectedWeddingTipsId;
     private final LayoutInflater layoutInflater;
     private final Context context;
-    public WeddingTipsDetailsAdapter(Context context, List<String> tipsImagesArrayList) {
+    public WeddingTipsDetailsAdapter(Context context,String selectedWeddingTipsId,  List<String> tipsImagesArrayList) {
+        this.selectedWeddingTipsId = selectedWeddingTipsId;
         this.tipsImagesArrayList = tipsImagesArrayList;
         this.layoutInflater = LayoutInflater.from(context);
         this.context = context;
@@ -50,6 +53,11 @@ public class WeddingTipsDetailsAdapter extends RecyclerView.Adapter<WeddingTipsD
 
         Glide.with(context).load(tipsImagesArrayList.get(position)).into(tvTipsPhoto);
 
+        tvTipsPhoto.setOnClickListener(view -> {
+            Intent intent = new Intent(context, TipsImagesActivity.class);
+            intent.putExtra("image", selectedWeddingTipsId);
+            context.startActivity(intent);
+        });
     }
 
     @Override

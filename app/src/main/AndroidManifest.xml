@@ -17,6 +17,9 @@
         android:theme="@style/Theme.WSAPAndroidApp"
         tools:targetApi="31">
         <activity
+            android:name=".TipsImagesActivity"
+            android:exported="false" />
+        <activity
             android:name=".EditNote"
             android:exported="false" />
         <activity

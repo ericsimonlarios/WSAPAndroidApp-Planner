@@ -360,6 +360,12 @@
         <item name="android:textSize">12sp</item>
     </style>
 
+    <style name="description_tips" parent="common_text">
+        <item name="android:textAlignment">textStart</item>
+        <item name="android:textSize">13sp</item>
+        <item name= "android:lineSpacingExtra">3sp</item>
+    </style>
+
     <style name="expo_post_schedule">
         <item name="android:fontFamily">@font/libre_baskerville</item>
         <item name="android:textSize">12sp</item>
