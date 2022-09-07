@@ -28,6 +28,11 @@
         <entry key="..\:/Github/WSAPAndroidApp-Planner/app/src/main/res/layout/fragment_todo_list.xml" value="0.33" />
         <entry key="..\:/Github/WSAPAndroidApp-Planner/app/src/main/res/menu/main_menu.xml" value="0.20416666666666666" />
         <entry key="..\:/Github/WSAPAndroidApp-Planner/app/src/main/res/menu/topbar_menu.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/emman/Documents/GitHub/WSAPAndroidApp-Planner/app/src/main/res/drawable/ic_baseline_add_24.xml" value="0.2115" />
+        <entry key="..\:/Users/emman/Documents/GitHub/WSAPAndroidApp-Planner/app/src/main/res/layout/activity_admin_exhibitor_categories.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/emman/Documents/GitHub/WSAPAndroidApp-Planner/app/src/main/res/layout/activity_admin_exhibitors.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/emman/Documents/GitHub/WSAPAndroidApp-Planner/app/src/main/res/layout/activity_admin_expos.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/emman/Documents/GitHub/WSAPAndroidApp-Planner/app/src/main/res/layout/activity_admin_wedding_tips.xml" value="0.22" />
         <entry key="..\:/Users/emman/Documents/GitHub/WSAPAndroidApp-Planner/app/src/main/res/layout/activity_image.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/emman/Documents/GitHub/WSAPAndroidApp-Planner/app/src/main/res/layout/activity_tips_image.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/emman/Documents/GitHub/WSAPAndroidApp-Planner/app/src/main/res/layout/activity_tips_images.xml" value="0.22" />
@@ -36,7 +41,9 @@
         <entry key="..\:/Users/emman/Documents/GitHub/WSAPAndroidApp-Planner/app/src/main/res/layout/activity_wedding_tips.xml" value="0.20102564102564102" />
         <entry key="..\:/Users/emman/Documents/GitHub/WSAPAndroidApp-Planner/app/src/main/res/layout/activity_wedding_tips_details.xml" value="0.22" />
         <entry key="..\:/Users/emman/Documents/GitHub/WSAPAndroidApp-Planner/app/src/main/res/layout/custom_activity_tips_images.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/emman/Documents/GitHub/WSAPAndroidApp-Planner/app/src/main/res/layout/custom_admin_expo_layout.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/emman/Documents/GitHub/WSAPAndroidApp-Planner/app/src/main/res/layout/custom_asymmetric_grid.xml" value="0.17" />
+        <entry key="..\:/Users/emman/Documents/GitHub/WSAPAndroidApp-Planner/app/src/main/res/layout/custom_expo_layout.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/emman/Documents/GitHub/WSAPAndroidApp-Planner/app/src/main/res/layout/custom_tips_images.xml" value="0.203125" />
         <entry key="..\:/Users/emman/Documents/GitHub/WSAPAndroidApp-Planner/app/src/main/res/layout/custom_wedding_tips_grid_photo_layout.xml" value="0.1" />
         <entry key="..\:/Users/emman/Documents/GitHub/WSAPAndroidApp-Planner/app/src/main/res/layout/custom_wedding_tips_layout.xml" value="0.22" />
