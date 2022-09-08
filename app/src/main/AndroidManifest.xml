@@ -20,6 +20,10 @@
             android:name=".AdminWeddingTipsActivity"
             android:exported="false" />
         <activity
+            android:name=".WeddingTipsFormActivity"
+            android:theme="@android:style/Theme.Holo.Light.Dialog"
+            />
+        <activity
             android:name=".TipsImagesActivity"
             android:exported="false" />
         <activity
