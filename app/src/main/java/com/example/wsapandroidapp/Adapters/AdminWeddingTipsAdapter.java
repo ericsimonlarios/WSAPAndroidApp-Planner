@@ -114,4 +114,6 @@ public class AdminWeddingTipsAdapter extends RecyclerView.Adapter<AdminWeddingTi
     public void setAdapterListener(AdminWeddingTipsAdapter.AdapterListener adapterListener) {
         this.adapterListener = adapterListener;
     }
+
+
 }

@@ -47,7 +47,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
-                    <androidx.appcompat.widget.AppCompatButton
+                    <Button
                         android:id="@+id/btnChooseImage"
                         style="@style/opposite_small_button"
                         android:layout_width="0dp"
@@ -210,8 +210,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent">
 
-                            <androidx.recyclerview.widget.RecyclerView
-                                android:id="@+id/imgIcon"
+                            <ImageView
+                                android:id="@+id/imgIcon2"
                                 android:layout_width="150dp"
                                 android:layout_height="150dp"
                                 android:adjustViewBounds="true"
@@ -220,6 +220,17 @@
                                 app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintTop_toTopOf="parent"
                                 app:srcCompat="@drawable/ic_image_primary" />
+
+<!--                            <androidx.recyclerview.widget.RecyclerView-->
+<!--                                android:id="@+id/imgIcon"-->
+<!--                                android:layout_width="150dp"-->
+<!--                                android:layout_height="150dp"-->
+<!--                                android:adjustViewBounds="true"-->
+<!--                                app:layout_constraintBottom_toBottomOf="parent"-->
+<!--                                app:layout_constraintEnd_toEndOf="parent"-->
+<!--                                app:layout_constraintStart_toStartOf="parent"-->
+<!--                                app:layout_constraintTop_toTopOf="parent"-->
+<!--                                app:srcCompat="@drawable/ic_image_primary" />-->
 
                         </androidx.constraintlayout.widget.ConstraintLayout>
 

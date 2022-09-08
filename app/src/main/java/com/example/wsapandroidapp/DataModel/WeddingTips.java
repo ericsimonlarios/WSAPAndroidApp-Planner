@@ -29,6 +29,15 @@ public class WeddingTips {
         this.dateCreated = dateCreated;
         this.author = author;
     }
+    public WeddingTips(String id, String topic, String description, String tips, String author, String dateCreated) {
+        this.id = id;
+        this.topic = topic;
+        this.description = description;
+        this.tips = tips;
+        this.dateCreated = dateCreated;
+        this.author = author;
+    }
+
 
     public String getId() {
         return id;

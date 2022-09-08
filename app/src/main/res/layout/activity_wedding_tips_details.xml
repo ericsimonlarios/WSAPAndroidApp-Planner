@@ -28,7 +28,8 @@
             <TextView
                 android:id="@+id/tvDateCreated"
                 style="@style/description_small_text"
-                android:layout_width="101dp"
+                android:textAlignment="center"
+                android:layout_width="130dp"
                 android:layout_height="25dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginEnd="24dp"
@@ -44,6 +45,7 @@
                 android:layout_width="177dp"
                 android:layout_height="25dp"
                 android:layout_marginTop="8dp"
+                android:layout_marginStart="10dp"
                 android:text="Author:"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toStartOf="@+id/tvDateCreated"

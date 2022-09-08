@@ -33,7 +33,8 @@
             <TextView
                 android:id="@+id/tvDateCreated"
                 style="@style/description_small_text"
-                android:layout_width="100dp"
+                android:textAlignment="center"
+                android:layout_width="130dp"
                 android:layout_height="20dp"
                 android:layout_marginTop="24dp"
                 android:layout_marginEnd="16dp"
