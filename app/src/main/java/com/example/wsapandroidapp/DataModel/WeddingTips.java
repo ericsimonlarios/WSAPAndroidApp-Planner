@@ -7,12 +7,12 @@ public class WeddingTips {
 
     private String id, topic, description, tips;
     private String dateCreated, author;
-    private TipsImages tipsImages;
+    private List<TipsImages> tipsImages;
 
     public WeddingTips() {
     }
 
-    public WeddingTips(String id, String topic, String description, TipsImages  tipsImages,String dateCreated) {
+    public WeddingTips(String id, String topic, String description, List<TipsImages>  tipsImages,String dateCreated) {
         this.id = id;
         this.topic = topic;
         this.description = description;
@@ -20,7 +20,7 @@ public class WeddingTips {
         this.dateCreated = dateCreated;
 
     }
-    public WeddingTips(String id, String topic, String description, String tips, TipsImages tipsImages, String author, String dateCreated) {
+    public WeddingTips(String id, String topic, String description, String tips, List<TipsImages> tipsImages, String author, String dateCreated) {
         this.id = id;
         this.topic = topic;
         this.description = description;
@@ -55,7 +55,7 @@ public class WeddingTips {
         return dateCreated;
     }
     public String getAuthor() {return  author;}
-    public TipsImages getTipsImages() {return tipsImages;}
+    public List<TipsImages> getTipsImages() {return tipsImages;}
 
     public void setId(String id) {
         this.id = id;
@@ -75,7 +75,7 @@ public class WeddingTips {
     public void setAuthor(String author) {
         this.author = author;
     }
-    public void setTipsImages(TipsImages tipsImages) {
+    public void setTipsImages(List<TipsImages> tipsImages) {
         this.tipsImages = tipsImages;
     }
 

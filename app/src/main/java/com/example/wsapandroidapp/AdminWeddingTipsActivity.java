@@ -10,9 +10,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.util.Log;
@@ -55,6 +57,7 @@ public class AdminWeddingTipsActivity extends AppCompatActivity {
     boolean isListening;
 
     List<WeddingTips> weddingTips = new ArrayList<>();
+    List<Uri> images = new ArrayList<>();
     List tipsImagesArrayList = new ArrayList<>();
     List tipsImagesList = new ArrayList<>();
     AdminWeddingTipsAdapter adminWeddingTipsAdapter;
@@ -81,6 +84,7 @@ public class AdminWeddingTipsActivity extends AppCompatActivity {
         weddingTipsQuery = firebaseDatabase.getReference("weddingTips");
 
         imgAdd.setOnClickListener(view -> {
+           images.clear();
            weddingTipsFormDialog.showDialog();
         });
 
@@ -143,29 +147,21 @@ public class AdminWeddingTipsActivity extends AppCompatActivity {
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(intent, Enums.PICK_IMAGE_REQUEST_CODE);
     }
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-        if (requestCode == Enums.GENERAL_REQUEST_CODE) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                if (ActivityCompat.checkSelfPermission(context,
-                        Manifest.permission.READ_EXTERNAL_STORAGE) ==
-                        PackageManager.PERMISSION_GRANTED
-                ) openStorage();
-            }
-        }
-    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-         if (requestCode == Enums.PICK_IMAGE_REQUEST_CODE && resultCode == RESULT_OK &&
+        if (requestCode == Enums.VOICE_RECOGNITION_REQUEST_CODE && resultCode == RESULT_OK) {
+            assert data != null;
+            etSearch.setText(data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS).get(0));
+
+//            filterExhibitors();
+        } else if (requestCode == Enums.PICK_IMAGE_REQUEST_CODE && resultCode == RESULT_OK &&
                 data != null && data.getData() != null) {
-            weddingTipsFormDialog.setImageData(data.getData());
+            images.add(data.getData());
+            weddingTipsFormDialog.getAdapter(images);
         }
     }
-
     @Override
     public void onResume() {
         isListening = true;
