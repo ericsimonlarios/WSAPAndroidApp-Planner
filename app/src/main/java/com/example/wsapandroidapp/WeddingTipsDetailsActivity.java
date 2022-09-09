@@ -122,14 +122,20 @@ public class WeddingTipsDetailsActivity extends AppCompatActivity {
         tvTipTitle.setText(weddingTip.getTopic());
         tvTipDescription.setText("\t\t\t" + weddingTip.getDescription());
         tvDateCreated.setText(weddingTip.getDateCreated());
-        tvTips.setText(weddingTip.getTips());
+
         if(weddingTip.getAuthor().equals("")){
             tvAuthor.setText("");
         }
         else {
             tvAuthor.setText("Author:\t" + weddingTip.getAuthor());
         }
-
+        if(weddingTip.getTips().contains("_b")){
+            String newTips = weddingTip.getTips().replace("_b","\n\n\n");
+            tvTips.setText(newTips);
+        }
+        else{
+            tvTips.setText(weddingTip.getTips());
+        }
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
         recyclerView.setLayoutManager(linearLayoutManager);

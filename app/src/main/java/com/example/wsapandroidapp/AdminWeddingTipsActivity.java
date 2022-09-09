@@ -149,14 +149,12 @@ public class AdminWeddingTipsActivity extends AppCompatActivity {
                         // weddingTipsFormDialog.setUpdateMode(true);
                         weddingTipsFormDialog.setWeddingTips(weddingTips);
                         weddingTipsFormDialog.showDialog();
-                        Toast.makeText(context, weddingTips.getId(), Toast.LENGTH_SHORT).show();
                     }
                     @Override
                     public void onDelete(WeddingTips weddingTips) {
                         selectedWeddingTips = weddingTips;
                         confirmationDialog.setMessage(getString(R.string.confirmation_prompt, "delete the topic"));
                         confirmationDialog.showDialog();
-                        Toast.makeText(context, weddingTips.getId(), Toast.LENGTH_SHORT).show();
                     }
                 });
             }

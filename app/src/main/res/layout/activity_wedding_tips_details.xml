@@ -45,12 +45,11 @@
                 android:layout_width="177dp"
                 android:layout_height="25dp"
                 android:layout_marginTop="8dp"
-                android:layout_marginStart="10dp"
                 android:text="Author:"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toStartOf="@+id/tvDateCreated"
                 app:layout_constraintHorizontal_bias="0.22"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/tvTipTitle"
                 app:layout_constraintTop_toBottomOf="@+id/tvTipTitle" />
 
             <TextView
