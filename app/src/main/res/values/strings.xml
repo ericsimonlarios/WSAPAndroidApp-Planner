@@ -10,7 +10,7 @@
     <string name="new_version_prompt">Please update the application to access the new features.</string>
     <string name="current_version_italicized"><i>Current Version v%.2f</i></string>
     <string name="latest_version_italicized"><i>Latest Version v%.2f</i></string>
-
+    <string name="finished_task">Finished Task</string>
     <string name="live">Live</string>
     <string name="app_status_title">Under %s</string>
     <string name="app_status_prompt">We are sorry.\nPlease come back again later.</string>
@@ -347,6 +347,14 @@
         <item>resendLinkCountdown</item>
         <item>isAnonymous</item>
     </string-array>
+
+    <string-array name="todoSortArray">
+        <item>Asc Date</item>
+        <item>Desc Date</item>
+        <item>A-Z</item>
+        <item>Z-A</item>
+    </string-array>
+
     <string name="title_activity_note_details">NoteDetails</string>
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
@@ -356,4 +364,5 @@
 
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+
 </resources>
