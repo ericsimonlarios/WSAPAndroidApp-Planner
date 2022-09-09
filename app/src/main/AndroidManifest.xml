@@ -17,10 +17,20 @@
         android:theme="@style/Theme.WSAPAndroidApp"
         tools:targetApi="31">
         <activity
-            android:name=".AddNotesActivity"
+            android:name=".AdminWeddingTipsActivity"
             android:exported="false" />
         <activity
-            android:name=".AddNotesFragment"
+
+            android:name=".TipsImagesActivity"
+            android:exported="false" />
+        <activity
+            android:name=".EditNote"
+            android:exported="false" />
+        <activity
+            android:name=".Addnote"
+            android:exported="false" />
+        <activity
+            android:name=".NoteDetails"
             android:exported="false" />
         <activity
             android:name=".Planner_notes"
@@ -166,10 +176,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".TodoListItemActivity"
+        <activity
+            android:name=".TodoListItemActivity"
             android:exported="false"
             android:parentActivityName=".TodoChecklistActivity"
-            android:windowSoftInputMode="adjustPan"/>
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".MainActivity"
             android:exported="true"
