@@ -169,8 +169,10 @@ public class Planner_notes extends AppCompatActivity {
         backtoplanner.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                onBackPressed();
                 noteAdapter.notifyDataSetChanged();
+                finish();
+
             }
         });
 
