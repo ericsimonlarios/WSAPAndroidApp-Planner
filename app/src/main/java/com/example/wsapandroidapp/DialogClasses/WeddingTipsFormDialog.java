@@ -29,6 +29,7 @@ import com.example.wsapandroidapp.Classes.Credentials;
 import com.example.wsapandroidapp.Classes.DateTime;
 import com.example.wsapandroidapp.Classes.Enums;
 import com.example.wsapandroidapp.Adapters.ImgArrayAdapter;
+import com.example.wsapandroidapp.DataModel.Exhibitor;
 import com.example.wsapandroidapp.DataModel.TipsImages;
 import com.example.wsapandroidapp.DataModel.WeddingTips;
 import com.example.wsapandroidapp.R;
@@ -226,7 +227,7 @@ public class WeddingTipsFormDialog {
             etTopic.getText().clear();
             etAuthor.getText().clear();
             etDescription.getText().clear();
-            etTopic.getText().clear();
+            etTips.getText().clear();
         }
 
         private void submitFailed(String errorMsg) {
@@ -265,6 +266,13 @@ public class WeddingTipsFormDialog {
 //                error(R.drawable.ic_wsap).into(imgIcon2);
 //
 //    }
+        public void deleteWeddingTips(WeddingTips weddingTips) {
+            firebaseDatabase = FirebaseDatabase.getInstance();
+            databaseReference = firebaseDatabase.getReference();
+            databaseReference.child("weddingTips").child(weddingTips.getId()).removeValue();
+            Toast.makeText(context, "Deleted Successfully", Toast.LENGTH_SHORT).show();
+        }
+
         private void submit() {
             imgUriArray = new ArrayList<>();
             tipsImages = new ArrayList<>();
@@ -277,8 +285,7 @@ public class WeddingTipsFormDialog {
 
             DateTime date = new DateTime();
             WeddingTips weddingTips = new WeddingTips(weddingTipsKey, topicLabel,
-                    author ,description, tips, date.getDateText());
-
+                    description ,tips, author, date.getDateText());
 //                    .addOnCompleteListener(task -> {
 //                        if (task.isSuccessful()) {
 //                            String msg = context.getString(R.string.add_record_success_msg, "a topic");
@@ -313,7 +320,8 @@ public class WeddingTipsFormDialog {
                     }
                 });
             }
-
+            Toast.makeText(context, "Added Successfully", Toast.LENGTH_SHORT).show();
+            dismissDialog();
         }
 
         public String getFileExtension(Uri uri){

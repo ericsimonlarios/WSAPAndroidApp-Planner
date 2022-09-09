@@ -37,7 +37,11 @@ public class AdminWeddingTipsAdapter extends RecyclerView.Adapter<AdminWeddingTi
         this.layoutInflater = LayoutInflater.from(context);
         this.context = context;
     }
-
+    public AdminWeddingTipsAdapter(Context context, List<WeddingTips> weddingTips) {
+        this.weddingTips = weddingTips;
+        this.layoutInflater = LayoutInflater.from(context);
+        this.context = context;
+    }
     @NonNull
     @Override
     public AdminWeddingTipsAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -103,15 +107,14 @@ public class AdminWeddingTipsAdapter extends RecyclerView.Adapter<AdminWeddingTi
             
         }
     }
-    private AdminWeddingTipsAdapter.AdapterListener adapterListener;
+    private AdapterListener adapterListener;
 
     public interface AdapterListener {
-        void onClick(WeddingTips weddingTips);
         void onEdit(WeddingTips weddingTips);
         void onDelete(WeddingTips weddingTips);
     }
 
-    public void setAdapterListener(AdminWeddingTipsAdapter.AdapterListener adapterListener) {
+    public void setAdapterListener(AdapterListener adapterListener) {
         this.adapterListener = adapterListener;
     }
 

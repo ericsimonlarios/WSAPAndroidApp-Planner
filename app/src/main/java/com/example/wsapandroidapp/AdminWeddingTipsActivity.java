@@ -22,13 +22,13 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.wsapandroidapp.Adapters.AdminWeddingTipsAdapter;
-import com.example.wsapandroidapp.Adapters.WeddingTipsAdapter;
 import com.example.wsapandroidapp.Classes.Enums;
 import com.example.wsapandroidapp.DataModel.TipsImages;
 import com.example.wsapandroidapp.DataModel.WeddingTips;
-import com.example.wsapandroidapp.DialogClasses.ExhibitorFormDialog;
+import com.example.wsapandroidapp.DialogClasses.ConfirmationDialog;
 import com.example.wsapandroidapp.DialogClasses.MessageDialog;
 import com.example.wsapandroidapp.DialogClasses.WeddingTipsFormDialog;
 import com.google.firebase.database.DataSnapshot;
@@ -49,6 +49,7 @@ public class AdminWeddingTipsActivity extends AppCompatActivity {
 
     Context context;
     MessageDialog messageDialog;
+    ConfirmationDialog confirmationDialog;
     WeddingTipsFormDialog weddingTipsFormDialog;
 
     FirebaseDatabase firebaseDatabase;
@@ -60,7 +61,10 @@ public class AdminWeddingTipsActivity extends AppCompatActivity {
     List<Uri> images = new ArrayList<>();
     List tipsImagesArrayList = new ArrayList<>();
     List tipsImagesList = new ArrayList<>();
-    AdminWeddingTipsAdapter adminWeddingTipsAdapter;
+
+
+   WeddingTips selectedWeddingTips = new WeddingTips();
+   AdminWeddingTipsAdapter adminWeddingTipsAdapter;
 
     TipsImages tipsImages;
 
@@ -78,6 +82,14 @@ public class AdminWeddingTipsActivity extends AppCompatActivity {
 
         context = AdminWeddingTipsActivity.this;
         messageDialog = new MessageDialog(context);
+
+        confirmationDialog = new ConfirmationDialog(context);
+
+        confirmationDialog.setDialogListener(() -> {
+            weddingTipsFormDialog.deleteWeddingTips(selectedWeddingTips);
+            confirmationDialog.dismissDialog();
+        });
+
         weddingTipsFormDialog = new WeddingTipsFormDialog(context);
 
         firebaseDatabase = FirebaseDatabase.getInstance(getString(R.string.firebase_RTDB_url));
@@ -99,6 +111,7 @@ public class AdminWeddingTipsActivity extends AppCompatActivity {
                         Enums.GENERAL_REQUEST_CODE);
             }
         });
+
 
         isListening = true;
         weddingTipsQuery.addValueEventListener(getWeddingTips());
@@ -129,6 +142,23 @@ public class AdminWeddingTipsActivity extends AppCompatActivity {
                 adminWeddingTipsAdapter = new AdminWeddingTipsAdapter(context, weddingTips, tipsImagesList);
                 recyclerView.setLayoutManager(linearLayoutManager);
                 recyclerView.setAdapter(adminWeddingTipsAdapter);
+
+                adminWeddingTipsAdapter.setAdapterListener(new AdminWeddingTipsAdapter.AdapterListener() {
+                    @Override
+                    public void onEdit(WeddingTips weddingTips) {
+                        // weddingTipsFormDialog.setUpdateMode(true);
+                        weddingTipsFormDialog.setWeddingTips(weddingTips);
+                        weddingTipsFormDialog.showDialog();
+                        Toast.makeText(context, weddingTips.getId(), Toast.LENGTH_SHORT).show();
+                    }
+                    @Override
+                    public void onDelete(WeddingTips weddingTips) {
+                        selectedWeddingTips = weddingTips;
+                        confirmationDialog.setMessage(getString(R.string.confirmation_prompt, "delete the topic"));
+                        confirmationDialog.showDialog();
+                        Toast.makeText(context, weddingTips.getId(), Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
