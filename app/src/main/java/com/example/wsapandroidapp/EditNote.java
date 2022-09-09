@@ -78,7 +78,8 @@ public class EditNote extends AppCompatActivity {
                     @Override
                     public void onSuccess(Void unused) {
                         Toast.makeText(EditNote.this,"Note Saved", Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(getApplicationContext(), Planner_notes.class));
+                        onBackPressed();
+
 
                     }
                 }).addOnFailureListener(new OnFailureListener() {
