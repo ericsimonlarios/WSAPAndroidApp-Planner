@@ -1,29 +1,43 @@
 package com.example.wsapandroidapp.DataModel;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class WeddingTips {
 
     private String id, topic, description, tips;
-    private String dateCreated;
-    private TipsImages tipsImages;
+    private String dateCreated, author;
+    private List<TipsImages> tipsImages;
 
     public WeddingTips() {
     }
 
-    public WeddingTips(String id, String topic, String description, TipsImages  tipsImages, String dateCreated) {
+    public WeddingTips(String id, String topic, String description, List<TipsImages>  tipsImages,String dateCreated) {
         this.id = id;
         this.topic = topic;
         this.description = description;
         this.tipsImages = tipsImages;
         this.dateCreated = dateCreated;
+
     }
-    public WeddingTips(String id, String topic, String description, String tips, TipsImages tipsImages, String dateCreated) {
+    public WeddingTips(String id, String topic, String description, String tips, List<TipsImages> tipsImages, String author, String dateCreated) {
         this.id = id;
         this.topic = topic;
         this.description = description;
         this.tips = tips;
         this.tipsImages = tipsImages;
         this.dateCreated = dateCreated;
+        this.author = author;
     }
+    public WeddingTips(String id, String topic, String description, String tips, String author, String dateCreated) {
+        this.id = id;
+        this.topic = topic;
+        this.description = description;
+        this.tips = tips;
+        this.dateCreated = dateCreated;
+        this.author = author;
+    }
+
 
     public String getId() {
         return id;
@@ -40,7 +54,8 @@ public class WeddingTips {
     public String getDateCreated() {
         return dateCreated;
     }
-    public TipsImages getTipsImages() {return tipsImages;}
+    public String getAuthor() {return  author;}
+    public List<TipsImages> getTipsImages() {return tipsImages;}
 
     public void setId(String id) {
         this.id = id;
@@ -57,7 +72,10 @@ public class WeddingTips {
     public void setDateCreated(String dateCreated) {
         this.dateCreated = dateCreated;
     }
-    public void setTipsImages(TipsImages tipsImages) {
+    public void setAuthor(String author) {
+        this.author = author;
+    }
+    public void setTipsImages(List<TipsImages> tipsImages) {
         this.tipsImages = tipsImages;
     }
 
