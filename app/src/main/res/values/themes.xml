@@ -36,4 +36,6 @@
     <style name="Theme.WSAPAndroidApp.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="Theme.WSAPAndroidApp.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="Theme.AppCompat" parent="Theme.AppCompat.Dialog" />
 </resources>

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.example.wsapandroidapp.Adapters.DashboardItemAdapter;
 import com.example.wsapandroidapp.Classes.Enums;
@@ -84,7 +85,8 @@ public class DashboardActivity extends AppCompatActivity {
                 new DashboardItem(getString(R.string.expos), R.drawable.expos, new Intent(context, AdminExpoDivisionsActivity.class)),
                 new DashboardItem(getString(R.string.suppliers), R.drawable.suppliers, new Intent(context, AdminSupplierCategoriesActivity.class)),
                 new DashboardItem(getString(R.string.exhibitors), R.drawable.exhibitors, new Intent(context, AdminExhibitorCategoriesActivity.class)),
-                new DashboardItem(getString(R.string.users), R.drawable.users, new Intent(context, AdminUsersActivity.class))
+                new DashboardItem(getString(R.string.users), R.drawable.users, new Intent(context, AdminUsersActivity.class)),
+                new DashboardItem(getString(R.string.wedding_tips), R.drawable.topics, new Intent(context, AdminWeddingTipsActivity.class))
         );
 
         GridLayoutManager gridLayoutManager = new GridLayoutManager(context, 2, GridLayoutManager.VERTICAL, false);
@@ -106,7 +108,8 @@ public class DashboardActivity extends AppCompatActivity {
                         recordCounts.add((int) snapshot.child("suppliers").getChildrenCount());
                         recordCounts.add((int) snapshot.child("exhibitors").getChildrenCount());
                         recordCounts.add((int) snapshot.child("users").getChildrenCount());
-                        recordCounts.add((int) snapshot.child("topics").getChildrenCount());
+                        recordCounts.add((int) snapshot.child("weddingTips").getChildrenCount());
+                        //recordCounts.add((int) snapshot.child("topics").getChildrenCount());
                     }
 
                     loadingDialog.dismissDialog();

@@ -360,6 +360,12 @@
         <item name="android:textSize">12sp</item>
     </style>
 
+    <style name="description_tips" parent="common_text">
+        <item name="android:textAlignment">textStart</item>
+        <item name="android:textSize">13sp</item>
+        <item name= "android:lineSpacingExtra">3sp</item>
+    </style>
+
     <style name="expo_post_schedule">
         <item name="android:fontFamily">@font/libre_baskerville</item>
         <item name="android:textSize">12sp</item>
@@ -376,6 +382,12 @@
 
     <style name="more_info_blue" parent="more_info">
         <item name="android:textColor">@color/blue_l1</item>
+    </style>
+
+    <style name="AppDialogTheme" parent="Theme.AppCompat.Light.Dialog">
+        <!-- Customize your theme here. -->
+        <item name="windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
     </style>
 
 </resources>

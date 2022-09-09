@@ -3,6 +3,7 @@ package com.example.wsapandroidapp;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.widget.TextView;
 import android.widget.ImageView;
@@ -20,6 +21,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import androidx.recyclerview.widget.SnapHelper;
+import androidx.recyclerview.widget.LinearSnapHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,14 +32,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 
 public class WeddingTipsDetailsActivity extends AppCompatActivity {
 
 
-    TextView tvTipTitle, tvDateCreated, tvTips, tvTipDescription;
+    TextView tvTipTitle, tvDateCreated, tvTips, tvTipDescription, tvAuthor;
     RecyclerView recyclerView;
     Context context;
     List tipsImagesArrayList = new ArrayList<>();
@@ -65,6 +65,7 @@ public class WeddingTipsDetailsActivity extends AppCompatActivity {
         tvDateCreated = findViewById(R.id.tvDateCreated);
         tvTipDescription = findViewById(R.id.tvTipDescription);
         tvTips = findViewById(R.id.tvTips);
+        tvAuthor = findViewById(R.id.tvAuthor);
         recyclerView = findViewById(R.id.recyclerView2);
 
         selectedWeddingTipsId = getIntent().getStringExtra("weddingTipsId");
@@ -74,6 +75,8 @@ public class WeddingTipsDetailsActivity extends AppCompatActivity {
         context = WeddingTipsDetailsActivity.this;
         messageDialog = new MessageDialog(context);
 
+        SnapHelper snapHelper = new LinearSnapHelper();
+        snapHelper.attachToRecyclerView(recyclerView);
     }
 
     private void initDatabaseQuery() {
@@ -93,7 +96,6 @@ public class WeddingTipsDetailsActivity extends AppCompatActivity {
                     if (snapshot.exists())
                         for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                             weddingTip = dataSnapshot.getValue(WeddingTips.class);
-                            
                             tipsImagesArrayList = new ArrayList();
                             for (DataSnapshot imgSnapshot : dataSnapshot.child("image").getChildren()) {
                                 tipsImagesArrayList.add(imgSnapshot.getValue().toString());
@@ -118,18 +120,45 @@ public class WeddingTipsDetailsActivity extends AppCompatActivity {
     private void updateUI() {
 
         tvTipTitle.setText(weddingTip.getTopic());
-        tvTipDescription.setText(weddingTip.getDescription());
+        tvTipDescription.setText("\t\t\t" + weddingTip.getDescription());
         tvDateCreated.setText(weddingTip.getDateCreated());
+
+        if(weddingTip.getAuthor().equals("")){
+            tvAuthor.setText("");
+        }
+        else {
+            tvAuthor.setText("Author:\t" + weddingTip.getAuthor());
+        }
         if(weddingTip.getTips().contains("_b")){
             String newTips = weddingTip.getTips().replace("_b","\n\n\n");
             tvTips.setText(newTips);
         }
+        else{
+            tvTips.setText(weddingTip.getTips());
+        }
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
         recyclerView.setLayoutManager(linearLayoutManager);
-        WeddingTipsDetailsAdapter  weddingTipsDetailsAdapter = new WeddingTipsDetailsAdapter(context, tipsImagesArrayList);
+        WeddingTipsDetailsAdapter  weddingTipsDetailsAdapter = new WeddingTipsDetailsAdapter(context,selectedWeddingTipsId, tipsImagesArrayList );
         recyclerView.setAdapter(weddingTipsDetailsAdapter);
-        weddingTipsDetailsAdapter.notifyDataSetChanged();
+
+        final int time_interval = 3000;
+        Handler handler = new Handler();
+        Runnable runnable = new Runnable() {
+            int count = 0;
+            @Override
+            public void run() {
+                if(count < tipsImagesArrayList.size())
+                {
+                    recyclerView.scrollToPosition(count++);
+                    handler.postDelayed(this,time_interval);
+                    if (count==tipsImagesArrayList.size()){
+                        count = 0;
+                    }
+                }
+            }
+        };
+        handler.postDelayed(runnable, time_interval);
 
     }
     @Override

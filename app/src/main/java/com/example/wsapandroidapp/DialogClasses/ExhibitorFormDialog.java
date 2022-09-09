@@ -227,7 +227,6 @@ public class ExhibitorFormDialog {
 
         String id = Credentials.getUniqueId();
         if (isUpdateMode) id = exhibitor.getId();
-
         if (isImageChanged) {
             String finalId = id;
 
