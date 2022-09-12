@@ -180,7 +180,7 @@
             android:name=".TodoListItemActivity"
             android:exported="false"
             android:parentActivityName=".TodoChecklistActivity"
-            android:windowSoftInputMode="adjustPan" />
+            />
         <activity
             android:name=".MainActivity"
             android:exported="true"

@@ -304,7 +304,6 @@ public class WeddingTipsFormDialog {
                             public void onSuccess(Uri uri1) {
                                 String imageKey = databaseReference.child("weddingTips").push().getKey();
                                 map.put(imageKey, uri1.toString());
-                                Toast.makeText(context, map.keySet().toString(), Toast.LENGTH_SHORT).show();
                                 databaseReference.child("weddingTips").child(weddingTipsKey).setValue(weddingTips);
                                 databaseReference.child("weddingTips").child(weddingTipsKey).child("image").updateChildren(map);
                             }
