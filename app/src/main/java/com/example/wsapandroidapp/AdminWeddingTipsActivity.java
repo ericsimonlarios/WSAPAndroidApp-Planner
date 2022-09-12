@@ -59,6 +59,7 @@ public class AdminWeddingTipsActivity extends AppCompatActivity {
 
     List<WeddingTips> weddingTips = new ArrayList<>();
     List<Uri> images = new ArrayList<>();
+    List<String> tipsImgList = new ArrayList<>();
     List tipsImagesArrayList = new ArrayList<>();
     List tipsImagesList = new ArrayList<>();
 
@@ -85,10 +86,10 @@ public class AdminWeddingTipsActivity extends AppCompatActivity {
 
         confirmationDialog = new ConfirmationDialog(context);
 
-        confirmationDialog.setDialogListener(() -> {
-            weddingTipsFormDialog.deleteWeddingTips(selectedWeddingTips);
-            confirmationDialog.dismissDialog();
-        });
+//        confirmationDialog.setDialogListener(() -> {
+//            weddingTipsFormDialog.deleteWeddingTips(selectedWeddingTips);
+//            confirmationDialog.dismissDialog();
+//        });
 
         weddingTipsFormDialog = new WeddingTipsFormDialog(context);
 
@@ -98,20 +99,9 @@ public class AdminWeddingTipsActivity extends AppCompatActivity {
         imgAdd.setOnClickListener(view -> {
             Intent intent = new Intent(this, WeddingTipsFormActivity.class);
             startActivity(intent);
+            finish();
          //  images.clear();
          //  weddingTipsFormDialog.showDialog();
-        });
-
-        weddingTipsFormDialog.setDialogListener(() -> {
-            if (ActivityCompat.checkSelfPermission(context,
-                    Manifest.permission.READ_EXTERNAL_STORAGE) ==
-                    PackageManager.PERMISSION_GRANTED
-            ) openStorage();
-            else {
-                ActivityCompat.requestPermissions((Activity) context,
-                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                        Enums.GENERAL_REQUEST_CODE);
-            }
         });
 
 
@@ -153,8 +143,9 @@ public class AdminWeddingTipsActivity extends AppCompatActivity {
                         weddingTipsFormDialog.showDialog();
                     }
                     @Override
-                    public void onDelete(WeddingTips weddingTips) {
+                    public void onDelete(WeddingTips weddingTips, List<String> tipsArrayList) {
                         selectedWeddingTips = weddingTips;
+                        tipsImgList = tipsArrayList;
                         confirmationDialog.setMessage(getString(R.string.confirmation_prompt, "delete the topic"));
                         confirmationDialog.showDialog();
                     }
@@ -171,12 +162,7 @@ public class AdminWeddingTipsActivity extends AppCompatActivity {
         };
     }
     @SuppressWarnings("deprecation")
-    private void openStorage() {
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(intent, Enums.PICK_IMAGE_REQUEST_CODE);
-    }
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
