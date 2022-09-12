@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import com.example.wsapandroidapp.DataModel.WeddingTips;
 import com.example.wsapandroidapp.R;
@@ -101,8 +102,20 @@ public class WeddingTipsAdapter extends RecyclerView.Adapter<WeddingTipsAdapter.
                                tipsImagesArrayList.add(imgSnapshot.getValue().toString());
                             }
                     }
-                    StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
-                    holder.childRecyclerView.setLayoutManager(staggeredGridLayoutManager);
+                    if(tipsImagesArrayList.size() == 1){
+                        StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL);
+                        holder.childRecyclerView.setLayoutManager(staggeredGridLayoutManager);
+                    }
+                    else if((tipsImagesArrayList.size() == 2)) {
+                        StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL);
+                        staggeredGridLayoutManager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_NONE);
+                        holder.childRecyclerView.setLayoutManager(staggeredGridLayoutManager);
+                    }
+                    else {
+                        StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL);
+                        staggeredGridLayoutManager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_NONE);
+                        holder.childRecyclerView.setLayoutManager(staggeredGridLayoutManager);
+                    }
                     WeddingTipsChildAdapter  weddingTipsChildAdapter = new WeddingTipsChildAdapter(context, weddingTips, tipsImagesArrayList, holder);
                     holder.childRecyclerView.setAdapter(weddingTipsChildAdapter);
                 }
@@ -119,9 +132,6 @@ public class WeddingTipsAdapter extends RecyclerView.Adapter<WeddingTipsAdapter.
 
     }
 
-    public int getItems(){
-        return weddingTips.size();
-    }
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
         TextView tvTipTitle, tvTipDescription, tvDateCreated, tvSeeMore;

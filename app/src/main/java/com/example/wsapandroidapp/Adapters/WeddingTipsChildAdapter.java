@@ -38,33 +38,58 @@ public class WeddingTipsChildAdapter extends RecyclerView.Adapter<WeddingTipsChi
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = layoutInflater.inflate(R.layout.custom_wedding_tips_grid_photo_layout, parent, false);
-        return new ViewHolder(view);
+        if(tipsImagesArrayList.size() == 1) {
+            View view = layoutInflater.inflate(R.layout.custom_wedding_tips_grid_photo_layout, parent, false);
+            return new ViewHolder(view);
+        }
+        else if(tipsImagesArrayList.size() == 2){
+            View view = layoutInflater.inflate(R.layout.custom_wedding_tips_grid_photo_layout1, parent, false);
+            return new ViewHolder(view);
+        }
+        else{
+            View view = layoutInflater.inflate(R.layout.custom_wedding_tips_grid_photo_layout2, parent, false);
+            return new ViewHolder(view);
+        }
     }
     @Override
     public void onBindViewHolder(@NonNull WeddingTipsChildAdapter.ViewHolder holder, int position) {
         ImageView tvTipsPhoto = holder.tvTipsPhoto;
+        ImageView tvTipsPhoto1 = holder.tvTipsPhoto1;
+        ImageView tvTipsPhoto2 = holder.tvTipsPhoto2;
         TextView tvItemOverLay = holder.tvItemOverlay;
-        Glide.with(context).load(tipsImagesArrayList.get(position)).into(tvTipsPhoto);
-        switch(position){
-            case 1:
-                if(tipsImagesArrayList.size() > 2) {
-                    int Items = tipsImagesArrayList.size() - 2;
-                    String moreItems = "+" + Items;
-                    tvItemOverLay.setText(moreItems);
-                    tvItemOverLay.setOnClickListener(view -> {
-                            Intent intent = new Intent(context, TipsImagesActivity.class);
-                            intent.putExtra("image", weddingTips.get(parentAdapter.getBindingAdapterPosition()).getId());
-                            context.startActivity(intent);
-                        });
-                }
-                else
-                {
-                    tvItemOverLay.setText("");
-                    tvItemOverLay.setOnClickListener(null);
-                }
-                break;
+        View disableOverlay = holder.disableOverlay;
+        if(tipsImagesArrayList.size() == 1){
+            Glide.with(context).load(tipsImagesArrayList.get(position)).into(tvTipsPhoto);
         }
+        else if(tipsImagesArrayList.size() == 2){
+            Glide.with(context).load(tipsImagesArrayList.get(0)).into(tvTipsPhoto);
+            Glide.with(context).load(tipsImagesArrayList.get(1)).into(tvTipsPhoto1);
+        }
+        else{
+            Glide.with(context).load(tipsImagesArrayList.get(0)).into(tvTipsPhoto);
+            Glide.with(context).load(tipsImagesArrayList.get(1)).into(tvTipsPhoto1);
+            Glide.with(context).load(tipsImagesArrayList.get(2)).into(tvTipsPhoto2);
+            if(tipsImagesArrayList.size() > 3) {
+                int Items = tipsImagesArrayList.size() - 3;
+                String moreItems = "+" + Items;
+                tvItemOverLay.setText(moreItems);
+                tvItemOverLay.setOnClickListener(view -> {
+                    Intent intent = new Intent(context, TipsImagesActivity.class);
+                    intent.putExtra("image", weddingTips.get(parentAdapter.getBindingAdapterPosition()).getId());
+                    context.startActivity(intent);
+                });
+                disableOverlay.setVisibility(View.VISIBLE);
+            }
+            else
+            {
+                tvItemOverLay.setText("");
+                tvItemOverLay.setOnClickListener(null);
+            }
+        }
+
+
+
+
     }
     @Override
      public int getItemCount() {
@@ -73,13 +98,17 @@ public class WeddingTipsChildAdapter extends RecyclerView.Adapter<WeddingTipsChi
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
-        ImageView tvTipsPhoto;
+        ImageView tvTipsPhoto,tvTipsPhoto1, tvTipsPhoto2;
         TextView tvItemOverlay;
+        View disableOverlay;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             tvTipsPhoto = itemView.findViewById(R.id.tvTipsPhoto);
+            tvTipsPhoto1 = itemView.findViewById(R.id.tvTipsPhoto1);
+            tvTipsPhoto2 = itemView.findViewById(R.id.tvTipsPhoto2);
             tvItemOverlay = itemView.findViewById(R.id.tvItemOverlay);
+            disableOverlay = itemView.findViewById(R.id.disableOverlay);
         }
     }
     private WeddingTipsAdapter.AdapterListener adapterListener;
