@@ -20,6 +20,9 @@
             android:name=".AdminWeddingTipsActivity"
             android:exported="false" />
         <activity
+            android:name=".WeddingTipsFormActivity"
+            android:exported="false" />
+        <activity
 
             android:name=".TipsImagesActivity"
             android:exported="false" />

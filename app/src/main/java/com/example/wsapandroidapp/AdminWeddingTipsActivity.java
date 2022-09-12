@@ -96,8 +96,10 @@ public class AdminWeddingTipsActivity extends AppCompatActivity {
         weddingTipsQuery = firebaseDatabase.getReference("weddingTips");
 
         imgAdd.setOnClickListener(view -> {
-           images.clear();
-           weddingTipsFormDialog.showDialog();
+            Intent intent = new Intent(this, WeddingTipsFormActivity.class);
+            startActivity(intent);
+         //  images.clear();
+         //  weddingTipsFormDialog.showDialog();
         });
 
         weddingTipsFormDialog.setDialogListener(() -> {
