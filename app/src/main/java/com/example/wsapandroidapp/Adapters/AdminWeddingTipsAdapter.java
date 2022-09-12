@@ -65,9 +65,10 @@ public class AdminWeddingTipsAdapter extends RecyclerView.Adapter<AdminWeddingTi
         WeddingTips weddingTip = weddingTips.get(position);
         tvTipTitle.setText(weddingTip.getTopic());
         tvDescription.setText(weddingTip.getDescription());
-       Glide.with(context).load(tipsImagesList.get(position).get(0).toString()).centerCrop().placeholder(R.drawable.ic_wsap).
-                error(R.drawable.ic_wsap).into(imgPoster);
-
+        if(tipsImagesList.get(position).get(0).toString() != null){
+            Glide.with(context).load(tipsImagesList.get(position).get(0).toString()).centerCrop().placeholder(R.drawable.ic_wsap).
+                    error(R.drawable.ic_wsap).into(imgPoster);
+        }
         imgPoster.setOnClickListener(view -> {
             Intent intent = new Intent(context, ImageActivity.class);
             intent.putExtra("image", tipsImagesList.get(position).get(0).toString());

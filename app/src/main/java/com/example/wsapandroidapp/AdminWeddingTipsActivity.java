@@ -98,20 +98,9 @@ public class AdminWeddingTipsActivity extends AppCompatActivity {
         imgAdd.setOnClickListener(view -> {
             Intent intent = new Intent(this, WeddingTipsFormActivity.class);
             startActivity(intent);
+            finish();
          //  images.clear();
          //  weddingTipsFormDialog.showDialog();
-        });
-
-        weddingTipsFormDialog.setDialogListener(() -> {
-            if (ActivityCompat.checkSelfPermission(context,
-                    Manifest.permission.READ_EXTERNAL_STORAGE) ==
-                    PackageManager.PERMISSION_GRANTED
-            ) openStorage();
-            else {
-                ActivityCompat.requestPermissions((Activity) context,
-                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                        Enums.GENERAL_REQUEST_CODE);
-            }
         });
 
 
@@ -171,12 +160,7 @@ public class AdminWeddingTipsActivity extends AppCompatActivity {
         };
     }
     @SuppressWarnings("deprecation")
-    private void openStorage() {
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(intent, Enums.PICK_IMAGE_REQUEST_CODE);
-    }
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {

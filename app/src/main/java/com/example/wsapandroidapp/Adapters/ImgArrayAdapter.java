@@ -27,12 +27,12 @@ public class ImgArrayAdapter extends RecyclerView.Adapter<ImgArrayAdapter.ViewHo
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder{
-        ImageView tvTipsPhoto;
-        TextView tvItemOverlay;
+        ImageView tvTipsPhoto, removeImage;
+
         public ViewHolder(View view){
             super(view);
             tvTipsPhoto = view.findViewById(R.id.tvTipsPhoto);
-            tvItemOverlay = view.findViewById(R.id.tvItemOverlay);
+            removeImage = view.findViewById(R.id.removeImage);
         }
     }
 
@@ -46,6 +46,12 @@ public class ImgArrayAdapter extends RecyclerView.Adapter<ImgArrayAdapter.ViewHo
     @Override
     public void onBindViewHolder(@NonNull ImgArrayAdapter.ViewHolder holder, int position) {
         Glide.with(context).load(imgArray.get(position)).into(holder.tvTipsPhoto);
+
+        holder.removeImage.setOnClickListener(view ->{
+            int getPos = holder.getAdapterPosition();
+            imgArray.remove(getPos);
+            notifyItemRemoved(getPos);
+        });
     }
 
     @Override
