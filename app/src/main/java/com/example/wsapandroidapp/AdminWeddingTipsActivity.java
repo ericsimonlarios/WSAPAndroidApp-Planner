@@ -59,6 +59,7 @@ public class AdminWeddingTipsActivity extends AppCompatActivity {
 
     List<WeddingTips> weddingTips = new ArrayList<>();
     List<Uri> images = new ArrayList<>();
+    List<String> tipsImgList = new ArrayList<>();
     List tipsImagesArrayList = new ArrayList<>();
     List tipsImagesList = new ArrayList<>();
 
@@ -85,10 +86,10 @@ public class AdminWeddingTipsActivity extends AppCompatActivity {
 
         confirmationDialog = new ConfirmationDialog(context);
 
-        confirmationDialog.setDialogListener(() -> {
-            weddingTipsFormDialog.deleteWeddingTips(selectedWeddingTips);
-            confirmationDialog.dismissDialog();
-        });
+//        confirmationDialog.setDialogListener(() -> {
+//            weddingTipsFormDialog.deleteWeddingTips(selectedWeddingTips);
+//            confirmationDialog.dismissDialog();
+//        });
 
         weddingTipsFormDialog = new WeddingTipsFormDialog(context);
 
@@ -142,8 +143,9 @@ public class AdminWeddingTipsActivity extends AppCompatActivity {
                         weddingTipsFormDialog.showDialog();
                     }
                     @Override
-                    public void onDelete(WeddingTips weddingTips) {
+                    public void onDelete(WeddingTips weddingTips, List<String> tipsArrayList) {
                         selectedWeddingTips = weddingTips;
+                        tipsImgList = tipsArrayList;
                         confirmationDialog.setMessage(getString(R.string.confirmation_prompt, "delete the topic"));
                         confirmationDialog.showDialog();
                     }

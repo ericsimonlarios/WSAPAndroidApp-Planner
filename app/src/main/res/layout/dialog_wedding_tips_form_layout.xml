@@ -116,6 +116,18 @@
                     app:layout_constraintTop_toBottomOf="@+id/etAuthor"
                     tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
 
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tvDescError"
+                    style="@style/error_text"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="4dp"
+                    android:text="@string/required_input_error"
+                    app:layout_constraintEnd_toEndOf="@+id/etDescription"
+                    app:layout_constraintStart_toStartOf="@+id/etDescription"
+                    app:layout_constraintTop_toBottomOf="@+id/etDescription" />
+
                 <androidx.appcompat.widget.AppCompatEditText
                     android:id="@+id/etTips"
                     style="@style/input_field_hint"
@@ -135,6 +147,18 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/etDescription"
                     tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tvTipsError"
+                    style="@style/error_text"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="4dp"
+                    android:text="@string/required_input_error"
+                    app:layout_constraintEnd_toEndOf="@+id/etTips"
+                    app:layout_constraintStart_toStartOf="@+id/etTips"
+                    app:layout_constraintTop_toBottomOf="@+id/etTips" />
 
 
                 <androidx.appcompat.widget.AppCompatTextView

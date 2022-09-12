@@ -57,7 +57,7 @@ public class WeddingTipsFormActivity extends AppCompatActivity {
 
     private RecyclerView imgIcon;
     private EditText etTopic,etAuthor, etDescription, etTips;
-    private TextView tvMessageTitle, tvImageError, tvTopicError;
+    private TextView tvMessageTitle, tvImageError, tvTopicError, tvDescError, tvTipsError;
     private Button btnSubmit;
 
     private boolean isImageChanged = false;
@@ -87,7 +87,8 @@ public class WeddingTipsFormActivity extends AppCompatActivity {
         tvMessageTitle = findViewById(R.id.tvMessageTitle);
         imgIcon = findViewById(R.id.imgIcon);
         tvImageError = findViewById(R.id.tvImageError);
-
+        tvDescError = findViewById(R.id.tvDescError);
+        tvTipsError = findViewById(R.id.tvTipsError);
         loadingDialog = new LoadingDialog(this);
         componentManager = new ComponentManager(this);
 
@@ -106,7 +107,7 @@ public class WeddingTipsFormActivity extends AppCompatActivity {
 
         Button btnChooseImage = findViewById(R.id.btnChooseImage);
         btnSubmit = findViewById(R.id.btnSubmit);
-
+        tvMessageTitle.setText(this.getString(R.string.add_record, "Wedding Tips"));
         etTopic.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -121,6 +122,9 @@ public class WeddingTipsFormActivity extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable editable) {
                 topicLabel = editable != null ? editable.toString() : "";
+
+                componentManager.setInputRightDrawable(etTopic, !Credentials.isEmpty(topicLabel), Enums.CLEAR_TEXT);
+                checkLabel(topicLabel, true, WeddingTipsFormActivity.this.getString(R.string.weddingTips_label), tvTopicError, etTopic);
             }
         });
         etAuthor.addTextChangedListener(new TextWatcher() {
@@ -153,6 +157,8 @@ public class WeddingTipsFormActivity extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable editable) {
                 description = editable != null ? editable.toString() : "";
+                componentManager.setInputRightDrawable(etDescription, !Credentials.isEmpty(description), Enums.CLEAR_TEXT);
+                checkLabel(description, true, WeddingTipsFormActivity.this.getString(R.string.weddingTips_label), tvDescError, etDescription);
             }
         });
         etTips.addTextChangedListener(new TextWatcher() {
@@ -169,6 +175,8 @@ public class WeddingTipsFormActivity extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable editable) {
                 tips = editable != null ? editable.toString() : "";
+                componentManager.setInputRightDrawable(etTips, !Credentials.isEmpty(tips), Enums.CLEAR_TEXT);
+                checkLabel(tips, true, WeddingTipsFormActivity.this.getString(R.string.weddingTips_label), tvTipsError, etTips);
             }
         });
 
@@ -192,7 +200,13 @@ public class WeddingTipsFormActivity extends AppCompatActivity {
         });
 
         btnSubmit.setOnClickListener(view -> {
-            submit();
+            checkLabel(topicLabel, true, WeddingTipsFormActivity.this.getString(R.string.weddingTips_label), tvTopicError, etTopic);
+            checkDesc(description, true, WeddingTipsFormActivity.this.getString(R.string.weddingTips_label), tvDescError, etDescription);
+            checkTips(tips, true, WeddingTipsFormActivity.this.getString(R.string.weddingTips_label), tvTipsError, etTips);
+            checkImage();
+            if (componentManager.isNoInputError() && imgArray.size() != 0){
+                submit();
+            }
         });
     }
 
@@ -232,12 +246,47 @@ public class WeddingTipsFormActivity extends AppCompatActivity {
 
         if (Credentials.isEmpty(string) && isRequired)
             componentManager.showInputError(targetTextView,
-                    context.getString(R.string.required_input_error, fieldName),
+                    this.getString(R.string.required_input_error, fieldName),
                     targetEditText);
         else if (!Credentials.isValidLength(string, Credentials.REQUIRED_LABEL_LENGTH, 0))
             componentManager.showInputError(targetTextView,
-                    context.getString(R.string.length_error, fieldName, Credentials.REQUIRED_LABEL_LENGTH),
+                    this.getString(R.string.length_error, fieldName, Credentials.REQUIRED_LABEL_LENGTH),
                     targetEditText);
+    }
+
+    private void checkDesc(String string, boolean isRequired, String fieldName,
+                            TextView targetTextView, EditText targetEditText) {
+        componentManager.hideInputError(targetTextView, targetEditText);
+
+        if (Credentials.isEmpty(string) && isRequired)
+            componentManager.showInputError(targetTextView,
+                    this.getString(R.string.required_input_error, "Description"),
+                    targetEditText);
+        else if (!Credentials.isValidLength(string, Credentials.REQUIRED_LABEL_LENGTH, 0))
+            componentManager.showInputError(targetTextView,
+                    this.getString(R.string.length_error, fieldName, Credentials.REQUIRED_LABEL_LENGTH),
+                    targetEditText);
+    }
+
+    private void checkTips(String string, boolean isRequired, String fieldName,
+                           TextView targetTextView, EditText targetEditText) {
+        componentManager.hideInputError(targetTextView, targetEditText);
+
+        if (Credentials.isEmpty(string) && isRequired)
+            componentManager.showInputError(targetTextView,
+                    this.getString(R.string.required_input_error, "Tips"),
+                    targetEditText);
+        else if (!Credentials.isValidLength(string, Credentials.REQUIRED_LABEL_LENGTH, 0))
+            componentManager.showInputError(targetTextView,
+                    this.getString(R.string.length_error, fieldName, Credentials.REQUIRED_LABEL_LENGTH),
+                    targetEditText);
+    }
+
+    private void checkImage() {
+        componentManager.hideInputError(tvImageError);
+
+        if (imgArray.size() == 0)
+            componentManager.showInputError(tvImageError, WeddingTipsFormActivity.this.getString(R.string.required_input_error, "Image"));
     }
 
     private void submit() {
@@ -256,7 +305,7 @@ public class WeddingTipsFormActivity extends AppCompatActivity {
                 description ,tips, author, date.getDateText());
 
         for(Uri uri: imgArray){
-            StorageReference fileRef = storageReference.child(weddingTipsKey).child(System.currentTimeMillis() + '.' + getFileExtension(uri));
+            StorageReference fileRef = storageReference.child(weddingTipsKey).child(System.currentTimeMillis() + "." + getFileExtension(uri));
             fileRef.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
