@@ -14,7 +14,7 @@
     <string name="live">Live</string>
     <string name="app_status_title">Under %s</string>
     <string name="app_status_prompt">We are sorry.\nPlease come back again later.</string>
-    <string name="title">Title</string>
+    <string name="title">Insert checklist title here</string>
     <string name="item">item</string>
     <string name="fd_on_cancelled">Failed to get %s.</string>
     <string name="add_task">Add new task</string>

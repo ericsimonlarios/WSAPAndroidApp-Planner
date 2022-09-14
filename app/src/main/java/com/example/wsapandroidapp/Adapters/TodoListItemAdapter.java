@@ -18,6 +18,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.wsapandroidapp.DataModel.ToDoChecklist;
 import com.example.wsapandroidapp.DataModel.Todo;
 import com.example.wsapandroidapp.R;
 import com.google.android.material.card.MaterialCardView;
@@ -35,20 +36,19 @@ import java.util.List;
 public class TodoListItemAdapter extends RecyclerView.Adapter<TodoListItemAdapter.ViewHolder> {
 
     private static final String TAG = "Error";
-    private final List<Todo> item;
-    private final String titleKey;
+    private final List<ToDoChecklist> item;
     private final Context context;
-    private CharSequence getID;
     private String getKey, userId;
-    private boolean checked, titleChecked;
+    private boolean checked;
+    private Todo todo;
     DatabaseReference mDatabase;
     FirebaseAuth firebaseAuth;
     FirebaseUser firebaseUser;
 
-    public TodoListItemAdapter(List<Todo> item, Context context, String titleKey){
+    public TodoListItemAdapter(List<ToDoChecklist> item, Context context, Todo todo){
         this.item = item;
         this.context = context;
-        this.titleKey = titleKey;
+        this.todo = todo;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder{
@@ -78,17 +78,18 @@ public class TodoListItemAdapter extends RecyclerView.Adapter<TodoListItemAdapte
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        mDatabase = FirebaseDatabase.getInstance().getReference();
+
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
         userId = firebaseUser.getUid();
-
-       checked = Boolean.parseBoolean(String.valueOf(item.get(position).getChecklist().get(1))) ;
-       titleChecked = Boolean.parseBoolean(String.valueOf(item.get(position).getChecklist().get(3)));
+        mDatabase = FirebaseDatabase.getInstance().getReference().child("TodoChecklist").child(userId).child(todo.getTitleKey()).child("TodoListItem");
+        holder.chklistItem.setText(item.get(position).getListText());
+//       checked = Boolean.parseBoolean(String.valueOf(item.get(position).getChecklist().get(1))) ;
+//       titleChecked = Boolean.parseBoolean(String.valueOf(item.get(position).getChecklist().get(3)));
         editTextListener(holder, position);
-        chkBoxListener(holder, position);
+//        chkBoxListener(holder, position);
         holder.clearTask.setOnClickListener(v-> removeTask(holder));
-        holder.chklistItem.setText((CharSequence) item.get(position).getChecklist().get(0));
+//        holder.chklistItem.setText((CharSequence) item.get(position).getChecklist().get(0));
         holder.chklistItem.addTextChangedListener(onTextChanged(holder, position, userId));
     }
 
@@ -106,19 +107,19 @@ public class TodoListItemAdapter extends RecyclerView.Adapter<TodoListItemAdapte
 
             @Override
             public void afterTextChanged(Editable s) {
-                int newPosition = holder.getAdapterPosition();
+                String getKey = item.get(holder.getBindingAdapterPosition()).getListKey();
                 String listName = holder.chklistItem.getText().toString();
-                getID = (CharSequence) item.get(newPosition).getChecklist().get(2);
-                getKey = getID.toString();
+                Toast.makeText(context, listName, Toast.LENGTH_SHORT).show();
                 HashMap<String, Object> result = new HashMap<>();
                 Boolean check = false;
                 if(holder.chkBoxList.isChecked()){
                     check = true;
                 }
-                result.put("listName", listName);
-                result.put("isChecked", check);
-                result.put("titleKey", gettitleKey());
-                mDatabase.child("TodoListItem").child(userId).child(getKey).updateChildren(result);
+                result.put("listText", listName);
+                result.put("checked", check);
+                mDatabase.child(getKey).updateChildren(result);
+//                item.set(holder.getBindingAdapterPosition(),new ToDoChecklist(listName, checked, getKey));
+//                notifyItemChanged(holder.getBindingAdapterPosition());
             }
         };
     }
@@ -130,8 +131,7 @@ public class TodoListItemAdapter extends RecyclerView.Adapter<TodoListItemAdapte
 
     public void removeTask(ViewHolder holder){
         int newPosition = holder.getAdapterPosition();
-        getID = (CharSequence) item.get(newPosition).getChecklist().get(2);
-        getKey = getID.toString();
+//      getID = (CharSequence) item.get(newPosition).getChecklist().get(2);
         if(getKey != null){
             DatabaseReference deleteID = mDatabase.child("TodoListItem").child(userId);
             deleteID.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -174,46 +174,46 @@ public class TodoListItemAdapter extends RecyclerView.Adapter<TodoListItemAdapte
         });
     }
 
-    public void chkBoxListener(@NonNull ViewHolder holder, int position){
-
-        if(titleChecked) {
-            holder.chkBoxList.setChecked(titleChecked);
-            holder.chklistItem.setPaintFlags(holder.chklistItem.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-            holder.chklistItem.setTextColor(context.getColor(R.color.gray));
-            holder.chkListCard.setBackgroundTintList(ContextCompat.getColorStateList(context, R.color.light_gray));
-            holder.chklistItem.setEnabled(false);
-            holder.chkBoxList.setEnabled(false);
-        }
-        if(checked){
-            holder.chkBoxList.setChecked(checked);
-            holder.chklistItem.setPaintFlags(holder.chklistItem.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-            holder.chklistItem.setTextColor(context.getColor(R.color.gray));
-            holder.chkListCard.setBackgroundTintList(ContextCompat.getColorStateList(context, R.color.light_gray));
-            holder.chklistItem.setEnabled(false);
-        }
-
-        holder.chkBoxList.setOnCheckedChangeListener((v, isChecked) ->{
-            int newPosition = holder.getAdapterPosition();
-            getID = (CharSequence) item.get(newPosition).getChecklist().get(2);
-            getKey = getID.toString();
-            if(isChecked){
-                holder.chklistItem.setPaintFlags(holder.chklistItem.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-                holder.chklistItem.setTextColor(context.getColor(R.color.gray));
-                holder.chkListCard.setBackgroundTintList(ContextCompat.getColorStateList(context, R.color.light_gray));
-                holder.chklistItem.setEnabled(false);
-                item.get(position).setChecked(true);
-                checked = true;
-            }else{
-                holder.chklistItem.setPaintFlags(holder.chklistItem.getPaintFlags() ^ Paint.STRIKE_THRU_TEXT_FLAG);
-                holder.chklistItem.setTextColor(context.getColor(R.color.black));
-                holder.chkListCard.setBackgroundTintList(ContextCompat.getColorStateList(context, R.color.yellow));
-                item.get(position).setChecked(false);
-                holder.chklistItem.setEnabled(true);
-                checked = false;
-            }
-            updateChkboxDB(getKey);
-        });
-    }
+//    public void chkBoxListener(@NonNull ViewHolder holder, int position){
+//
+//        if(titleChecked) {
+//            holder.chkBoxList.setChecked(titleChecked);
+//            holder.chklistItem.setPaintFlags(holder.chklistItem.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+//            holder.chklistItem.setTextColor(context.getColor(R.color.gray));
+//            holder.chkListCard.setBackgroundTintList(ContextCompat.getColorStateList(context, R.color.light_gray));
+//            holder.chklistItem.setEnabled(false);
+//            holder.chkBoxList.setEnabled(false);
+//        }
+//        if(checked){
+//            holder.chkBoxList.setChecked(checked);
+//            holder.chklistItem.setPaintFlags(holder.chklistItem.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+//            holder.chklistItem.setTextColor(context.getColor(R.color.gray));
+//            holder.chkListCard.setBackgroundTintList(ContextCompat.getColorStateList(context, R.color.light_gray));
+//            holder.chklistItem.setEnabled(false);
+//        }
+//
+//        holder.chkBoxList.setOnCheckedChangeListener((v, isChecked) ->{
+//            int newPosition = holder.getAdapterPosition();
+////            getID = (CharSequence) item.get(newPosition).getChecklist().get(2);
+//            getKey = getID.toString();
+//            if(isChecked){
+//                holder.chklistItem.setPaintFlags(holder.chklistItem.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+//                holder.chklistItem.setTextColor(context.getColor(R.color.gray));
+//                holder.chkListCard.setBackgroundTintList(ContextCompat.getColorStateList(context, R.color.light_gray));
+//                holder.chklistItem.setEnabled(false);
+////                item.get(position).setChecked(true);
+//                checked = true;
+//            }else{
+//                holder.chklistItem.setPaintFlags(holder.chklistItem.getPaintFlags() ^ Paint.STRIKE_THRU_TEXT_FLAG);
+//                holder.chklistItem.setTextColor(context.getColor(R.color.black));
+//                holder.chkListCard.setBackgroundTintList(ContextCompat.getColorStateList(context, R.color.yellow));
+////                item.get(position).setChecked(false);
+//                holder.chklistItem.setEnabled(true);
+//                checked = false;
+//            }
+//            updateChkboxDB(getKey);
+//        });
+//    }
 
     public void updateChkboxDB(String getKey){
         mDatabase = FirebaseDatabase.getInstance().getReference();
@@ -223,11 +223,7 @@ public class TodoListItemAdapter extends RecyclerView.Adapter<TodoListItemAdapte
         mDatabase.child("TodoListItem").child(userId).child(getKey).child("isChecked").setValue(checked);
     }
 
-    public String gettitleKey() {
-        return titleKey;
-    }
-
-    public List<Todo> getItem() {
-        return item;
-    }
+//    public List<Todo> getItem() {
+//        return item;
+//    }
 }

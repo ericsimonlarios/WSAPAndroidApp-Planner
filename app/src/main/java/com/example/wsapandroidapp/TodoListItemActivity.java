@@ -155,7 +155,7 @@ public class TodoListItemActivity extends AppCompatActivity {
     public void callAdapter(RecyclerView listItemRV, List<Todo> item, String key){
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         listItemRV.setLayoutManager(linearLayoutManager);
-        todoListItemAdapter = new TodoListItemAdapter(item,TodoListItemActivity.this, key);
+//        todoListItemAdapter = new TodoListItemAdapter(item,TodoListItemActivity.this, key);
         listItemRV.setAdapter(todoListItemAdapter);
     }
 
@@ -176,8 +176,8 @@ public class TodoListItemActivity extends AppCompatActivity {
                 listTitle = listEditTitle.getText().toString();
                 if(!listTitle.equals("")){
                     isNew = false;
-                    Todo data = new Todo(listTitle, currentDate, userId, isChecked);
-                    mDatabase.child("TodoCheckList").child(userId).child(key).setValue(data);
+//                    Todo data = new Todo(listTitle, currentDate, userId, isChecked);
+//                    mDatabase.child("TodoCheckList").child(userId).child(key).setValue(data);
                     todoListItemAdapter.notifyItemInserted(counter);
                 }
             }

@@ -6,21 +6,29 @@ import java.util.List;
 public class Todo{
     private String uid, listTitle, dateCreated, titleKey;
     private List<ToDoChecklist> checklist = new ArrayList<>();
-    private boolean isChecked;
-    public Todo(String listTitle, String dateCreated, String uid, boolean isChecked){
+
+    public Todo(String listTitle, String dateCreated, String uid, String titleKey){
         this.listTitle = listTitle;
         this.dateCreated = dateCreated;
         this.uid = uid;
-        this.isChecked = isChecked;
+        this.titleKey = titleKey;
     }
 
-    public Todo(String listTitle, String dateCreated, String uid, String titleKey, boolean isChecked){
+    public Todo(String listTitle, String dateCreated, String uid, String titleKey, List<ToDoChecklist> checklist){
         this.listTitle = listTitle;
         this.dateCreated = dateCreated;
         this.uid = uid;
-        this.titleKey=titleKey;
-        this.isChecked = isChecked;
+        this.titleKey = titleKey;
+        this.checklist = checklist;
     }
+
+//    public Todo(String listTitle, String dateCreated, String uid, String titleKey, boolean isChecked){
+//        this.listTitle = listTitle;
+//        this.dateCreated = dateCreated;
+//        this.uid = uid;
+//        this.titleKey=titleKey;
+//        this.isChecked = isChecked;
+//    }
 
 
     public Todo(){
@@ -70,12 +78,5 @@ public class Todo{
         return checklist;
     }
 
-    public boolean isChecked() {
-        return isChecked;
-    }
-
-    public void setChecked(boolean checked) {
-        isChecked = checked;
-    }
 }
 

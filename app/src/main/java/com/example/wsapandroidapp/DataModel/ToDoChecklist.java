@@ -5,11 +5,10 @@ public class ToDoChecklist {
     private boolean checked, titleChecked;
     private String listKey;
 
-    public ToDoChecklist(String listText, boolean checked, String listKey, boolean titleChecked){
+    public ToDoChecklist(String listText, boolean checked, String listKey){
         this.listText = listText;
         this.checked = checked;
         this.listKey = listKey;
-        this.titleChecked = titleChecked;
     }
 
     public void setText(String listText){

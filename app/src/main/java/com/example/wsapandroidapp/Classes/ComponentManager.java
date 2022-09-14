@@ -3,6 +3,7 @@ package com.example.wsapandroidapp.Classes;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.speech.RecognizerIntent;
 import android.text.method.PasswordTransformationMethod;
@@ -10,6 +11,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.wsapandroidapp.R;
@@ -18,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.res.ResourcesCompat;
 
 public class ComponentManager {
@@ -241,6 +244,25 @@ public class ComponentManager {
             button.setBackgroundColor(context.getColor(R.color.gray));
             button.setTextColor(context.getColor(R.color.system_darker_gray));
         }
+    }
+
+    // This function is applicable for dropdown buttons, the itemDispManager is the dropdown view and childLayout is the layout to be manipulated
+    // refer to TodoChkListAdapter Class to see an example of its usage
+    // created by Ersi
+    public Boolean itemDisplayManager(Boolean checked, ImageView itemDispManager, ConstraintLayout childLayout){
+        Resources res = context.getResources();
+        if(checked){
+            Drawable drawable = ResourcesCompat.getDrawable(res, R.drawable.ic_baseline_arrow_drop_down_24, null);
+            itemDispManager.setImageDrawable(drawable);
+            childLayout.setVisibility(View.VISIBLE);
+            checked = false;
+        }else{
+            Drawable drawable = ResourcesCompat.getDrawable(res, R.drawable.ic_baseline_arrow_drop_up_24, null);
+            itemDispManager.setImageDrawable(drawable);
+            childLayout.setVisibility(View.GONE);
+            checked = true;
+        }
+        return checked;
     }
 
     private PasswordListener passwordListener;
