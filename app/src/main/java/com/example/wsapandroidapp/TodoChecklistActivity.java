@@ -19,13 +19,15 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.wsapandroidapp.Adapters.TodoChkListAdapter;
-import com.example.wsapandroidapp.Adapters.TodoFinishedTaskAdapter;
 import com.example.wsapandroidapp.Classes.ComponentManager;
 import com.example.wsapandroidapp.Classes.Enums;
 import com.example.wsapandroidapp.DataModel.Todo;
+import com.example.wsapandroidapp.DialogClasses.ConfirmationDialog;
 import com.example.wsapandroidapp.DialogClasses.LoadingDialog;
+import com.example.wsapandroidapp.DialogClasses.TodoChecklistDialog;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -35,6 +37,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,19 +54,17 @@ public class TodoChecklistActivity extends AppCompatActivity {
 
     String userId;
     List<Todo> list = new ArrayList<>();
-    List<String> keys = new ArrayList<>();
     List<Todo> items = new ArrayList<>();
-    List<Todo> finItems = new ArrayList<>();
-    List<Todo> fullItems = new ArrayList<>();
+    List<Todo> searchItem;
     TodoChkListAdapter chkListAdapter;
-    TodoFinishedTaskAdapter finListAdapter;
     ComponentManager componentManager;
-
+    TodoChecklistDialog todoChecklistDialog;
+    ConfirmationDialog confirmationDialog;
     int pos = 0;
     String searchSupplier = "";
     boolean isSearched;
 
-    private DatabaseReference mDatabase, cleanListItems;
+    private DatabaseReference mDatabase, childRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,19 +73,22 @@ public class TodoChecklistActivity extends AppCompatActivity {
 
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
         FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+        assert firebaseUser != null;
         userId = firebaseUser.getUid();
 
-        mDatabase = FirebaseDatabase.getInstance().getReference("TodoCheckList").child(userId);
-        cleanListItems = FirebaseDatabase.getInstance().getReference().child("TodoListItem").child(userId);
+        mDatabase = FirebaseDatabase.getInstance().getReference("TodoChecklist").child(userId);
+        childRef = FirebaseDatabase.getInstance().getReference("TodoChecklistItems").child(userId);
+
         etSearch = findViewById(R.id.etSearch);
         tvMessage = findViewById(R.id.tvMessage);
-        textView27 = findViewById(R.id.textView27);
         chkListRV = findViewById(R.id.chkListRV);
-        finishedTaskRV = findViewById(R.id.finishedTaskRV);
         addList = findViewById(R.id.addList);
         sortSpinner = findViewById(R.id.sortSpinner);
 
         loadingDialog = new LoadingDialog(this);
+        confirmationDialog = new ConfirmationDialog(this);
+
+        todoChecklistDialog = new TodoChecklistDialog(this, false);
 
         ArrayAdapter <CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.todoSortArray, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -96,30 +100,27 @@ public class TodoChecklistActivity extends AppCompatActivity {
         componentManager.setVoiceRecognitionListener(() -> startActivityForResult(componentManager.voiceRecognitionIntent(), Enums.VOICE_RECOGNITION_REQUEST_CODE));
 
         loadingDialog.showDialog();
+
         mDatabase.addValueEventListener(getListQuery());
-        cleanListItems.addListenerForSingleValueEvent(cleanItems());
 
         isSearched = false;
         etSearch.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-
             }
-
             @Override
             public void afterTextChanged(Editable s) {
                 searchSupplier = s != null ? s.toString() : "";
+                assert s != null;
                 if(s.toString().equals("")){
                     items.clear();
                     isSearched = false;
                     getPos();
                     callAdapter(list);
-                    callFinAdapter(finItems);
                 }else{
                     filterSearch(s.toString());
                 }
@@ -127,22 +128,23 @@ public class TodoChecklistActivity extends AppCompatActivity {
         });
 
         addList.setOnClickListener(v -> {
-            Intent intent = new Intent(TodoChecklistActivity.this, TodoListItemActivity.class);
-            startActivity(intent);
+            todoChecklistDialog = new TodoChecklistDialog(this, false);
+            todoChecklistDialog.setDialog();
+            todoChecklistDialog.showDialog();
         });
-
     }
 
     public void filterSearch(String searchItem){
         items.clear();
         isSearched = true;
-        for(Todo listItem: fullItems){
+        for(Todo listItem: list){
             if(listItem.getListTitle().toLowerCase().contains(searchItem)){
+                items.add(listItem);
+            }else if(listItem.getDateCreated().toLowerCase().contains(searchItem)){
                 items.add(listItem);
             }
         }
-
-        if(items.size() == 0 && finItems.size() == 0){
+        if(items.size() == 0){
             tvMessage.setVisibility(View.VISIBLE);
             tvMessage.setText(getString(R.string.no_record, "Record"));
         }else{
@@ -155,53 +157,44 @@ public class TodoChecklistActivity extends AppCompatActivity {
     }
 
     public void getPos(){
+        if(isSearched){
+            searchItem = items;
+        }else{
+            searchItem = list;
+        }
         switch (pos){
             case 0:{
-                if(isSearched){
-                    items.sort((o1, o2) -> o2.getDateCreated().compareToIgnoreCase(o1.getDateCreated()));
-                    callAdapter(items);
-                }else{
-                    list.sort((o1, o2) -> o2.getDateCreated().compareToIgnoreCase(o1.getDateCreated()));
-                    finItems.sort((o1, o2) -> o2.getDateCreated().compareToIgnoreCase(o1.getDateCreated()));
-                    callFinAdapter(finItems);
-                    callAdapter(list);
-                }
+                searchItem.sort((o1, o2) -> {
+                    try {
+                        return o2.getDateFormat().compareTo(o1.getDateFormat());
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                    return 0;
+                });
+                callAdapter(searchItem);
                 break;
             }
             case 1:{
-                if(isSearched){
-                    items.sort((o1, o2) -> o1.getDateCreated().compareToIgnoreCase(o2.getDateCreated()));
-                    callAdapter(items);
-                }else{
-                    list.sort((o1, o2) -> o1.getDateCreated().compareToIgnoreCase(o2.getDateCreated()));
-                    finItems.sort((o1, o2) -> o1.getDateCreated().compareToIgnoreCase(o2.getDateCreated()));
-                    callFinAdapter(finItems);
-                    callAdapter(list);
-                }
+                searchItem.sort((o1, o2) -> {
+                    try {
+                        return o1.getDateFormat().compareTo(o2.getDateFormat());
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                    return 0;
+                });
+                callAdapter(searchItem);
                 break;
             }
             case 2:{
-                if(isSearched){
-                    items.sort((o1, o2) -> o1.getListTitle().compareToIgnoreCase(o2.getListTitle()));
-                    callAdapter(items);
-                }else{
-                    list.sort((o1, o2) -> o1.getListTitle().compareToIgnoreCase(o2.getListTitle()));
-                    finItems.sort((o1, o2) -> o1.getListTitle().compareToIgnoreCase(o2.getListTitle()));
-                    callFinAdapter(finItems);
-                    callAdapter(list);
-                }
+                searchItem.sort((o1, o2) -> o1.getListTitle().compareToIgnoreCase(o2.getListTitle()));
+                callAdapter(searchItem);
                 break;
             }
             case 3:{
-                if(isSearched){
-                    items.sort((o1, o2) -> o2.getListTitle().compareToIgnoreCase(o1.getListTitle()));
-                    callAdapter(items);
-                }else{
-                    list.sort((o1, o2) -> o2.getListTitle().compareToIgnoreCase(o1.getListTitle()));
-                    finItems.sort((o1, o2) -> o2.getListTitle().compareToIgnoreCase(o1.getListTitle()));
-                    callFinAdapter(finItems);
-                    callAdapter(list);
-                }
+                searchItem.sort((o1, o2) -> o2.getListTitle().compareToIgnoreCase(o1.getListTitle()));
+                callAdapter(searchItem);
                 break;
             }
         }
@@ -214,35 +207,17 @@ public class TodoChecklistActivity extends AppCompatActivity {
                 pos = position;
                 getPos();
             }
-
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                list.sort((o1, o2) -> o2.getDateCreated().compareToIgnoreCase(o1.getDateCreated()));
-                callAdapter(list);
-            }
-        };
-    }
-
-    public ValueEventListener cleanItems(){
-        return new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-
-                if(snapshot.exists()){
-                    for(DataSnapshot node: snapshot.getChildren()){
-
-                        if(!keys.contains(node.child("titleKey").getValue().toString())){
-                            node.getRef().removeValue();
-                        }
-
+                list.sort((o1, o2) -> {
+                    try {
+                        return o2.getDateFormat().compareTo(o1.getDateFormat());
+                    } catch (ParseException e) {
+                        e.printStackTrace();
                     }
-                }
-                loadingDialog.dismissDialog();
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                loadingDialog.dismissDialog();
-                Log.w(TAG, "loadPost:onCancelled", error.toException());
+                    return 0;
+                });
+                callAdapter(list);
             }
         };
     }
@@ -252,30 +227,18 @@ public class TodoChecklistActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                     list.clear();
-                    finItems.clear();
-                    if (snapshot.exists()) {
+                    if(snapshot.exists()) {
                         for (DataSnapshot node : snapshot.getChildren()) {
-                            List<String> getData = new ArrayList<>();
-                            keys.add(node.getKey());
-                            Boolean isChecked = (Boolean) node.child("checked").getValue();
-                            getData.add(node.child("listTitle").getValue().toString());
-                            getData.add(node.child("dateCreated").getValue().toString());
-                            getData.add(node.child("uid").getValue().toString());
-                            fullItems.add(new Todo(getData.get(0), getData.get(1), getData.get(2), node.getKey(), isChecked));
-                            if(Boolean.TRUE.equals(isChecked)){
-                                finItems.add(new Todo(getData.get(0), getData.get(1), getData.get(2), node.getKey(), isChecked));
-                            }
-                            else{
-                                list.add(new Todo(getData.get(0), getData.get(1), getData.get(2), node.getKey(), isChecked));
-                            }
+                            Todo todo = node.getValue(Todo.class);
+                            assert todo != null;
+                            list.add(new Todo(todo.getListTitle(), todo.getDateCreated(), todo.getUid(), todo.getTitleKey()));
                         }
                         callAdapter(list);
-                        callFinAdapter(finItems);
-                        getPos();
+                    }else{
+                        callAdapter(list);
                     }
-                loadingDialog.dismissDialog();
+                    loadingDialog.dismissDialog();
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 loadingDialog.dismissDialog();
@@ -290,23 +253,28 @@ public class TodoChecklistActivity extends AppCompatActivity {
         chkListRV.setLayoutManager(linearLayoutManager);
         chkListAdapter = new TodoChkListAdapter(TodoChecklistActivity.this, list);
         chkListRV.setAdapter(chkListAdapter);
-        chkListAdapter.notifyDataSetChanged();
-    }
+        chkListAdapter.setOnOptionsListener(new TodoChkListAdapter.onOptionsListener() {
+            @Override
+            public void onEdit(Todo todo, int position) {
+                todoChecklistDialog.setDialog();
+                todoChecklistDialog.editQuery(todo);
+                todoChecklistDialog.showDialog();
+            }
+            @Override
+            public void onDelete(Todo todo) {
+                confirmationDialog.setMessage(getString(R.string.confirmation_prompt, "delete the checklist item?"));
+                confirmationDialog.showDialog();
 
-    @SuppressLint("NotifyDataSetChanged")
-    public void callFinAdapter(List<Todo> finList){
-        if(finList.size() != 0){
-            finishedTaskRV.setVisibility(View.VISIBLE);
-            textView27.setVisibility(View.VISIBLE);
-            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(TodoChecklistActivity.this, LinearLayoutManager.VERTICAL, false);
-            finishedTaskRV.setLayoutManager(linearLayoutManager);
-            finListAdapter = new TodoFinishedTaskAdapter(finList, TodoChecklistActivity.this);
-            finishedTaskRV.setAdapter(finListAdapter);
-            finListAdapter.notifyDataSetChanged();
-        }else{
-            finishedTaskRV.setVisibility(View.GONE);
-            textView27.setVisibility(View.GONE);
-        }
+                confirmationDialog.setDialogListener(() -> {
+                    DatabaseReference deleteRef = mDatabase.child(todo.getTitleKey());
+                    DatabaseReference deleteChild = childRef.child(todo.getTitleKey());
+                    deleteChild.getRef().removeValue();
+                    deleteRef.getRef().removeValue().addOnCompleteListener(task -> Toast.makeText(TodoChecklistActivity.this, "Deleted Successfully", Toast.LENGTH_SHORT).show()).addOnFailureListener(e -> Toast.makeText(TodoChecklistActivity.this, "Delete Failed", Toast.LENGTH_SHORT).show());
+                    confirmationDialog.dismissDialog();
+                });
+            }
+
+        });
     }
 
     @Override
@@ -317,21 +285,6 @@ public class TodoChecklistActivity extends AppCompatActivity {
             etSearch.setText(data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS).get(0));
             filterSearch(etSearch.getText().toString());
         }
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
     }
 
 }

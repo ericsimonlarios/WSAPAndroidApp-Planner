@@ -3,13 +3,13 @@ package com.example.wsapandroidapp.DataModel;
 public class ToDoChecklist {
     private String listText;
     private boolean checked, titleChecked;
-    private String listKey;
+    private String listKey, getListKey;
 
-    public ToDoChecklist(String listText, boolean checked, String listKey, boolean titleChecked){
+    public ToDoChecklist(String listText, boolean checked, String listKey, String getListKey){
         this.listText = listText;
         this.checked = checked;
         this.listKey = listKey;
-        this.titleChecked = titleChecked;
+        this.getListKey = getListKey;
     }
 
     public void setText(String listText){
@@ -42,5 +42,13 @@ public class ToDoChecklist {
 
     public void setListKey(String listKey) {
         this.listKey = listKey;
+    }
+
+    public String getGetListKey() {
+        return getListKey;
+    }
+
+    public void setGetListKey(String getListKey) {
+        this.getListKey = getListKey;
     }
 }

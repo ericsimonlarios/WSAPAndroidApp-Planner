@@ -182,8 +182,6 @@ public class AdminWeddingTipsActivity extends AppCompatActivity {
         if (requestCode == Enums.VOICE_RECOGNITION_REQUEST_CODE && resultCode == RESULT_OK) {
             assert data != null;
             etSearch.setText(data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS).get(0));
-
-//            filterExhibitors();
         } else if (requestCode == Enums.PICK_IMAGE_REQUEST_CODE && resultCode == RESULT_OK &&
                 data != null && data.getData() != null) {
             images.add(data.getData());

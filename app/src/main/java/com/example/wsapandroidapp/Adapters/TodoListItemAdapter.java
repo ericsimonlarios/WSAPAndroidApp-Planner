@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Paint;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,32 +22,28 @@ import com.example.wsapandroidapp.R;
 import com.google.android.material.card.MaterialCardView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashMap;
 import java.util.List;
 
 public class TodoListItemAdapter extends RecyclerView.Adapter<TodoListItemAdapter.ViewHolder> {
 
-    private static final String TAG = "Error";
     private final List<Todo> item;
-    private final String titleKey;
     private final Context context;
-    private CharSequence getID;
-    private String getKey, userId;
-    private boolean checked, titleChecked;
+    private String getKey;
+    private String listName;
+    private boolean checked;
+    private final Todo todo;
     DatabaseReference mDatabase;
     FirebaseAuth firebaseAuth;
     FirebaseUser firebaseUser;
 
-    public TodoListItemAdapter(List<Todo> item, Context context, String titleKey){
+    public TodoListItemAdapter(List item, Context context, Todo todo){
         this.item = item;
         this.context = context;
-        this.titleKey = titleKey;
+        this.todo = todo;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder{
@@ -73,26 +68,29 @@ public class TodoListItemAdapter extends RecyclerView.Adapter<TodoListItemAdapte
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.custom_todo_checklist_items, parent, false);
         return new ViewHolder(view);
-
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        mDatabase = FirebaseDatabase.getInstance().getReference();
+
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
-        userId = firebaseUser.getUid();
+        String userId = firebaseUser.getUid();
+        mDatabase = FirebaseDatabase.getInstance().getReference().child("TodoChecklistItems").child(userId).child(todo.getTitleKey());
 
-       checked = Boolean.parseBoolean(String.valueOf(item.get(position).getChecklist().get(1))) ;
-       titleChecked = Boolean.parseBoolean(String.valueOf(item.get(position).getChecklist().get(3)));
-        editTextListener(holder, position);
-        chkBoxListener(holder, position);
+        int newPos = holder.getBindingAdapterPosition();
+        checked = Boolean.parseBoolean(String.valueOf(item.get(newPos).getChecklist().get(1)));
+        String listItemName = String.valueOf(item.get(newPos).getChecklist().get(0));
+        holder.chklistItem.setText(listItemName);
+
+        editTextListener(holder);
+
+        chkBoxListener(holder);
         holder.clearTask.setOnClickListener(v-> removeTask(holder));
-        holder.chklistItem.setText((CharSequence) item.get(position).getChecklist().get(0));
-        holder.chklistItem.addTextChangedListener(onTextChanged(holder, position, userId));
+        holder.chklistItem.addTextChangedListener(onTextChanged(holder));
     }
 
-    public TextWatcher onTextChanged(ViewHolder holder, int position, String userId){
+    public TextWatcher onTextChanged(ViewHolder holder){
         return new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -106,65 +104,40 @@ public class TodoListItemAdapter extends RecyclerView.Adapter<TodoListItemAdapte
 
             @Override
             public void afterTextChanged(Editable s) {
-                int newPosition = holder.getAdapterPosition();
-                String listName = holder.chklistItem.getText().toString();
-                getID = (CharSequence) item.get(newPosition).getChecklist().get(2);
-                getKey = getID.toString();
-                HashMap<String, Object> result = new HashMap<>();
-                Boolean check = false;
-                if(holder.chkBoxList.isChecked()){
-                    check = true;
-                }
-                result.put("listName", listName);
-                result.put("isChecked", check);
-                result.put("titleKey", gettitleKey());
-                mDatabase.child("TodoListItem").child(userId).child(getKey).updateChildren(result);
+                listName = holder.chklistItem.getText().toString();
+                updateListItem(holder);
             }
         };
     }
-
     @Override
     public int getItemCount() {
         return item.size();
     }
 
+    public void updateListItem(ViewHolder holder){
+        getKey = String.valueOf(item.get(holder.getBindingAdapterPosition()).getChecklist().get(3));
+        chkBoxListener(holder);
+        HashMap<String, Object> result = new HashMap<>();
+        result.put("listText", listName);
+        result.put("checked", checked);
+        result.put("titleKey", todo.getTitleKey());
+        mDatabase.child(getKey).updateChildren(result);
+    }
     public void removeTask(ViewHolder holder){
-        int newPosition = holder.getAdapterPosition();
-        getID = (CharSequence) item.get(newPosition).getChecklist().get(2);
-        getKey = getID.toString();
-        if(getKey != null){
-            DatabaseReference deleteID = mDatabase.child("TodoListItem").child(userId);
-            deleteID.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    if(snapshot.exists()){
-                        for (DataSnapshot node: snapshot.getChildren()){
-                            String listId = node.getRef().getKey();
-                            if(listId.equals(getKey)){
-                                node.getRef().removeValue();
-                                updatePosition(holder);
-                            }
-                        }
-                    }
-                }
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-                    Log.w(TAG, "loadPost:onCancelled", error.toException());
-                }
-            });
-        }else{
-            updatePosition(holder);
-        }
+        getKey = String.valueOf(item.get(holder.getBindingAdapterPosition()).getChecklist().get(3));
+        DatabaseReference deleteID = mDatabase.child(getKey);
+        deleteID.getRef().removeValue();
+        updatePosition(holder);
     }
 
     public void updatePosition(ViewHolder holder){
-        int newPosition = holder.getAdapterPosition();
+        int newPosition = holder.getBindingAdapterPosition();
         item.remove(newPosition);
         notifyItemRemoved(newPosition);
         Toast.makeText(context, "Task Deleted", Toast.LENGTH_SHORT).show();
     }
 
-    public void editTextListener(@NonNull ViewHolder holder, int position){
+    public void editTextListener(@NonNull ViewHolder holder){
         holder.chklistItem.setOnFocusChangeListener((v, hasFocus) -> {
             if(!hasFocus){
                 holder.clearTask.setVisibility(View.GONE);
@@ -174,16 +147,8 @@ public class TodoListItemAdapter extends RecyclerView.Adapter<TodoListItemAdapte
         });
     }
 
-    public void chkBoxListener(@NonNull ViewHolder holder, int position){
-
-        if(titleChecked) {
-            holder.chkBoxList.setChecked(titleChecked);
-            holder.chklistItem.setPaintFlags(holder.chklistItem.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-            holder.chklistItem.setTextColor(context.getColor(R.color.gray));
-            holder.chkListCard.setBackgroundTintList(ContextCompat.getColorStateList(context, R.color.light_gray));
-            holder.chklistItem.setEnabled(false);
-            holder.chkBoxList.setEnabled(false);
-        }
+    public void chkBoxListener(@NonNull ViewHolder holder){
+        listName = holder.chklistItem.getText().toString();
         if(checked){
             holder.chkBoxList.setChecked(checked);
             holder.chklistItem.setPaintFlags(holder.chklistItem.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
@@ -191,43 +156,21 @@ public class TodoListItemAdapter extends RecyclerView.Adapter<TodoListItemAdapte
             holder.chkListCard.setBackgroundTintList(ContextCompat.getColorStateList(context, R.color.light_gray));
             holder.chklistItem.setEnabled(false);
         }
-
         holder.chkBoxList.setOnCheckedChangeListener((v, isChecked) ->{
-            int newPosition = holder.getAdapterPosition();
-            getID = (CharSequence) item.get(newPosition).getChecklist().get(2);
-            getKey = getID.toString();
             if(isChecked){
                 holder.chklistItem.setPaintFlags(holder.chklistItem.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
                 holder.chklistItem.setTextColor(context.getColor(R.color.gray));
                 holder.chkListCard.setBackgroundTintList(ContextCompat.getColorStateList(context, R.color.light_gray));
                 holder.chklistItem.setEnabled(false);
-                item.get(position).setChecked(true);
                 checked = true;
             }else{
                 holder.chklistItem.setPaintFlags(holder.chklistItem.getPaintFlags() ^ Paint.STRIKE_THRU_TEXT_FLAG);
                 holder.chklistItem.setTextColor(context.getColor(R.color.black));
                 holder.chkListCard.setBackgroundTintList(ContextCompat.getColorStateList(context, R.color.yellow));
-                item.get(position).setChecked(false);
                 holder.chklistItem.setEnabled(true);
                 checked = false;
             }
-            updateChkboxDB(getKey);
+            updateListItem(holder);
         });
-    }
-
-    public void updateChkboxDB(String getKey){
-        mDatabase = FirebaseDatabase.getInstance().getReference();
-        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-        FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
-        String userId = firebaseUser.getUid();
-        mDatabase.child("TodoListItem").child(userId).child(getKey).child("isChecked").setValue(checked);
-    }
-
-    public String gettitleKey() {
-        return titleKey;
-    }
-
-    public List<Todo> getItem() {
-        return item;
     }
 }
