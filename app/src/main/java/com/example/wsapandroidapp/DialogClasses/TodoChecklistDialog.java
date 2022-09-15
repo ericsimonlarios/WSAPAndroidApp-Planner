@@ -2,6 +2,7 @@ package com.example.wsapandroidapp.DialogClasses;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Window;
@@ -12,10 +13,13 @@ import android.widget.TextView;
 import com.example.wsapandroidapp.Classes.DateTime;
 import com.example.wsapandroidapp.DataModel.Todo;
 import com.example.wsapandroidapp.R;
+import com.example.wsapandroidapp.TodoChecklistActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.HashMap;
 
 public class TodoChecklistDialog {
     private TextView tvMessageTitle;
@@ -107,6 +111,13 @@ public class TodoChecklistDialog {
             if(!strListTitle.equals("") || userId != null){
                 assert getKey != null;
                 databaseReference.child("TodoChecklist").child(userId).child(getKey).setValue(todo);
+                DatabaseReference todoListItems = firebaseDatabase.getReference().child("TodoChecklistItems").child(userId).child(getKey);
+                String listKey = todoListItems.push().getKey();
+                HashMap<String, Object> result = new HashMap<>();
+                result.put("listText", "");
+                result.put("checked", false);
+                result.put("titleKey", getKey);
+                todoListItems.child(listKey).updateChildren(result);
             }
         }
 

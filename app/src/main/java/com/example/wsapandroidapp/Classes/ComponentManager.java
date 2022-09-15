@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.wsapandroidapp.R;
 
@@ -244,25 +245,6 @@ public class ComponentManager {
             button.setBackgroundColor(context.getColor(R.color.gray));
             button.setTextColor(context.getColor(R.color.system_darker_gray));
         }
-    }
-
-    // This function is applicable for dropdown buttons, the itemDispManager is the dropdown view and childLayout is the layout to be manipulated
-    // refer to TodoChkListAdapter Class to see an example of its usage
-    // created by Ersi
-    public Boolean itemDisplayManager(Boolean checked, ImageView itemDispManager, ConstraintLayout childLayout){
-        Resources res = context.getResources();
-        if(checked){
-            Drawable drawable = ResourcesCompat.getDrawable(res, R.drawable.ic_baseline_arrow_drop_down_24, null);
-            itemDispManager.setImageDrawable(drawable);
-            childLayout.setVisibility(View.VISIBLE);
-            checked = false;
-        }else{
-            Drawable drawable = ResourcesCompat.getDrawable(res, R.drawable.ic_baseline_arrow_drop_up_24, null);
-            itemDispManager.setImageDrawable(drawable);
-            childLayout.setVisibility(View.GONE);
-            checked = true;
-        }
-        return checked;
     }
 
     private PasswordListener passwordListener;

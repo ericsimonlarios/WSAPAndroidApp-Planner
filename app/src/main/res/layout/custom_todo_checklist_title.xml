@@ -28,9 +28,10 @@
 
             <ImageView
                 android:id="@+id/itemDisplayManager"
-                android:layout_width="32dp"
+                android:paddingVertical="10dp"
+                android:layout_width="36dp"
                 android:layout_height="match_parent"
-                android:src="@drawable/ic_baseline_arrow_drop_down_24"
+                android:src="@drawable/ic_baseline_arrow_drop_up_24"
                 app:layout_constraintBottom_toBottomOf="@+id/constraintLayout13"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/constraintLayout13" />
@@ -41,7 +42,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/menuItem"
+                app:layout_constraintEnd_toStartOf="@+id/imgView18"
                 app:layout_constraintStart_toEndOf="@+id/itemDisplayManager"
                 app:layout_constraintTop_toTopOf="parent">
 
@@ -74,8 +75,20 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <ImageView
+                android:id="@+id/imgView18"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_baseline_add_24"
+                android:padding="5dp"
+                app:layout_constraintBottom_toBottomOf="@+id/menuItem"
+                app:layout_constraintEnd_toStartOf="@+id/menuItem"
+                app:layout_constraintTop_toTopOf="@+id/menuItem"
+                app:tint="@color/primary" />
+
+            <ImageView
                 android:id="@+id/menuItem"
                 android:layout_width="32dp"
+                android:padding="5dp"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_baseline_more_vert_24"
                 app:layout_constraintBottom_toBottomOf="@+id/constraintLayout13"
@@ -91,6 +104,7 @@
         android:id="@+id/checkListItemsLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/listTitleCV">
@@ -114,40 +128,30 @@
         </com.google.android.material.card.MaterialCardView>
 
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/constraintLayout14"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:paddingVertical="10dp"
-            android:clickable="true"
-            android:focusable="true"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/materialCardView2">
+<!--        <androidx.constraintlayout.widget.ConstraintLayout-->
+<!--            android:id="@+id/constraintLayout14"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:paddingVertical="10dp"-->
+<!--            android:clickable="true"-->
+<!--            android:focusable="true"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toBottomOf="@+id/materialCardView2">-->
 
-            <ImageView
-                android:id="@+id/imgView18"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_baseline_add_24"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:tint="@color/primary" />
+<!--            <TextView-->
+<!--                style="@style/activity_title"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginLeft="10sp"-->
+<!--                android:text="@string/add_task"-->
+<!--                android:textColor="@color/primary"-->
+<!--                android:textSize="14sp"-->
+<!--                app:layout_constraintBottom_toBottomOf="@+id/imgView18"-->
+<!--                app:layout_constraintStart_toEndOf="@id/imgView18"-->
+<!--                app:layout_constraintTop_toTopOf="@+id/imgView18" />-->
 
-            <TextView
-                style="@style/activity_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10sp"
-                android:text="@string/add_task"
-                android:textColor="@color/primary"
-                android:textSize="14sp"
-                app:layout_constraintBottom_toBottomOf="@+id/imgView18"
-                app:layout_constraintStart_toEndOf="@id/imgView18"
-                app:layout_constraintTop_toTopOf="@+id/imgView18" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
+<!--        </androidx.constraintlayout.widget.ConstraintLayout>-->
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

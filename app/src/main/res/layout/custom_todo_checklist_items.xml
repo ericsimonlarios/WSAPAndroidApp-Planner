@@ -13,8 +13,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:backgroundTint="@color/yellow"
-        android:layout_marginVertical="5dp">
+        android:backgroundTint="@color/yellow">
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/conLayout2"
             android:layout_width="match_parent"

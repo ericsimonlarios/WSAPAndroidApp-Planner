@@ -1,34 +1,26 @@
 package com.example.wsapandroidapp.Adapters;
 
-import android.app.Activity;
+import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
 import android.content.res.Resources;
-import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.wsapandroidapp.Classes.ComponentManager;
-import com.example.wsapandroidapp.DataModel.ToDoChecklist;
 import com.example.wsapandroidapp.DataModel.Todo;
+import com.example.wsapandroidapp.DialogClasses.LoadingDialog;
 import com.example.wsapandroidapp.R;
-import com.example.wsapandroidapp.TodoChecklistActivity;
-import com.example.wsapandroidapp.TodoListItemActivity;
 import com.google.android.material.card.MaterialCardView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -39,26 +31,28 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class TodoChkListAdapter extends RecyclerView.Adapter<TodoChkListAdapter.ViewHolder> {
+public class TodoChkListAdapter extends RecyclerView.Adapter<TodoChkListAdapter.ViewHolder>{
     private final List<Todo> dataSet;
-    private final List<ToDoChecklist> chkList;
     private final Context context;
-    private Boolean checked, addNew;
-    private TodoListItemAdapter todoListItemAdapter;
-    private int globalPos;
+    private Boolean addNew;
     private String userId;
+
+    LoadingDialog loadingDialog;
     DatabaseReference mDatabase;
     FirebaseAuth firebaseAuth;
     FirebaseUser firebaseUser;
+    private final String TAG = "Error";
 
     public static class ViewHolder extends RecyclerView.ViewHolder{
         TextView listTitle, chkListDate;
         MaterialCardView listTitleCV;
-        ConstraintLayout conLayout1, conLayout2, checkListItemsLayout, constraintLayout14;
+        ConstraintLayout conLayout1, conLayout2, checkListItemsLayout;
         ImageView itemDisplayManager, menuItem;
+        final ImageView imgView18;
         RecyclerView checkListItems;
         public ViewHolder(View view){
             super(view);
@@ -72,15 +66,13 @@ public class TodoChkListAdapter extends RecyclerView.Adapter<TodoChkListAdapter.
             menuItem = view.findViewById(R.id.menuItem);
             checkListItemsLayout = view.findViewById(R.id.checkListItemsLayout);
             checkListItems = view.findViewById(R.id.checkListItems);
-            constraintLayout14 = view.findViewById(R.id.constraintLayout14);
+            imgView18 = view.findViewById(R.id.imgView18);
         }
     }
 
-    public TodoChkListAdapter(Context context, List<Todo> dataSet, List<ToDoChecklist> chkList) {
+    public TodoChkListAdapter(Context context, List<Todo> dataSet) {
         this.dataSet = dataSet;
         this.context = context;
-        this.checked = false;
-        this.chkList = chkList;
     }
 
     @NonNull
@@ -90,99 +82,133 @@ public class TodoChkListAdapter extends RecyclerView.Adapter<TodoChkListAdapter.
         return new ViewHolder(view);
     }
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         addNew = false;
+        List<Todo> todoList = new ArrayList<>();
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
         mDatabase = FirebaseDatabase.getInstance().getReference();
         userId = firebaseUser.getUid();
-
-        int newPos = holder.getAdapterPosition();
+        int globalPos = holder.getBindingAdapterPosition();
         Todo todo = dataSet.get(position);
-        holder.listTitle.setText(dataSet.get(newPos).getListTitle());
-        holder.chkListDate.setText(dataSet.get(newPos).getDateCreated());
+        holder.listTitle.setText(dataSet.get(globalPos).getListTitle());
+        holder.chkListDate.setText(dataSet.get(globalPos).getDateCreated());
+        holder.itemDisplayManager.setTag(R.drawable.ic_baseline_arrow_drop_up_24);
+
+        Resources res = context.getResources();
         holder.itemDisplayManager.setOnClickListener(view ->{
-            ComponentManager componentManager = new ComponentManager(context);
-            checked = componentManager.itemDisplayManager(checked, holder.itemDisplayManager, holder.checkListItemsLayout);
+
+            int integer = (Integer) holder.itemDisplayManager.getTag();
+            switch (integer){
+                case R.drawable.ic_baseline_arrow_drop_down_24:{
+                    Drawable drawable = ResourcesCompat.getDrawable(res, R.drawable.ic_baseline_arrow_drop_up_24, null);
+                    holder.itemDisplayManager.setImageDrawable(drawable);
+                    holder.checkListItemsLayout.setVisibility(View.GONE);
+                    holder.itemDisplayManager.setTag(R.drawable.ic_baseline_arrow_drop_up_24);
+                    break;
+                }
+
+                case R.drawable.ic_baseline_arrow_drop_up_24:{
+                    Drawable drawable = ResourcesCompat.getDrawable(res, R.drawable.ic_baseline_arrow_drop_down_24, null);
+                    holder.itemDisplayManager.setImageDrawable(drawable);
+                    holder.checkListItemsLayout.setVisibility(View.VISIBLE);
+                    holder.itemDisplayManager.setTag(R.drawable.ic_baseline_arrow_drop_down_24);
+                    break;
+                }
+
+            }
         });
+
+        loadingDialog = new LoadingDialog(context);
 
         holder.menuItem.setOnClickListener(view ->{
             PopupMenu popupMenu = new PopupMenu(context, holder.menuItem);
             popupMenu.getMenuInflater().inflate(R.menu.topbar_menu, popupMenu.getMenu());
-            popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                @Override
-                public boolean onMenuItemClick(MenuItem item) {
-                    int id = item.getItemId();
-                    switch (id){
-                        case R.id.deleteList:{
-                            if(onOptionsListener != null) onOptionsListener.onDelete(todo);
-                            return true;
-                        }
-                        case R.id.markDone:{
-                            Toast.makeText(context, "Done", Toast.LENGTH_SHORT).show();
-                            return true;
-                        }
-                        case R.id.editTitle:{
-                            if(onOptionsListener != null) onOptionsListener.onEdit(todo);
-                        }
+            popupMenu.setOnMenuItemClickListener(item -> {
+                int id = item.getItemId();
+                switch (id){
+                    case R.id.deleteList:{
+                        if(onOptionsListener != null) onOptionsListener.onDelete(todo);
+                        return true;
                     }
-                    return true;
+                    case R.id.editTitle:{
+                        if(onOptionsListener != null) onOptionsListener.onEdit(todo, holder.getBindingAdapterPosition());
+                    }
                 }
+                return true;
             });
             popupMenu.show();
 
         });
 
-        holder.constraintLayout14.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                addNew = true;
-                callAdapter(holder, addNew, todo);
-            }
+        holder.imgView18.setOnClickListener(v -> {
+            addNew = true;
+            callAdapter(holder, addNew, todo, todoList);
+
+            Drawable drawable = ResourcesCompat.getDrawable(res, R.drawable.ic_baseline_arrow_drop_down_24, null);
+            holder.itemDisplayManager.setImageDrawable(drawable);
+            holder.checkListItemsLayout.setVisibility(View.VISIBLE);
+            holder.itemDisplayManager.setTag(R.drawable.ic_baseline_arrow_drop_down_24);
         });
 
-        callAdapter(holder, addNew, todo);
-
+        loadingDialog.dismissDialog();
+        getLatestList(holder, addNew, todo, todoList);
     }
 
-    public void callAdapter(ViewHolder holder, Boolean addNew, Todo todo){
-        globalPos = holder.getBindingAdapterPosition();
-        TodoListItemAdapter todoListItemAdapter = new TodoListItemAdapter(chkList, context, todo);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
+    public void callAdapter(ViewHolder holder, Boolean addNew, Todo todo, List<Todo> todoList){
+
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, true);
         holder.checkListItems.setLayoutManager(linearLayoutManager);
+        TodoListItemAdapter todoListItemAdapter = new TodoListItemAdapter(todoList, context, todo);
         holder.checkListItems.setAdapter(todoListItemAdapter);
 
-        if(todoListItemAdapter.getItemCount() == 0){
-            String listKey = mDatabase.child("TodoChecklist").push().getKey();
-            chkList.add(new ToDoChecklist("", false, listKey));
-            todoListItemAdapter.notifyItemInserted(todoListItemAdapter.getItemCount()+1);
+        if(addNew){
+            List chkList = new ArrayList();
+            String listKey = mDatabase.child("TodoChecklistItems").push().getKey();
+            chkList.add("");
+            chkList.add(false);
+            chkList.add(todo.getTitleKey());
+            chkList.add(listKey);
+            todoList.add(0,new Todo(chkList));
+            todoListItemAdapter.notifyItemInserted(0);
         }
 
-        if(addNew){
-            if(todoListItemAdapter.getItemCount()!= 0){
-                String listKey = mDatabase.child("TodoChecklist").push().getKey();
-                chkList.add(new ToDoChecklist("", false, listKey));
-                todoListItemAdapter.notifyItemInserted(todoListItemAdapter.getItemCount()+1);
-            }
-        }
     }
 
-    public void getLatestList(ViewHolder holder){
-        String getTitleKey = dataSet.get(holder.getBindingAdapterPosition()).getTitleKey();
-        if(getTitleKey != null || !getTitleKey.equals("")){
-            DatabaseReference getRef = mDatabase.child("TodoChecklist").child(userId).child(getTitleKey).child("TodoListItem");
+    public void getLatestList(ViewHolder holder, Boolean addNew, Todo todo,List<Todo> todoList){
+        if(todo.getTitleKey() != null || !todo.getTitleKey().equals("")){
+            DatabaseReference getRef = mDatabase.child("TodoChecklistItems").child(userId);
             getRef.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     if(snapshot.exists()){
-
+                        for(DataSnapshot node: snapshot.getChildren()) {
+                            if(Objects.equals(node.getKey(), todo.getTitleKey())){
+                                for (DataSnapshot nodeChild: node.getChildren()){
+                                    List chkList = new ArrayList();
+                                    Boolean checked;
+                                    String titleKey = Objects.requireNonNull(nodeChild.child("titleKey").getValue()).toString();
+                                    String listText = String.valueOf(nodeChild.child("listText").getValue());
+                                    String getListKey = nodeChild.getKey();
+                                    checked = (Boolean) nodeChild.child("checked").getValue();
+                                    chkList.add(listText);
+                                    chkList.add(checked);
+                                    chkList.add(titleKey);
+                                    chkList.add(getListKey);
+                                    todoList.add(new Todo(chkList));
+                                }
+                            }
+                        }
                     }
+                    callAdapter(holder, addNew, todo, todoList);
+                    loadingDialog.dismissDialog();
                 }
-
                 @Override
                 public void onCancelled(@NonNull DatabaseError error) {
-
+                    Log.w(TAG, "loadPost:onCancelled", error.toException());
+                    loadingDialog.dismissDialog();
                 }
             });
         }
@@ -191,7 +217,7 @@ public class TodoChkListAdapter extends RecyclerView.Adapter<TodoChkListAdapter.
     private onOptionsListener onOptionsListener;
 
     public interface onOptionsListener{
-        void onEdit(Todo todo);
+        void onEdit(Todo todo, int position);
         void onDelete(Todo todo);
     }
 

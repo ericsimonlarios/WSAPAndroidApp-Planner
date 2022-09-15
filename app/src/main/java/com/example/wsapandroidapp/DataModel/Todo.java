@@ -1,12 +1,17 @@
 package com.example.wsapandroidapp.DataModel;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class Todo{
     private String uid, listTitle, dateCreated, titleKey;
     private List<ToDoChecklist> checklist = new ArrayList<>();
-
+    Date date;
     public Todo(String listTitle, String dateCreated, String uid, String titleKey){
         this.listTitle = listTitle;
         this.dateCreated = dateCreated;
@@ -14,11 +19,7 @@ public class Todo{
         this.titleKey = titleKey;
     }
 
-    public Todo(String listTitle, String dateCreated, String uid, String titleKey, List<ToDoChecklist> checklist){
-        this.listTitle = listTitle;
-        this.dateCreated = dateCreated;
-        this.uid = uid;
-        this.titleKey = titleKey;
+    public Todo( List<ToDoChecklist> checklist){
         this.checklist = checklist;
     }
 
@@ -76,6 +77,11 @@ public class Todo{
 
     public List<ToDoChecklist> getChecklist() {
         return checklist;
+    }
+
+    public Date getDateFormat() throws ParseException {
+        DateFormat formatDate = new SimpleDateFormat("MMMM dd, yyyy", Locale.ENGLISH);
+        return date = formatDate.parse(getDateCreated());
     }
 
 }
