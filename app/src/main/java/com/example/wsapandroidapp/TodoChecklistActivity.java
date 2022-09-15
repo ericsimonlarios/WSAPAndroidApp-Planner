@@ -150,8 +150,6 @@ public class TodoChecklistActivity extends AppCompatActivity {
         }else{
             tvMessage.setVisibility(View.GONE);
         }
-        finishedTaskRV.setVisibility(View.GONE);
-        textView27.setVisibility(View.GONE);
         getPos();
         callAdapter(items);
     }

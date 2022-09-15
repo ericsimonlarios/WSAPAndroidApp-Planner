@@ -40,7 +40,7 @@ public class TodoChkListAdapter extends RecyclerView.Adapter<TodoChkListAdapter.
     private final Context context;
     private Boolean addNew;
     private String userId;
-
+    private TodoListItemAdapter todoListItemAdapter;
     LoadingDialog loadingDialog;
     DatabaseReference mDatabase;
     FirebaseAuth firebaseAuth;
@@ -145,8 +145,8 @@ public class TodoChkListAdapter extends RecyclerView.Adapter<TodoChkListAdapter.
 
         holder.imgView18.setOnClickListener(v -> {
             addNew = true;
-            callAdapter(holder, addNew, todo, todoList);
-
+//            callAdapter(holder, addNew, todo, todoList);
+            getLatestList(holder, addNew, todo, todoList);
             Drawable drawable = ResourcesCompat.getDrawable(res, R.drawable.ic_baseline_arrow_drop_down_24, null);
             holder.itemDisplayManager.setImageDrawable(drawable);
             holder.checkListItemsLayout.setVisibility(View.VISIBLE);
@@ -161,7 +161,7 @@ public class TodoChkListAdapter extends RecyclerView.Adapter<TodoChkListAdapter.
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, true);
         holder.checkListItems.setLayoutManager(linearLayoutManager);
-        TodoListItemAdapter todoListItemAdapter = new TodoListItemAdapter(todoList, context, todo);
+        todoListItemAdapter = new TodoListItemAdapter(todoList, context, todo);
         holder.checkListItems.setAdapter(todoListItemAdapter);
 
         if(addNew){
@@ -171,7 +171,7 @@ public class TodoChkListAdapter extends RecyclerView.Adapter<TodoChkListAdapter.
             chkList.add(false);
             chkList.add(todo.getTitleKey());
             chkList.add(listKey);
-            todoList.add(0,new Todo(chkList));
+            todoList.add(new Todo(chkList));
             todoListItemAdapter.notifyItemInserted(0);
         }
 
