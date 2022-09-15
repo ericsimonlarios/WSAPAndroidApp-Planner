@@ -86,11 +86,6 @@ public class AdminWeddingTipsActivity extends AppCompatActivity {
 
         confirmationDialog = new ConfirmationDialog(context);
 
-//        confirmationDialog.setDialogListener(() -> {
-//            weddingTipsFormDialog.deleteWeddingTips(selectedWeddingTips);
-//            confirmationDialog.dismissDialog();
-//        });
-
         weddingTipsFormDialog = new WeddingTipsFormDialog(context);
 
         firebaseDatabase = FirebaseDatabase.getInstance(getString(R.string.firebase_RTDB_url));
@@ -100,10 +95,7 @@ public class AdminWeddingTipsActivity extends AppCompatActivity {
             Intent intent = new Intent(this, WeddingTipsFormActivity.class);
             startActivity(intent);
             finish();
-         //  images.clear();
-         //  weddingTipsFormDialog.showDialog();
         });
-
 
         isListening = true;
         weddingTipsQuery.addValueEventListener(getWeddingTips());
@@ -135,21 +127,22 @@ public class AdminWeddingTipsActivity extends AppCompatActivity {
                 recyclerView.setLayoutManager(linearLayoutManager);
                 recyclerView.setAdapter(adminWeddingTipsAdapter);
 
-                adminWeddingTipsAdapter.setAdapterListener(new AdminWeddingTipsAdapter.AdapterListener() {
-                    @Override
-                    public void onEdit(WeddingTips weddingTips) {
-                        // weddingTipsFormDialog.setUpdateMode(true);
-                        weddingTipsFormDialog.setWeddingTips(weddingTips);
-                        weddingTipsFormDialog.showDialog();
-                    }
-                    @Override
-                    public void onDelete(WeddingTips weddingTips, List<String> tipsArrayList) {
-                        selectedWeddingTips = weddingTips;
-                        tipsImgList = tipsArrayList;
-                        confirmationDialog.setMessage(getString(R.string.confirmation_prompt, "delete the topic"));
-                        confirmationDialog.showDialog();
-                    }
-                });
+//                adminWeddingTipsAdapter.setAdapterListener(new AdminWeddingTipsAdapter.AdapterListener() {
+//                    @Override
+//                    public void onEdit(WeddingTips weddingTips) {
+//
+//                       // weddingTipsFormActivity.setWeddingTips(weddingTips);
+//
+//
+//                    }
+//                    @Override
+//                    public void onDelete(WeddingTips weddingTips, List<String> tipsArrayList) {
+//                        selectedWeddingTips = weddingTips;
+//                        tipsImgList = tipsArrayList;
+//                        confirmationDialog.setMessage(getString(R.string.confirmation_prompt, "delete the topic"));
+//                        confirmationDialog.showDialog();
+//                    }
+//                });
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
@@ -163,7 +156,6 @@ public class AdminWeddingTipsActivity extends AppCompatActivity {
     }
     @SuppressWarnings("deprecation")
 
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -171,7 +163,6 @@ public class AdminWeddingTipsActivity extends AppCompatActivity {
             assert data != null;
             etSearch.setText(data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS).get(0));
 
-//            filterExhibitors();
         } else if (requestCode == Enums.PICK_IMAGE_REQUEST_CODE && resultCode == RESULT_OK &&
                 data != null && data.getData() != null) {
             images.add(data.getData());

@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -46,7 +47,6 @@ public class ImgArrayAdapter extends RecyclerView.Adapter<ImgArrayAdapter.ViewHo
     @Override
     public void onBindViewHolder(@NonNull ImgArrayAdapter.ViewHolder holder, int position) {
         Glide.with(context).load(imgArray.get(position)).into(holder.tvTipsPhoto);
-
         holder.removeImage.setOnClickListener(view ->{
             int getPos = holder.getAdapterPosition();
             imgArray.remove(getPos);

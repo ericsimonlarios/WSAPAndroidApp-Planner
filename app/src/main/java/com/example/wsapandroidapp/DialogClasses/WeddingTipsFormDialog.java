@@ -331,5 +331,6 @@ public class WeddingTipsFormDialog {
             MimeTypeMap mime = MimeTypeMap.getSingleton();
             return mime.getExtensionFromMimeType(cr.getType(uri));
         }
+
 }
 

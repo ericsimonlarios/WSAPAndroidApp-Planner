@@ -1,6 +1,7 @@
 package com.example.wsapandroidapp;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.ContentResolver;
@@ -9,9 +10,11 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.speech.RecognizerIntent;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Window;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
@@ -32,21 +35,23 @@ import com.example.wsapandroidapp.Classes.ComponentManager;
 import com.example.wsapandroidapp.Classes.Credentials;
 import com.example.wsapandroidapp.Classes.DateTime;
 import com.example.wsapandroidapp.Classes.Enums;
-import com.example.wsapandroidapp.Classes.Theme;
 import com.example.wsapandroidapp.DataModel.TipsImages;
 import com.example.wsapandroidapp.DataModel.WeddingTips;
 import com.example.wsapandroidapp.DialogClasses.LoadingDialog;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -59,8 +64,10 @@ public class WeddingTipsFormActivity extends AppCompatActivity {
     private EditText etTopic,etAuthor, etDescription, etTips;
     private TextView tvMessageTitle, tvImageError, tvTopicError, tvDescError, tvTipsError;
     private Button btnSubmit;
+    Context context;
 
     private boolean isImageChanged = false;
+    private boolean isUpdateMode = false;
 
     private LoadingDialog loadingDialog;
     private ComponentManager componentManager;
@@ -68,13 +75,25 @@ public class WeddingTipsFormActivity extends AppCompatActivity {
     private FirebaseDatabase firebaseDatabase;
     private StorageReference storageReference;
     private DatabaseReference databaseReference;
+    private FirebaseStorage firebaseStorage;
+    Query weddingTipsQuery;
+    boolean isListening;
+    WeddingTips weddingTip;
+
+    String selectedWeddingTipsId = "";
+
+
 
     private String topicLabel, author, description, tips;
     private List<Uri> imgArray = new ArrayList<>();
+    private List<Uri> imgArrayUpdate = new ArrayList<>();
+    private List<String> imgArrayUpdate2 = new ArrayList<>();
+    private List<Uri> tipsImagesArrayList = new ArrayList<>();
     private List<String> imgUriArray = new ArrayList<>();
     private List<TipsImages> tipsImages = new ArrayList<>();
     private Map<String, Object> map;
     private int counter;
+    private int counterUpdate;
     private boolean isCompleted;
 
     @Override
@@ -92,6 +111,9 @@ public class WeddingTipsFormActivity extends AppCompatActivity {
         loadingDialog = new LoadingDialog(this);
         componentManager = new ComponentManager(this);
 
+        context = WeddingTipsFormActivity.this;
+        selectedWeddingTipsId = getIntent().getStringExtra("weddingTipsId");
+
         etTopic = findViewById(R.id.etTopic);
         etAuthor = findViewById((R.id.etAuthor));
         etDescription = findViewById(R.id.etDescription);
@@ -104,10 +126,21 @@ public class WeddingTipsFormActivity extends AppCompatActivity {
                 Collections.singletonList(etTopic);
 
         componentManager.initializeErrorComponents(errorTextViewList, errorEditTextList);
-
         Button btnChooseImage = findViewById(R.id.btnChooseImage);
         btnSubmit = findViewById(R.id.btnSubmit);
         tvMessageTitle.setText(this.getString(R.string.add_record, "Wedding Tips"));
+
+        if(selectedWeddingTipsId != null){
+            isUpdateMode = true;
+            initDatabaseQuery();
+            tvMessageTitle.setText(this.getString(R.string.update_record, "Wedding Tips"));
+            btnSubmit.setText(context.getString(R.string.update));
+        }
+        else{
+            isUpdateMode = false;
+        }
+
+
         etTopic.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -204,9 +237,19 @@ public class WeddingTipsFormActivity extends AppCompatActivity {
             checkDesc(description, true, WeddingTipsFormActivity.this.getString(R.string.weddingTips_label), tvDescError, etDescription);
             checkTips(tips, true, WeddingTipsFormActivity.this.getString(R.string.weddingTips_label), tvTipsError, etTips);
             checkImage();
-            if (componentManager.isNoInputError() && imgArray.size() != 0){
-                submit();
+            if(isUpdateMode)
+            {
+                if (componentManager.isNoInputError() && tipsImagesArrayList.size() != 0){
+                    submit();
+                }
             }
+            else
+            {
+                if (componentManager.isNoInputError() && imgArray.size() != 0){
+                    submit();
+                }
+            }
+
         });
     }
 
@@ -217,13 +260,29 @@ public class WeddingTipsFormActivity extends AppCompatActivity {
         startActivityForResult(intent, Enums.PICK_IMAGE_REQUEST_CODE);
     }
 
+    public void setUpdateMode(boolean isUpdateMode) {
+        this.isUpdateMode = isUpdateMode;
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == Enums.PICK_IMAGE_REQUEST_CODE && resultCode == RESULT_OK &&
-                data != null && data.getData() != null) {
-            imgArray.add(data.getData());
-            callImgAdapter(imgArray);
+        if(isUpdateMode) {
+            if (requestCode == Enums.PICK_IMAGE_REQUEST_CODE && resultCode == RESULT_OK &&
+                    data != null && data.getData() != null) {
+                imgArrayUpdate.add(data.getData());
+                tipsImagesArrayList.add(data.getData());
+                callImgAdapter(tipsImagesArrayList);
+            }
+
+        }
+        else {
+            if (requestCode == Enums.PICK_IMAGE_REQUEST_CODE && resultCode == RESULT_OK &&
+                    data != null && data.getData() != null)
+            {
+                imgArray.add(data.getData());
+                callImgAdapter(imgArray);
+            }
         }
     }
 
@@ -281,65 +340,196 @@ public class WeddingTipsFormActivity extends AppCompatActivity {
                     this.getString(R.string.length_error, fieldName, Credentials.REQUIRED_LABEL_LENGTH),
                     targetEditText);
     }
-
     private void checkImage() {
         componentManager.hideInputError(tvImageError);
+        if(isUpdateMode){
+            if(imgArrayUpdate.size() != 0 )
+            {
+                if (tipsImagesArrayList.size() == 0)
+                    componentManager.showInputError(tvImageError,
+                            WeddingTipsFormActivity.this.getString(R.string.required_input_error, "Image"));
+            }
 
-        if (imgArray.size() == 0)
-            componentManager.showInputError(tvImageError, WeddingTipsFormActivity.this.getString(R.string.required_input_error, "Image"));
+        }
+        else{
+            if (imgArray.size() == 0)
+                componentManager.showInputError(tvImageError,
+                        WeddingTipsFormActivity.this.getString(R.string.required_input_error, "Image"));
+        }
+
     }
 
     private void submit() {
-        loadingDialog.showDialog();
-        imgUriArray = new ArrayList<>();
-        tipsImages = new ArrayList<>();
-        firebaseDatabase = FirebaseDatabase.getInstance();
-        databaseReference = firebaseDatabase.getReference();
-        String weddingTipsKey = databaseReference.child("weddingTips").push().getKey();
-        map = new HashMap<>();
-        storageReference = FirebaseStorage.getInstance().getReference("weddingTips");
-        counter = 0;
-        isCompleted = false;
-        DateTime date = new DateTime();
-        WeddingTips weddingTips = new WeddingTips(weddingTipsKey, topicLabel,
-                description ,tips, author, date.getDateText());
+        if(isUpdateMode)
+        {
+            loadingDialog.showDialog();
+            imgUriArray = new ArrayList<>();
+            tipsImages = new ArrayList<>();
+            firebaseDatabase = FirebaseDatabase.getInstance();
+            databaseReference = firebaseDatabase.getReference();
+            map = new HashMap<>();
+            storageReference = FirebaseStorage.getInstance().getReference("weddingTips");
+            counter = 0;
+            counterUpdate = 0;
+            isCompleted = false;
+            DateTime date = new DateTime();
+            String weddingTipsKey = selectedWeddingTipsId;
+            WeddingTips weddingTips = new WeddingTips(weddingTipsKey, topicLabel,
+                    description ,tips, author, date.getDateText());
+            if(imgArrayUpdate.size() == 0)
+            {
+                databaseReference.child("weddingTips").child(weddingTipsKey).setValue(weddingTips);
+                loadingDialog.dismissDialog();
+                Toast.makeText(WeddingTipsFormActivity.this, "Updated Successfully", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(WeddingTipsFormActivity.this, AdminWeddingTipsActivity.class);
+                startActivity(intent);
+                finish();
+            }
+            else{
+                for(Uri uri: imgArrayUpdate){
+                    StorageReference fileRef = storageReference.child(weddingTipsKey).child(System.currentTimeMillis() + "." + getFileExtension(uri));
+                    fileRef.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                @Override
+                                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                    fileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                        @Override
+                                        public void onSuccess(Uri uri1) {
+                                            counter++;
+                                            String imageKey = databaseReference.child("weddingTips").push().getKey();
+                                            map.put(imageKey, uri1.toString());
+                                            databaseReference.child("weddingTips").child(weddingTipsKey).setValue(weddingTips);
+                                            databaseReference.child("weddingTips").child(weddingTipsKey).child("image").updateChildren(map);
+                                            if(counter == imgArrayUpdate.size()){
+                                                for (String string: imgArrayUpdate2)
+                                                {
+                                                    counterUpdate++;
+                                                    String imageKey2 = databaseReference.child("weddingTips").push().getKey();
+                                                    map.put(imageKey2, string);
+                                                    databaseReference.child("weddingTips").child(weddingTipsKey).child("image").setValue(map);
+                                                    if (counterUpdate == imgArrayUpdate2.size()){
+                                                        isCompleted = true;
+                                                    }
+                                                }
+                                            }
+                                            if(isCompleted) {
+                                                loadingDialog.dismissDialog();
+                                                Toast.makeText(WeddingTipsFormActivity.this, "Updated Successfully", Toast.LENGTH_SHORT).show();
+                                                Intent intent = new Intent(WeddingTipsFormActivity.this, AdminWeddingTipsActivity.class);
+                                                startActivity(intent);
+                                                finish();
+                                            }
+                                        }
+                                    });
+                                }
+                            }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                                @Override
+                                public void onProgress(@NonNull UploadTask.TaskSnapshot snapshot) {
+                                }
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Toast.makeText(context, "Failed", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                }
+            }
 
-        for(Uri uri: imgArray){
-            StorageReference fileRef = storageReference.child(weddingTipsKey).child(System.currentTimeMillis() + "." + getFileExtension(uri));
-            fileRef.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    fileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                        @Override
-                        public void onSuccess(Uri uri1) {
-                            counter++;
-                            String imageKey = databaseReference.child("weddingTips").push().getKey();
-                            map.put(imageKey, uri1.toString());
-                            databaseReference.child("weddingTips").child(weddingTipsKey).setValue(weddingTips);
-                            databaseReference.child("weddingTips").child(weddingTipsKey).child("image").updateChildren(map);
-                            if(counter == imgArray.size()){
-                                isCompleted = true;
+        }
+        else{
+            loadingDialog.showDialog();
+            imgUriArray = new ArrayList<>();
+            tipsImages = new ArrayList<>();
+            firebaseDatabase = FirebaseDatabase.getInstance();
+            databaseReference = firebaseDatabase.getReference();
+            map = new HashMap<>();
+            storageReference = FirebaseStorage.getInstance().getReference("weddingTips");
+            counter = 0;
+            isCompleted = false;
+            DateTime date = new DateTime();
+            String weddingTipsKey = databaseReference.child("weddingTips").push().getKey();
+            WeddingTips weddingTips = new WeddingTips(weddingTipsKey, topicLabel,
+                    description ,tips, author, date.getDateText());
+            for(Uri uri: imgArray){
+                StorageReference fileRef = storageReference.child(weddingTipsKey).child(System.currentTimeMillis() + "." + getFileExtension(uri));
+                fileRef.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                            @Override
+                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                fileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                    @Override
+                                    public void onSuccess(Uri uri1) {
+                                        counter++;
+                                        String imageKey = databaseReference.child("weddingTips").push().getKey();
+                                        map.put(imageKey, uri1.toString());
+                                        databaseReference.child("weddingTips").child(weddingTipsKey).setValue(weddingTips);
+                                        databaseReference.child("weddingTips").child(weddingTipsKey).child("image").updateChildren(map);
+                                        if(counter == imgArray.size()){
+                                            isCompleted = true;
+                                        }
+                                        if(isCompleted) {
+                                            loadingDialog.dismissDialog();
+                                            Toast.makeText(WeddingTipsFormActivity.this, "Added Successfully", Toast.LENGTH_SHORT).show();
+                                            Intent intent = new Intent(WeddingTipsFormActivity.this, AdminWeddingTipsActivity.class);
+                                            startActivity(intent);
+                                            finish();
+                                        }
+                                    }
+                                });
                             }
-                            if(isCompleted) {
-                                loadingDialog.dismissDialog();
-                                Toast.makeText(WeddingTipsFormActivity.this, "Added Successfully", Toast.LENGTH_SHORT).show();
-                                Intent intent = new Intent(WeddingTipsFormActivity.this, AdminWeddingTipsActivity.class);
-                                startActivity(intent);
-                                finish();
+                        }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                            @Override
+                            public void onProgress(@NonNull UploadTask.TaskSnapshot snapshot) {
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                            }
+                        });
+            }
+        }
+    }
+    private void initDatabaseQuery() {
+        firebaseDatabase = FirebaseDatabase.getInstance(getString(R.string.firebase_RTDB_url));
+        weddingTipsQuery = firebaseDatabase.getReference("weddingTips").orderByChild("id").equalTo(selectedWeddingTipsId);
+        isListening = true;
+        weddingTipsQuery.addValueEventListener(getWeddingTips());
+    }
+
+    private ValueEventListener getWeddingTips() {
+        return new ValueEventListener() {
+            @SuppressLint("NotifyDataSetChanged")
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (isListening) {
+                    if (snapshot.exists())
+                        for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                            weddingTip = dataSnapshot.getValue(WeddingTips.class);
+                            tipsImagesArrayList = new ArrayList();
+                            for (DataSnapshot imgSnapshot : dataSnapshot.child("image").getChildren()) {
+                                imgArrayUpdate2.add(imgSnapshot.getValue().toString());
+                                Uri myUri = Uri.parse(imgSnapshot.getValue().toString());
+                                tipsImagesArrayList.add(myUri);
+                               // imgArrayUpdate.add(myUri);
+
                             }
                         }
-                    });
                 }
-            }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onProgress(@NonNull UploadTask.TaskSnapshot snapshot) {
-                }
-            })
-            .addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                }
-            });
-        }
+                etTopic.setText(weddingTip.getTopic());
+                etDescription.setText(weddingTip.getDescription());
+                etTips.setText(weddingTip.getTips());
+                etAuthor.setText(weddingTip.getAuthor());
+
+                LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
+                imgIcon.setLayoutManager(linearLayoutManager);
+                ImgArrayAdapter imgArrayAdapter = new ImgArrayAdapter(context, tipsImagesArrayList);
+                imgIcon.setAdapter(imgArrayAdapter);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e("TAG: " + context.getClass(), "onCancelled", error.toException());
+            }
+        };
     }
 }

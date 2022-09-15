@@ -60,15 +60,30 @@ public class WeddingTipsChildAdapter extends RecyclerView.Adapter<WeddingTipsChi
         View disableOverlay = holder.disableOverlay;
         if(tipsImagesArrayList.size() == 1){
             Glide.with(context).load(tipsImagesArrayList.get(position)).into(tvTipsPhoto);
+            tvTipsPhoto.setOnClickListener(view -> {
+                Intent intent = new Intent(context, TipsImagesActivity.class);
+                intent.putExtra("image", weddingTips.get(parentAdapter.getBindingAdapterPosition()).getId());
+                context.startActivity(intent);
+            });
         }
         else if(tipsImagesArrayList.size() == 2){
             Glide.with(context).load(tipsImagesArrayList.get(0)).into(tvTipsPhoto);
             Glide.with(context).load(tipsImagesArrayList.get(1)).into(tvTipsPhoto1);
+            tvTipsPhoto.setOnClickListener(view -> {
+                Intent intent = new Intent(context, TipsImagesActivity.class);
+                intent.putExtra("image", weddingTips.get(parentAdapter.getBindingAdapterPosition()).getId());
+                context.startActivity(intent);
+            });
         }
         else{
             Glide.with(context).load(tipsImagesArrayList.get(0)).into(tvTipsPhoto);
             Glide.with(context).load(tipsImagesArrayList.get(1)).into(tvTipsPhoto1);
             Glide.with(context).load(tipsImagesArrayList.get(2)).into(tvTipsPhoto2);
+            tvTipsPhoto.setOnClickListener(view -> {
+                Intent intent = new Intent(context, TipsImagesActivity.class);
+                intent.putExtra("image", weddingTips.get(parentAdapter.getBindingAdapterPosition()).getId());
+                context.startActivity(intent);
+            });
             if(tipsImagesArrayList.size() > 3) {
                 int Items = tipsImagesArrayList.size() - 3;
                 String moreItems = "+" + Items;
@@ -86,9 +101,6 @@ public class WeddingTipsChildAdapter extends RecyclerView.Adapter<WeddingTipsChi
                 tvItemOverLay.setOnClickListener(null);
             }
         }
-
-
-
 
     }
     @Override

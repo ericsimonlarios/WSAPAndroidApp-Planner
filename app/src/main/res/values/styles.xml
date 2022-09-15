@@ -310,6 +310,11 @@
         <item name="strokeColor">@color/primary</item>
         <item name="cornerRadius">10dp</item>
     </style>
+    <style name="photo_card_bordered">
+        <item name="strokeWidth">.5dp</item>
+        <item name="strokeColor">@color/primary</item>
+        <item name="cornerRadius">1dp</item>
+    </style>
 
     <style name="transparent_edit_text" parent="activity_title">
         <item name="android:background">@color/transparent</item>

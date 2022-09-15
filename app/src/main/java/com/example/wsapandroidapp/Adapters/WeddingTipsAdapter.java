@@ -105,6 +105,7 @@ public class WeddingTipsAdapter extends RecyclerView.Adapter<WeddingTipsAdapter.
                     if(tipsImagesArrayList.size() == 1){
                         StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL);
                         holder.childRecyclerView.setLayoutManager(staggeredGridLayoutManager);
+
                     }
                     else if((tipsImagesArrayList.size() == 2)) {
                         StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL);
@@ -118,7 +119,7 @@ public class WeddingTipsAdapter extends RecyclerView.Adapter<WeddingTipsAdapter.
                     }
                     WeddingTipsChildAdapter  weddingTipsChildAdapter = new WeddingTipsChildAdapter(context, weddingTips, tipsImagesArrayList, holder);
                     holder.childRecyclerView.setAdapter(weddingTipsChildAdapter);
-                }
+                }   holder.childRecyclerView.setNestedScrollingEnabled(false);
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {

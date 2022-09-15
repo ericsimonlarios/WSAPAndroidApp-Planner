@@ -18,6 +18,7 @@ import com.example.wsapandroidapp.DataModel.WeddingTips;
 import com.example.wsapandroidapp.DialogClasses.ConfirmationDialog;
 import com.example.wsapandroidapp.ImageActivity;
 import com.example.wsapandroidapp.R;
+import com.example.wsapandroidapp.WeddingTipsFormActivity;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseReference;
@@ -87,7 +88,9 @@ public class AdminWeddingTipsAdapter extends RecyclerView.Adapter<AdminWeddingTi
         });
 
         imgUpdate.setOnClickListener(view -> {
-            if (adapterListener != null) adapterListener.onEdit(weddingTip);
+            Intent intent = new Intent(context, WeddingTipsFormActivity.class);
+            intent.putExtra("weddingTipsId", weddingTip.getId());
+            context.startActivity(intent);
         });
         confirmationDialog = new ConfirmationDialog(context);
         imgDelete.setOnClickListener(view -> {
@@ -159,7 +162,7 @@ public class AdminWeddingTipsAdapter extends RecyclerView.Adapter<AdminWeddingTi
     private AdapterListener adapterListener;
 
     public interface AdapterListener {
-        void onEdit(WeddingTips weddingTips);
+        void onEdit(WeddingTips weddingTip);
         void onDelete(WeddingTips weddingTips, List<String> tipsImagesList);
     }
 
