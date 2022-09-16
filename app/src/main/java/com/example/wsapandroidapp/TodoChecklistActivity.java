@@ -45,8 +45,8 @@ public class TodoChecklistActivity extends AppCompatActivity {
     private static final String TAG = "Error";
 
     EditText etSearch;
-    TextView tvMessage, textView27;
-    RecyclerView chkListRV, finishedTaskRV;
+    TextView tvMessage;
+    RecyclerView chkListRV;
     Spinner sortSpinner;
     FloatingActionButton addList;
 
@@ -55,6 +55,7 @@ public class TodoChecklistActivity extends AppCompatActivity {
     String userId;
     List<Todo> list = new ArrayList<>();
     List<Todo> items = new ArrayList<>();
+    List<Todo> getListItems = new ArrayList<>();
     List<Todo> searchItem;
     TodoChkListAdapter chkListAdapter;
     ComponentManager componentManager;
@@ -64,7 +65,7 @@ public class TodoChecklistActivity extends AppCompatActivity {
     String searchSupplier = "";
     boolean isSearched;
 
-    private DatabaseReference mDatabase, childRef;
+    private DatabaseReference mDatabase, childRef, getChildRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,7 +103,8 @@ public class TodoChecklistActivity extends AppCompatActivity {
         loadingDialog.showDialog();
 
         mDatabase.addValueEventListener(getListQuery());
-
+        getChildRef = childRef;
+        getChildRef.addValueEventListener(getRef());
         isSearched = false;
         etSearch.addTextChangedListener(new TextWatcher() {
             @Override
@@ -137,11 +139,24 @@ public class TodoChecklistActivity extends AppCompatActivity {
     public void filterSearch(String searchItem){
         items.clear();
         isSearched = true;
+        List<String> checkTitle = new ArrayList<>();
         for(Todo listItem: list){
             if(listItem.getListTitle().toLowerCase().contains(searchItem)){
                 items.add(listItem);
+                checkTitle.add(listItem.getListTitle().toLowerCase());
+                continue;
             }else if(listItem.getDateCreated().toLowerCase().contains(searchItem)){
                 items.add(listItem);
+
+            }
+            for(Todo itemList: getListItems){
+                if(listItem.getTitleKey().contains(String.valueOf(itemList.getChecklist().get(2)))){
+                    if(String.valueOf(itemList.getChecklist().get(0)).toLowerCase().contains(searchItem)){
+                            items.add(listItem);
+                            break;
+                    }
+                }
+
             }
         }
         if(items.size() == 0){
@@ -152,6 +167,31 @@ public class TodoChecklistActivity extends AppCompatActivity {
         }
         getPos();
         callAdapter(items);
+    }
+
+    public ValueEventListener getRef(){
+        return new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.exists()){
+                    for(DataSnapshot node: snapshot.getChildren()){
+                        for(DataSnapshot nodeChild: node.getChildren()){
+                            List list = new ArrayList();
+                            list.add(nodeChild.child("listText").getValue().toString());
+                            list.add(nodeChild.child("checked").getValue());
+                            list.add(nodeChild.child("titleKey").getValue().toString());
+                            list.add(nodeChild.child(nodeChild.getKey()));
+                            getListItems.add(new Todo(list));
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        };
     }
 
     public void getPos(){

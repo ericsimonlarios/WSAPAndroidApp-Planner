@@ -145,8 +145,7 @@ public class TodoChkListAdapter extends RecyclerView.Adapter<TodoChkListAdapter.
 
         holder.imgView18.setOnClickListener(v -> {
             addNew = true;
-//            callAdapter(holder, addNew, todo, todoList);
-            getLatestList(holder, addNew, todo, todoList);
+            callAdapter(holder, addNew, todo, todoList);
             Drawable drawable = ResourcesCompat.getDrawable(res, R.drawable.ic_baseline_arrow_drop_down_24, null);
             holder.itemDisplayManager.setImageDrawable(drawable);
             holder.checkListItemsLayout.setVisibility(View.VISIBLE);
@@ -172,7 +171,7 @@ public class TodoChkListAdapter extends RecyclerView.Adapter<TodoChkListAdapter.
             chkList.add(todo.getTitleKey());
             chkList.add(listKey);
             todoList.add(new Todo(chkList));
-            todoListItemAdapter.notifyItemInserted(0);
+            todoListItemAdapter.notifyItemInserted(todoListItemAdapter.getItemCount()+1);
         }
 
     }
