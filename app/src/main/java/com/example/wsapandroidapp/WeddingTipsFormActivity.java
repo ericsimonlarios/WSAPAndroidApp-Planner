@@ -67,7 +67,7 @@ public class WeddingTipsFormActivity extends AppCompatActivity {
     Context context;
 
     private boolean isImageChanged = false;
-    private boolean isUpdateMode = false;
+    private boolean isUpdateMode;
 
     private LoadingDialog loadingDialog;
     private ComponentManager componentManager;
@@ -81,19 +81,22 @@ public class WeddingTipsFormActivity extends AppCompatActivity {
     WeddingTips weddingTip;
 
     String selectedWeddingTipsId = "";
-
+    String image = "";
+    Integer getPos;
 
 
     private String topicLabel, author, description, tips;
     private List<Uri> imgArray = new ArrayList<>();
     private List<Uri> imgArrayUpdate = new ArrayList<>();
     private List<String> imgArrayUpdate2 = new ArrayList<>();
+    private List<String> imgArrayUpdated = new ArrayList<>();
     private List<Uri> tipsImagesArrayList = new ArrayList<>();
     private List<String> imgUriArray = new ArrayList<>();
     private List<TipsImages> tipsImages = new ArrayList<>();
     private Map<String, Object> map;
     private int counter;
     private int counterUpdate;
+    private int imagePos;
     private boolean isCompleted;
 
     @Override
@@ -101,6 +104,7 @@ public class WeddingTipsFormActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.dialog_wedding_tips_form_layout);
+
 
         ImageView imgClose = findViewById(R.id.imgClose);
         tvMessageTitle = findViewById(R.id.tvMessageTitle);
@@ -112,8 +116,10 @@ public class WeddingTipsFormActivity extends AppCompatActivity {
         componentManager = new ComponentManager(this);
 
         context = WeddingTipsFormActivity.this;
-        selectedWeddingTipsId = getIntent().getStringExtra("weddingTipsId");
 
+        selectedWeddingTipsId = getIntent().getStringExtra("weddingTipsId");
+        image = getIntent().getStringExtra("image");
+        //imagePos = getIntent().getIntExtra("int_value", 0);
         etTopic = findViewById(R.id.etTopic);
         etAuthor = findViewById((R.id.etAuthor));
         etDescription = findViewById(R.id.etDescription);
@@ -129,7 +135,6 @@ public class WeddingTipsFormActivity extends AppCompatActivity {
         Button btnChooseImage = findViewById(R.id.btnChooseImage);
         btnSubmit = findViewById(R.id.btnSubmit);
         tvMessageTitle.setText(this.getString(R.string.add_record, "Wedding Tips"));
-
         if(selectedWeddingTipsId != null){
             isUpdateMode = true;
             initDatabaseQuery();
@@ -272,7 +277,7 @@ public class WeddingTipsFormActivity extends AppCompatActivity {
                     data != null && data.getData() != null) {
                 imgArrayUpdate.add(data.getData());
                 tipsImagesArrayList.add(data.getData());
-                callImgAdapter(tipsImagesArrayList);
+                callImgAdapter(tipsImagesArrayList, isUpdateMode);
             }
 
         }
@@ -281,16 +286,34 @@ public class WeddingTipsFormActivity extends AppCompatActivity {
                     data != null && data.getData() != null)
             {
                 imgArray.add(data.getData());
-                callImgAdapter(imgArray);
+                callImgAdapter(imgArray, isUpdateMode);
             }
         }
     }
 
-    public void callImgAdapter(List<Uri> imgList){
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
-        imgIcon.setLayoutManager(linearLayoutManager);
-        ImgArrayAdapter imgArrayAdapter = new ImgArrayAdapter(this, imgList);
-        imgIcon.setAdapter(imgArrayAdapter);
+    public void callImgAdapter(List<Uri> imgList, boolean isUpdateMode){
+        if(isUpdateMode){
+            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+            imgIcon.setLayoutManager(linearLayoutManager);
+            ImgArrayAdapter imgArrayAdapter = new ImgArrayAdapter(context,isUpdateMode, imgList);
+            imgIcon.setAdapter(imgArrayAdapter);
+            imgArrayAdapter.setAdapterListener(new ImgArrayAdapter.AdapterListener() {
+                @Override
+                public void passImg(int posImg) {
+                    getPos = posImg;
+//                    imgArrayUpdate2.remove(getPos);
+//                    tipsImagesArrayList.remove(getPos);
+//                    imgArrayAdapter.notifyItemRemoved(getPos);
+                    Toast.makeText(context, String.valueOf(getPos) , Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+        else{
+            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+            imgIcon.setLayoutManager(linearLayoutManager);
+            ImgArrayAdapter imgArrayAdapter = new ImgArrayAdapter(context,isUpdateMode, imgList);
+            imgIcon.setAdapter(imgArrayAdapter);
+        }
     }
 
     public String getFileExtension(Uri uri){
@@ -376,14 +399,27 @@ public class WeddingTipsFormActivity extends AppCompatActivity {
             String weddingTipsKey = selectedWeddingTipsId;
             WeddingTips weddingTips = new WeddingTips(weddingTipsKey, topicLabel,
                     description ,tips, author, date.getDateText());
+
             if(imgArrayUpdate.size() == 0)
-            {
-                databaseReference.child("weddingTips").child(weddingTipsKey).setValue(weddingTips);
-                loadingDialog.dismissDialog();
-                Toast.makeText(WeddingTipsFormActivity.this, "Updated Successfully", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(WeddingTipsFormActivity.this, AdminWeddingTipsActivity.class);
-                startActivity(intent);
-                finish();
+            {   databaseReference.child("weddingTips").child(weddingTipsKey).setValue(weddingTips);
+                for (String string: imgArrayUpdate2)
+                {
+                    counterUpdate++;
+                    String imageKey2 = databaseReference.child("weddingTips").push().getKey();
+                    map.put(imageKey2, string);
+                    databaseReference.child("weddingTips").child(weddingTipsKey).child("image").updateChildren(map);
+
+                    if (counterUpdate == imgArrayUpdate2.size()){
+                        isCompleted = true;
+                    }
+                    if(isCompleted) {
+                        loadingDialog.dismissDialog();
+                        Toast.makeText(WeddingTipsFormActivity.this, "Updated Successfully", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(WeddingTipsFormActivity.this, AdminWeddingTipsActivity.class);
+                        startActivity(intent);
+                        finish();
+                    }
+                }
             }
             else{
                 for(Uri uri: imgArrayUpdate){
@@ -415,8 +451,8 @@ public class WeddingTipsFormActivity extends AppCompatActivity {
                                                 loadingDialog.dismissDialog();
                                                 Toast.makeText(WeddingTipsFormActivity.this, "Updated Successfully", Toast.LENGTH_SHORT).show();
                                                 Intent intent = new Intent(WeddingTipsFormActivity.this, AdminWeddingTipsActivity.class);
-                                                startActivity(intent);
                                                 finish();
+                                                startActivity(intent);
                                             }
                                         }
                                     });
@@ -470,8 +506,9 @@ public class WeddingTipsFormActivity extends AppCompatActivity {
                                             loadingDialog.dismissDialog();
                                             Toast.makeText(WeddingTipsFormActivity.this, "Added Successfully", Toast.LENGTH_SHORT).show();
                                             Intent intent = new Intent(WeddingTipsFormActivity.this, AdminWeddingTipsActivity.class);
-                                            startActivity(intent);
                                             finish();
+                                            startActivity(intent);
+
                                         }
                                     }
                                 });
@@ -520,10 +557,7 @@ public class WeddingTipsFormActivity extends AppCompatActivity {
                 etTips.setText(weddingTip.getTips());
                 etAuthor.setText(weddingTip.getAuthor());
 
-                LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
-                imgIcon.setLayoutManager(linearLayoutManager);
-                ImgArrayAdapter imgArrayAdapter = new ImgArrayAdapter(context, tipsImagesArrayList);
-                imgIcon.setAdapter(imgArrayAdapter);
+                callImgAdapter(tipsImagesArrayList, isUpdateMode);
             }
 
             @Override
@@ -532,4 +566,5 @@ public class WeddingTipsFormActivity extends AppCompatActivity {
             }
         };
     }
+
 }

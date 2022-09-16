@@ -1,6 +1,8 @@
 package com.example.wsapandroidapp.Adapters;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +16,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.wsapandroidapp.R;
+import com.example.wsapandroidapp.TipsImagesActivity;
+import com.example.wsapandroidapp.WeddingTipsFormActivity;
 
 import java.util.List;
 
@@ -21,8 +25,11 @@ public class ImgArrayAdapter extends RecyclerView.Adapter<ImgArrayAdapter.ViewHo
 
     Context context;
     List<Uri> imgArray;
+    private String selectedWeddingTipsId;
+    boolean isUpdateMode;
 
-    public ImgArrayAdapter(Context context, List<Uri> imgArray){
+    public ImgArrayAdapter(Context context,Boolean isUpdateMode, List<Uri> imgArray){
+        this.isUpdateMode = isUpdateMode;
         this.context = context;
         this.imgArray = imgArray;
     }
@@ -42,20 +49,45 @@ public class ImgArrayAdapter extends RecyclerView.Adapter<ImgArrayAdapter.ViewHo
     public ImgArrayAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.custom_add_image_wedding_tips_layout, parent, false);
         return new ViewHolder(view);
+
     }
 
     @Override
     public void onBindViewHolder(@NonNull ImgArrayAdapter.ViewHolder holder, int position) {
         Glide.with(context).load(imgArray.get(position)).into(holder.tvTipsPhoto);
-        holder.removeImage.setOnClickListener(view ->{
-            int getPos = holder.getAdapterPosition();
-            imgArray.remove(getPos);
-            notifyItemRemoved(getPos);
-        });
+        if(isUpdateMode)
+        {
+                holder.removeImage.setOnClickListener(view ->{
+                int getPos = holder.getBindingAdapterPosition();
+                Toast.makeText(context, "testing", Toast.LENGTH_SHORT).show();
+                if (adapterListener != null) adapterListener.passImg(getPos);
+                 imgArray.remove(getPos);
+                notifyItemRemoved(getPos);
+            });
+        }
+        else{
+            Toast.makeText(context, "no id ", Toast.LENGTH_SHORT).show();
+            holder.removeImage.setOnClickListener(view ->{
+                int getPos = holder.getAdapterPosition();
+                imgArray.remove(getPos);
+                notifyItemRemoved(getPos);
+            });
+        }
     }
 
     @Override
     public int getItemCount() {
         return imgArray.size();
     }
+
+    private AdapterListener adapterListener;
+
+    public interface AdapterListener
+    {
+        void passImg (int getPos);
+    }
+    public void setAdapterListener(ImgArrayAdapter.AdapterListener adapterListener) {
+        this.adapterListener = adapterListener;
+    }
+
 }
