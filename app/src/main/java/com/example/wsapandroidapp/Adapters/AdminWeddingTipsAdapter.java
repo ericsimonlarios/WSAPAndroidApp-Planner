@@ -15,10 +15,17 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.wsapandroidapp.DataModel.WeddingTips;
+import com.example.wsapandroidapp.DialogClasses.ConfirmationDialog;
 import com.example.wsapandroidapp.ImageActivity;
 import com.example.wsapandroidapp.R;
+import com.example.wsapandroidapp.WeddingTipsFormActivity;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,9 +35,15 @@ public class AdminWeddingTipsAdapter extends RecyclerView.Adapter<AdminWeddingTi
     private final List<WeddingTips> weddingTips;
     private final LayoutInflater layoutInflater;
     private List<ArrayList> tipsImagesList;
-
+    private ConfirmationDialog confirmationDialog;
     private final Context context;
-
+    private int getPos;
+    private FirebaseDatabase firebaseDatabase;
+    private DatabaseReference databaseReference;
+    private FirebaseStorage firebaseStorage;
+    private StorageReference storageReference;
+    private boolean isDeleted;
+    private int counter;
     public AdminWeddingTipsAdapter(Context context, List<WeddingTips> weddingTips, List<ArrayList>tipsImagesList) {
         this.tipsImagesList = tipsImagesList;
         this.weddingTips = weddingTips;
@@ -61,13 +74,13 @@ public class AdminWeddingTipsAdapter extends RecyclerView.Adapter<AdminWeddingTi
 
         imgMoreInfo.setVisibility(View.GONE);
         imgMove.setVisibility(View.GONE);
-
         WeddingTips weddingTip = weddingTips.get(position);
         tvTipTitle.setText(weddingTip.getTopic());
         tvDescription.setText(weddingTip.getDescription());
-       Glide.with(context).load(tipsImagesList.get(position).get(0).toString()).centerCrop().placeholder(R.drawable.ic_wsap).
-                error(R.drawable.ic_wsap).into(imgPoster);
-
+        if(tipsImagesList.get(position).get(0).toString() != null){
+            Glide.with(context).load(tipsImagesList.get(position).get(0).toString()).centerCrop().placeholder(R.drawable.ic_wsap).
+                    error(R.drawable.ic_wsap).into(imgPoster);
+        }
         imgPoster.setOnClickListener(view -> {
             Intent intent = new Intent(context, ImageActivity.class);
             intent.putExtra("image", tipsImagesList.get(position).get(0).toString());
@@ -75,11 +88,50 @@ public class AdminWeddingTipsAdapter extends RecyclerView.Adapter<AdminWeddingTi
         });
 
         imgUpdate.setOnClickListener(view -> {
-            if (adapterListener != null) adapterListener.onEdit(weddingTip);
+            Intent intent = new Intent(context, WeddingTipsFormActivity.class);
+            intent.putExtra("weddingTipsId", weddingTip.getId());
+            context.startActivity(intent);
+        });
+        confirmationDialog = new ConfirmationDialog(context);
+        imgDelete.setOnClickListener(view -> {
+//            if (adapterListener != null) adapterListener.onDelete(weddingTip, tipsImagesList.get(position));
+            getPos = holder.getBindingAdapterPosition();
+            confirmationDialog.setMessage(context.getString(R.string.confirmation_prompt, "delete the topic"));
+            confirmationDialog.showDialog();
         });
 
-        imgDelete.setOnClickListener(view -> {
-            if (adapterListener != null) adapterListener.onDelete(weddingTip);
+        confirmationDialog.setDialogListener(() -> {
+            isDeleted = false;
+            firebaseDatabase = FirebaseDatabase.getInstance();
+            firebaseStorage = FirebaseStorage.getInstance();
+            databaseReference = firebaseDatabase.getReference();
+            if(weddingTips.get(getPos).getId() != null){
+                Toast.makeText(context, String.valueOf(weddingTips.get(getPos).getId()), Toast.LENGTH_SHORT).show();
+                counter = 0;
+                for(int i = 0; tipsImagesList.get(getPos).size() > i; i++){
+                    String deleteImg = tipsImagesList.get(getPos).get(i).toString();
+                    storageReference = firebaseStorage.getReference().getStorage().getReferenceFromUrl(deleteImg);
+                    storageReference.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void unused) {
+
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(context, "Delete Failed", Toast.LENGTH_SHORT).show();
+                            confirmationDialog.dismissDialog();
+                        }
+                    });
+                }
+                Toast.makeText(context, "Deleted Successfully", Toast.LENGTH_SHORT).show();
+                databaseReference.child("weddingTips").child(weddingTips.get(getPos).getId()).removeValue();
+                confirmationDialog.dismissDialog();
+            }else{
+                Toast.makeText(context, "Error Deleting", Toast.LENGTH_SHORT).show();
+                confirmationDialog.dismissDialog();
+            }
+
         });
 
     }
@@ -110,8 +162,8 @@ public class AdminWeddingTipsAdapter extends RecyclerView.Adapter<AdminWeddingTi
     private AdapterListener adapterListener;
 
     public interface AdapterListener {
-        void onEdit(WeddingTips weddingTips);
-        void onDelete(WeddingTips weddingTips);
+        void onEdit(WeddingTips weddingTip);
+        void onDelete(WeddingTips weddingTips, List<String> tipsImagesList);
     }
 
     public void setAdapterListener(AdapterListener adapterListener) {
