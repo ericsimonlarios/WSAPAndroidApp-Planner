@@ -59,7 +59,6 @@ public class ImgArrayAdapter extends RecyclerView.Adapter<ImgArrayAdapter.ViewHo
         {
                 holder.removeImage.setOnClickListener(view ->{
                 int getPos = holder.getBindingAdapterPosition();
-                Toast.makeText(context, "testing", Toast.LENGTH_SHORT).show();
                 if (adapterListener != null) adapterListener.passImg(getPos);
                  imgArray.remove(getPos);
                 notifyItemRemoved(getPos);

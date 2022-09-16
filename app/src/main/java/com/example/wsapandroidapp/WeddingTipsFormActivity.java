@@ -82,7 +82,7 @@ public class WeddingTipsFormActivity extends AppCompatActivity {
 
     String selectedWeddingTipsId = "";
     String image = "";
-    Integer getPos;
+    int getPos;
 
 
     private String topicLabel, author, description, tips;
@@ -119,7 +119,6 @@ public class WeddingTipsFormActivity extends AppCompatActivity {
 
         selectedWeddingTipsId = getIntent().getStringExtra("weddingTipsId");
         image = getIntent().getStringExtra("image");
-        //imagePos = getIntent().getIntExtra("int_value", 0);
         etTopic = findViewById(R.id.etTopic);
         etAuthor = findViewById((R.id.etAuthor));
         etDescription = findViewById(R.id.etDescription);
@@ -301,10 +300,7 @@ public class WeddingTipsFormActivity extends AppCompatActivity {
                 @Override
                 public void passImg(int posImg) {
                     getPos = posImg;
-//                    imgArrayUpdate2.remove(getPos);
-//                    tipsImagesArrayList.remove(getPos);
-//                    imgArrayAdapter.notifyItemRemoved(getPos);
-                    Toast.makeText(context, String.valueOf(getPos) , Toast.LENGTH_SHORT).show();
+                    imgArrayUpdate2.remove(getPos);
                 }
             });
         }
@@ -399,7 +395,6 @@ public class WeddingTipsFormActivity extends AppCompatActivity {
             String weddingTipsKey = selectedWeddingTipsId;
             WeddingTips weddingTips = new WeddingTips(weddingTipsKey, topicLabel,
                     description ,tips, author, date.getDateText());
-
             if(imgArrayUpdate.size() == 0)
             {   databaseReference.child("weddingTips").child(weddingTipsKey).setValue(weddingTips);
                 for (String string: imgArrayUpdate2)
@@ -408,7 +403,6 @@ public class WeddingTipsFormActivity extends AppCompatActivity {
                     String imageKey2 = databaseReference.child("weddingTips").push().getKey();
                     map.put(imageKey2, string);
                     databaseReference.child("weddingTips").child(weddingTipsKey).child("image").updateChildren(map);
-
                     if (counterUpdate == imgArrayUpdate2.size()){
                         isCompleted = true;
                     }
@@ -434,7 +428,7 @@ public class WeddingTipsFormActivity extends AppCompatActivity {
                                             String imageKey = databaseReference.child("weddingTips").push().getKey();
                                             map.put(imageKey, uri1.toString());
                                             databaseReference.child("weddingTips").child(weddingTipsKey).setValue(weddingTips);
-                                            databaseReference.child("weddingTips").child(weddingTipsKey).child("image").updateChildren(map);
+                                            databaseReference.child("weddingTips").child(weddingTipsKey).child("image").setValue(map);
                                             if(counter == imgArrayUpdate.size()){
                                                 for (String string: imgArrayUpdate2)
                                                 {
@@ -445,14 +439,14 @@ public class WeddingTipsFormActivity extends AppCompatActivity {
                                                     if (counterUpdate == imgArrayUpdate2.size()){
                                                         isCompleted = true;
                                                     }
+                                                    if(isCompleted) {
+                                                        loadingDialog.dismissDialog();
+                                                        Toast.makeText(WeddingTipsFormActivity.this, "Updated Successfully", Toast.LENGTH_SHORT).show();
+                                                        Intent intent = new Intent(WeddingTipsFormActivity.this, AdminWeddingTipsActivity.class);
+                                                        startActivity(intent);
+                                                        finish();
+                                                    }
                                                 }
-                                            }
-                                            if(isCompleted) {
-                                                loadingDialog.dismissDialog();
-                                                Toast.makeText(WeddingTipsFormActivity.this, "Updated Successfully", Toast.LENGTH_SHORT).show();
-                                                Intent intent = new Intent(WeddingTipsFormActivity.this, AdminWeddingTipsActivity.class);
-                                                finish();
-                                                startActivity(intent);
                                             }
                                         }
                                     });
