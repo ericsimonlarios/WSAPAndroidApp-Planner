@@ -54,24 +54,23 @@ public class ImgArrayAdapter extends RecyclerView.Adapter<ImgArrayAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull ImgArrayAdapter.ViewHolder holder, int position) {
-        Glide.with(context).load(imgArray.get(position)).into(holder.tvTipsPhoto);
         if(isUpdateMode)
         {
                 holder.removeImage.setOnClickListener(view ->{
                 int getPos = holder.getBindingAdapterPosition();
-                if (adapterListener != null) adapterListener.passImg(getPos);
                  imgArray.remove(getPos);
-                notifyItemRemoved(getPos);
+                 notifyItemRemoved(getPos);
+                 if (adapterListener != null) adapterListener.passImg(getPos);
             });
         }
         else{
-            Toast.makeText(context, "no id ", Toast.LENGTH_SHORT).show();
             holder.removeImage.setOnClickListener(view ->{
                 int getPos = holder.getAdapterPosition();
                 imgArray.remove(getPos);
                 notifyItemRemoved(getPos);
             });
         }
+        Glide.with(context).load(imgArray.get(position)).into(holder.tvTipsPhoto);
     }
 
     @Override
