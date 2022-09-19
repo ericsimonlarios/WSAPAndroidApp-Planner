@@ -12,16 +12,20 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.example.wsapandroidapp.Adapters.WeddingTipsAdapter;
 import com.example.wsapandroidapp.Classes.Enums;
 import com.example.wsapandroidapp.Classes.Units;
 import com.example.wsapandroidapp.DataModel.Expo;
 import com.example.wsapandroidapp.DataModel.Supplier;
+import com.example.wsapandroidapp.DataModel.WeddingTips;
 import com.example.wsapandroidapp.DialogClasses.MessageDialog;
 import com.example.wsapandroidapp.ExpoDetailsActivity;
 import com.example.wsapandroidapp.ExposActivity;
 import com.example.wsapandroidapp.R;
 import com.example.wsapandroidapp.SupplierDetailsActivity;
 import com.example.wsapandroidapp.SuppliersActivity;
+import com.example.wsapandroidapp.WeddingTipsActivity;
+import com.example.wsapandroidapp.WeddingTipsDetailsActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -39,13 +43,14 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 public class HomeFragment extends Fragment {
 
     ConstraintLayout constraintLayout;
     ProgressBar pbLoading2;
     CardView upcomingExposCard, featuredWeddingTipCard, featuredSupplierCard, featuredTriviaCard;
-    TextView tvUpcomingExpo, tvFeaturedSupplier;
+    TextView tvUpcomingExpo, tvFeaturedSupplier, tvFeaturedWeddingTip;
     Button btnViewAllExpos, btnViewAllWeddingTips, btnViewAllSuppliers, btnViewAllTrivia;
 
     Context context;
@@ -56,12 +61,13 @@ public class HomeFragment extends Fragment {
     FirebaseUser firebaseUser;
     FirebaseDatabase firebaseDatabase;
 
-    Query exposQuery, suppliersQuery;
+    Query exposQuery, suppliersQuery, weddingTipsQuery;
 
     boolean isListening;
 
     List<Expo> expos = new ArrayList<>();
     List<Supplier> suppliers = new ArrayList<>();
+    List<WeddingTips> weddingTips = new ArrayList<>();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -79,6 +85,7 @@ public class HomeFragment extends Fragment {
 
         tvUpcomingExpo = view.findViewById(R.id.tvUpcomingExpo);
         tvFeaturedSupplier = view.findViewById(R.id.tvFeaturedSupplier);
+        tvFeaturedWeddingTip = view.findViewById(R.id.tvFeaturedWeddingTip);
 
         btnViewAllExpos = view.findViewById(R.id.btnViewAllExpos);
         btnViewAllWeddingTips = view.findViewById(R.id.btnViewAllWeddingTips);
@@ -94,21 +101,25 @@ public class HomeFragment extends Fragment {
         firebaseDatabase = FirebaseDatabase.getInstance(getString(R.string.firebase_RTDB_url));
         exposQuery = firebaseDatabase.getReference("expos");
         suppliersQuery = firebaseDatabase.getReference("suppliers").orderByChild("supplier");
+        weddingTipsQuery = firebaseDatabase.getReference("weddingTips");
 
         isListening = true;
         pbLoading2.setVisibility(View.VISIBLE);
         constraintLayout.setVisibility(View.GONE);
         exposQuery.addValueEventListener(getExpos());
-
+        weddingTipsQuery.addValueEventListener(getWeddingTips());
+        
         btnViewAllExpos.setOnClickListener(view1 -> {
             Intent intent = new Intent(context, ExposActivity.class);
             startActivity(intent);
         });
 
         btnViewAllWeddingTips.setOnClickListener(view1 -> {
-            messageDialog.setMessage(getString(R.string.coming_soon));
-            messageDialog.setMessageType(Enums.INFO_MESSAGE);
-            messageDialog.showDialog();
+            Intent intent = new Intent(context, WeddingTipsActivity.class);
+            startActivity(intent);
+//            messageDialog.setMessage(getString(R.string.coming_soon));
+//            messageDialog.setMessageType(Enums.INFO_MESSAGE);
+//            messageDialog.showDialog();
         });
 
         btnViewAllSuppliers.setOnClickListener(view1 -> {
@@ -166,6 +177,46 @@ public class HomeFragment extends Fragment {
                 pbLoading2.setVisibility(View.GONE);
 
                 messageDialog.setMessage(getString(R.string.fd_on_cancelled, "Expos"));
+                messageDialog.setMessageType(Enums.ERROR_MESSAGE);
+                messageDialog.showDialog();
+            }
+        };
+    }
+
+    private ValueEventListener getWeddingTips() {
+        return new ValueEventListener() {
+            @SuppressLint("NotifyDataSetChanged")
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (isListening) {
+                    weddingTips.clear();
+                    if (snapshot.exists())
+                        for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                            WeddingTips weddingTip = dataSnapshot.getValue(WeddingTips.class);
+                            if (weddingTip != null)
+                                weddingTips.add(weddingTip);
+                        }
+                    if (weddingTips.size() == 0)
+                        tvUpcomingExpo.setText(getString(R.string.no_record, "Featured Wedding Tip"));
+                    else {
+                        Random rnd = new Random();
+
+                        WeddingTips weddingTip = weddingTips.get(rnd.nextInt(weddingTips.size() - 1));
+                        tvFeaturedWeddingTip.setText(weddingTip.getTopic());
+
+                        featuredWeddingTipCard.setOnClickListener(view -> {
+                            Intent intent = new Intent(context, WeddingTipsDetailsActivity.class);
+                            intent.putExtra("weddingTipsId", weddingTip.getId());
+                            context.startActivity(intent);
+                        });
+                    }
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e("TAG: " + context.getClass(), "onCancelled", error.toException());
+
+                messageDialog.setMessage(getString(R.string.fd_on_cancelled, "WeddingTips"));
                 messageDialog.setMessageType(Enums.ERROR_MESSAGE);
                 messageDialog.showDialog();
             }
