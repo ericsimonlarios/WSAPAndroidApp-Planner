@@ -29,7 +29,7 @@ public class WeddingTipsDetailsAdapter extends RecyclerView.Adapter<WeddingTipsD
 
 
 
-    private List<String> tipsImagesArrayList;
+    private final List<String> tipsImagesArrayList;
     private final String selectedWeddingTipsId;
     private final LayoutInflater layoutInflater;
     private final Context context;

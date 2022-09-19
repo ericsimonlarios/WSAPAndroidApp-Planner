@@ -50,5 +50,6 @@
 
     <color name="email_address">#CC9933</color>
     <color name="email_address_ripple">#8E6B24</color>
+    <color name= "transparent_black">#7F000000</color>
 
 </resources>

@@ -81,7 +81,6 @@
     <string name="same_email_address_error">The new email address should not be the same as the current email address.</string>
     <string name="sign_out">Sign out</string>
     <string name="email_verification_link_failed">Failed to send the email verification link.</string>
-
     <string name="home">Home</string>
     <string name="expos">Expos</string>
     <string name="suppliers">Suppliers</string>
@@ -227,7 +226,6 @@
     <string name="chapters">Chapters</string>
 
     <string name="exhibitor_label">Exhibitor Label</string>
-
 
     <string name="weddingTips_label">Topic</string>
 

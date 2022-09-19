@@ -30,7 +30,6 @@ import com.example.wsapandroidapp.DataModel.TipsImages;
 import com.example.wsapandroidapp.DataModel.WeddingTips;
 import com.example.wsapandroidapp.DialogClasses.ConfirmationDialog;
 import com.example.wsapandroidapp.DialogClasses.MessageDialog;
-import com.example.wsapandroidapp.DialogClasses.WeddingTipsFormDialog;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
@@ -50,7 +49,6 @@ public class AdminWeddingTipsActivity extends AppCompatActivity {
     Context context;
     MessageDialog messageDialog;
     ConfirmationDialog confirmationDialog;
-    WeddingTipsFormDialog weddingTipsFormDialog;
 
     FirebaseDatabase firebaseDatabase;
 
@@ -58,7 +56,7 @@ public class AdminWeddingTipsActivity extends AppCompatActivity {
     boolean isListening;
 
     List<WeddingTips> weddingTips = new ArrayList<>();
-    List<Uri> images = new ArrayList<>();
+    List<String> tipsImgList = new ArrayList<>();
     List tipsImagesArrayList = new ArrayList<>();
     List tipsImagesList = new ArrayList<>();
 
@@ -85,33 +83,14 @@ public class AdminWeddingTipsActivity extends AppCompatActivity {
 
         confirmationDialog = new ConfirmationDialog(context);
 
-        confirmationDialog.setDialogListener(() -> {
-            weddingTipsFormDialog.deleteWeddingTips(selectedWeddingTips);
-            confirmationDialog.dismissDialog();
-        });
-
-        weddingTipsFormDialog = new WeddingTipsFormDialog(context);
-
         firebaseDatabase = FirebaseDatabase.getInstance(getString(R.string.firebase_RTDB_url));
         weddingTipsQuery = firebaseDatabase.getReference("weddingTips");
 
         imgAdd.setOnClickListener(view -> {
-           images.clear();
-           weddingTipsFormDialog.showDialog();
+            Intent intent = new Intent(this, WeddingTipsFormActivity.class);
+            startActivity(intent);
+            finish();
         });
-
-        weddingTipsFormDialog.setDialogListener(() -> {
-            if (ActivityCompat.checkSelfPermission(context,
-                    Manifest.permission.READ_EXTERNAL_STORAGE) ==
-                    PackageManager.PERMISSION_GRANTED
-            ) openStorage();
-            else {
-                ActivityCompat.requestPermissions((Activity) context,
-                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                        Enums.GENERAL_REQUEST_CODE);
-            }
-        });
-
 
         isListening = true;
         weddingTipsQuery.addValueEventListener(getWeddingTips());
@@ -143,20 +122,6 @@ public class AdminWeddingTipsActivity extends AppCompatActivity {
                 recyclerView.setLayoutManager(linearLayoutManager);
                 recyclerView.setAdapter(adminWeddingTipsAdapter);
 
-                adminWeddingTipsAdapter.setAdapterListener(new AdminWeddingTipsAdapter.AdapterListener() {
-                    @Override
-                    public void onEdit(WeddingTips weddingTips) {
-                        // weddingTipsFormDialog.setUpdateMode(true);
-                        weddingTipsFormDialog.setWeddingTips(weddingTips);
-                        weddingTipsFormDialog.showDialog();
-                    }
-                    @Override
-                    public void onDelete(WeddingTips weddingTips) {
-                        selectedWeddingTips = weddingTips;
-                        confirmationDialog.setMessage(getString(R.string.confirmation_prompt, "delete the topic"));
-                        confirmationDialog.showDialog();
-                    }
-                });
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
@@ -168,26 +133,7 @@ public class AdminWeddingTipsActivity extends AppCompatActivity {
             }
         };
     }
-    @SuppressWarnings("deprecation")
-    private void openStorage() {
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(intent, Enums.PICK_IMAGE_REQUEST_CODE);
-    }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == Enums.VOICE_RECOGNITION_REQUEST_CODE && resultCode == RESULT_OK) {
-            assert data != null;
-            etSearch.setText(data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS).get(0));
-        } else if (requestCode == Enums.PICK_IMAGE_REQUEST_CODE && resultCode == RESULT_OK &&
-                data != null && data.getData() != null) {
-            images.add(data.getData());
-            weddingTipsFormDialog.getAdapter(images);
-        }
-    }
     @Override
     public void onResume() {
         isListening = true;

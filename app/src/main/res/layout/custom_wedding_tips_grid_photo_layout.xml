@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/imageBgLayout"
         style="@style/item_card_bordered"
@@ -15,14 +16,7 @@
             android:layout_height="match_parent"
             android:scaleType="fitXY"
             app:srcCompat="@drawable/events" />
-        <TextView
-            android:id="@+id/tvItemOverlay"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:autoSizeTextType="uniform"
-            android:gravity="center"
-            android:text=""
-            />
+
     </com.google.android.material.card.MaterialCardView>
 
 
