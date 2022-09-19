@@ -134,6 +134,7 @@ public class TodoListItemAdapter extends RecyclerView.Adapter<TodoListItemAdapte
         int newPosition = holder.getBindingAdapterPosition();
         item.remove(newPosition);
         notifyItemRemoved(newPosition);
+        Toast.makeText(context, String.valueOf(newPosition), Toast.LENGTH_SHORT).show();
         Toast.makeText(context, "Task Deleted", Toast.LENGTH_SHORT).show();
     }
 

@@ -235,6 +235,18 @@ public class TodoChecklistActivity extends AppCompatActivity {
                 callAdapter(searchItem);
                 break;
             }
+            default:{
+                searchItem.sort((o1, o2) -> {
+                    try {
+                        return o2.getDateFormat().compareTo(o1.getDateFormat());
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                    return 0;
+                });
+                callAdapter(searchItem);
+                break;
+            }
         }
     }
 
@@ -271,10 +283,10 @@ public class TodoChecklistActivity extends AppCompatActivity {
                             assert todo != null;
                             list.add(new Todo(todo.getListTitle(), todo.getDateCreated(), todo.getUid(), todo.getTitleKey()));
                         }
-                        callAdapter(list);
-                    }else{
-                        callAdapter(list);
+
                     }
+                    getPos();
+                    callAdapter(list);
                     loadingDialog.dismissDialog();
             }
             @Override

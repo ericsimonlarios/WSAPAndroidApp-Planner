@@ -144,7 +144,7 @@ public class TodoChkListAdapter extends RecyclerView.Adapter<TodoChkListAdapter.
 
     public void callAdapter(ViewHolder holder, Todo todo, List<Todo> todoList){
 
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, true);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
         holder.checkListItems.setLayoutManager(linearLayoutManager);
         todoListItemAdapter = new TodoListItemAdapter(todoList, context, todo);
         holder.checkListItems.setAdapter(todoListItemAdapter);
