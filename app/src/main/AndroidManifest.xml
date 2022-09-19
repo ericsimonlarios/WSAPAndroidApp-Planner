@@ -131,7 +131,7 @@
         <activity
             android:name=".TodoChecklistActivity"
             android:exported="false"
-            android:windowSoftInputMode="stateHidden|adjustPan"/>
+            />
         <activity
             android:name=".BudgetPlanActivity"
             android:exported="false" />

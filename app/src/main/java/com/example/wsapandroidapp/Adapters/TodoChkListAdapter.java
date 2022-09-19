@@ -98,27 +98,13 @@ public class TodoChkListAdapter extends RecyclerView.Adapter<TodoChkListAdapter.
         holder.itemDisplayManager.setTag(R.drawable.ic_baseline_arrow_drop_up_24);
 
         Resources res = context.getResources();
+
+        holder.listTitleCV.setOnClickListener(view ->{
+            dropDownManager(holder, res);
+        });
+
         holder.itemDisplayManager.setOnClickListener(view ->{
-
-            int integer = (Integer) holder.itemDisplayManager.getTag();
-            switch (integer){
-                case R.drawable.ic_baseline_arrow_drop_down_24:{
-                    Drawable drawable = ResourcesCompat.getDrawable(res, R.drawable.ic_baseline_arrow_drop_up_24, null);
-                    holder.itemDisplayManager.setImageDrawable(drawable);
-                    holder.checkListItemsLayout.setVisibility(View.GONE);
-                    holder.itemDisplayManager.setTag(R.drawable.ic_baseline_arrow_drop_up_24);
-                    break;
-                }
-
-                case R.drawable.ic_baseline_arrow_drop_up_24:{
-                    Drawable drawable = ResourcesCompat.getDrawable(res, R.drawable.ic_baseline_arrow_drop_down_24, null);
-                    holder.itemDisplayManager.setImageDrawable(drawable);
-                    holder.checkListItemsLayout.setVisibility(View.VISIBLE);
-                    holder.itemDisplayManager.setTag(R.drawable.ic_baseline_arrow_drop_down_24);
-                    break;
-                }
-
-            }
+            dropDownManager(holder, res);
         });
 
         loadingDialog = new LoadingDialog(context);
@@ -156,13 +142,35 @@ public class TodoChkListAdapter extends RecyclerView.Adapter<TodoChkListAdapter.
         getLatestList(holder, addNew, todo, todoList);
     }
 
-    public void callAdapter(ViewHolder holder, Boolean addNew, Todo todo, List<Todo> todoList){
+    public void callAdapter(ViewHolder holder, Todo todo, List<Todo> todoList){
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, true);
         holder.checkListItems.setLayoutManager(linearLayoutManager);
         todoListItemAdapter = new TodoListItemAdapter(todoList, context, todo);
         holder.checkListItems.setAdapter(todoListItemAdapter);
 
+    }
+
+    public void dropDownManager(ViewHolder holder, Resources res){
+        int integer = (Integer) holder.itemDisplayManager.getTag();
+        switch (integer){
+            case R.drawable.ic_baseline_arrow_drop_down_24:{
+                Drawable drawable = ResourcesCompat.getDrawable(res, R.drawable.ic_baseline_arrow_drop_up_24, null);
+                holder.itemDisplayManager.setImageDrawable(drawable);
+                holder.checkListItemsLayout.setVisibility(View.GONE);
+                holder.itemDisplayManager.setTag(R.drawable.ic_baseline_arrow_drop_up_24);
+                break;
+            }
+
+            case R.drawable.ic_baseline_arrow_drop_up_24:{
+                Drawable drawable = ResourcesCompat.getDrawable(res, R.drawable.ic_baseline_arrow_drop_down_24, null);
+                holder.itemDisplayManager.setImageDrawable(drawable);
+                holder.checkListItemsLayout.setVisibility(View.VISIBLE);
+                holder.itemDisplayManager.setTag(R.drawable.ic_baseline_arrow_drop_down_24);
+                break;
+            }
+
+        }
     }
 
     public void getLatestList(ViewHolder holder, Boolean addNew, Todo todo,List<Todo> todoList){
@@ -203,7 +211,7 @@ public class TodoChkListAdapter extends RecyclerView.Adapter<TodoChkListAdapter.
                             todoListItemAdapter.notifyItemInserted(todoListItemAdapter.getItemCount()+1);
                         }
                     }
-                    callAdapter(holder, addNew, todo, todoList);
+                    callAdapter(holder, todo, todoList);
                     loadingDialog.dismissDialog();
                 }
                 @Override
