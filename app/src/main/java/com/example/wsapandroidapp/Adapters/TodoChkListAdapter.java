@@ -145,7 +145,7 @@ public class TodoChkListAdapter extends RecyclerView.Adapter<TodoChkListAdapter.
 
         holder.imgView18.setOnClickListener(v -> {
             addNew = true;
-            callAdapter(holder, addNew, todo, todoList);
+            getLatestList(holder, addNew, todo, todoList);
             Drawable drawable = ResourcesCompat.getDrawable(res, R.drawable.ic_baseline_arrow_drop_down_24, null);
             holder.itemDisplayManager.setImageDrawable(drawable);
             holder.checkListItemsLayout.setVisibility(View.VISIBLE);
@@ -163,17 +163,6 @@ public class TodoChkListAdapter extends RecyclerView.Adapter<TodoChkListAdapter.
         todoListItemAdapter = new TodoListItemAdapter(todoList, context, todo);
         holder.checkListItems.setAdapter(todoListItemAdapter);
 
-        if(addNew){
-            List chkList = new ArrayList();
-            String listKey = mDatabase.child("TodoChecklistItems").push().getKey();
-            chkList.add("");
-            chkList.add(false);
-            chkList.add(todo.getTitleKey());
-            chkList.add(listKey);
-            todoList.add(new Todo(chkList));
-            todoListItemAdapter.notifyItemInserted(todoListItemAdapter.getItemCount()+1);
-        }
-
     }
 
     public void getLatestList(ViewHolder holder, Boolean addNew, Todo todo,List<Todo> todoList){
@@ -183,6 +172,7 @@ public class TodoChkListAdapter extends RecyclerView.Adapter<TodoChkListAdapter.
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     if(snapshot.exists()){
+                        todoList.clear();
                         for(DataSnapshot node: snapshot.getChildren()) {
                             if(Objects.equals(node.getKey(), todo.getTitleKey())){
                                 for (DataSnapshot nodeChild: node.getChildren()){
@@ -197,8 +187,20 @@ public class TodoChkListAdapter extends RecyclerView.Adapter<TodoChkListAdapter.
                                     chkList.add(titleKey);
                                     chkList.add(getListKey);
                                     todoList.add(new Todo(chkList));
+
                                 }
                             }
+                        }
+                        if(addNew){
+                            List chkList = new ArrayList();
+                            chkList.clear();
+                            String listKey = mDatabase.child("TodoChecklistItems").push().getKey();
+                            chkList.add("");
+                            chkList.add(false);
+                            chkList.add(todo.getTitleKey());
+                            chkList.add(listKey);
+                            todoList.add(new Todo(chkList));
+                            todoListItemAdapter.notifyItemInserted(todoListItemAdapter.getItemCount()+1);
                         }
                     }
                     callAdapter(holder, addNew, todo, todoList);
