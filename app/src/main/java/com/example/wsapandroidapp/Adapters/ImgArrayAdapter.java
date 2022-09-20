@@ -25,7 +25,6 @@ public class ImgArrayAdapter extends RecyclerView.Adapter<ImgArrayAdapter.ViewHo
 
     Context context;
     List<Uri> imgArray;
-    private String selectedWeddingTipsId;
     boolean isUpdateMode;
 
     public ImgArrayAdapter(Context context,Boolean isUpdateMode, List<Uri> imgArray){
