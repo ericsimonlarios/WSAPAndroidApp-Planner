@@ -11,12 +11,14 @@ import java.util.Locale;
 public class Todo{
     private String uid, listTitle, dateCreated, titleKey;
     private List<ToDoChecklist> checklist = new ArrayList<>();
+    private boolean checked;
     Date date;
-    public Todo(String listTitle, String dateCreated, String uid, String titleKey){
+    public Todo(String listTitle, String dateCreated, String uid, String titleKey, boolean checked){
         this.listTitle = listTitle;
         this.dateCreated = dateCreated;
         this.uid = uid;
         this.titleKey = titleKey;
+        this.checked = checked;
     }
 
     public Todo( List<ToDoChecklist> checklist){
@@ -34,6 +36,14 @@ public class Todo{
 
     public Todo(){
 
+    }
+
+    public boolean isChecked() {
+        return checked;
+    }
+
+    public void setChecked(boolean checked) {
+        this.checked = checked;
     }
 
     public void setTitleKey(String titleKey){

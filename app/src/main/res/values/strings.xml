@@ -15,6 +15,7 @@
     <string name="app_status_title">Under %s</string>
     <string name="app_status_prompt">We are sorry.\nPlease come back again later.</string>
     <string name="title">Insert checklist title here</string>
+    <string name="due_date">Pick a due date</string>
     <string name="item">item</string>
     <string name="fd_on_cancelled">Failed to get %s.</string>
     <string name="add_task">Add new task</string>
@@ -228,7 +229,7 @@
     <string name="exhibitor_label">Exhibitor Label</string>
 
     <string name="weddingTips_label">Topic</string>
-
+    <string name="titleLabel">Checklist Title</string>
     <string name="move_category">Move Category</string>
     <string name="select_category">Select Category</string>
 
@@ -347,8 +348,10 @@
     </string-array>
 
     <string-array name="todoSortArray">
-        <item>Asc Date</item>
-        <item>Desc Date</item>
+        <item>All</item>
+        <item>Today</item>
+        <item>Past</item>
+        <item>Future</item>
         <item>A-Z</item>
         <item>Z-A</item>
     </string-array>

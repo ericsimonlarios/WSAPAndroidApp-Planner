@@ -433,7 +433,7 @@ public class WeddingTipsFormActivity extends AppCompatActivity {
                                                     counterUpdate++;
                                                     String imageKey2 = databaseReference.child("weddingTips").push().getKey();
                                                     map.put(imageKey2, string);
-                                                    if (counterUpdate == imgArrayUpdate2.size()){
+                                                    if (counterUpdate == imgArrayUpdate2                           .size()){
                                                         databaseReference.child("weddingTips").child(weddingTipsKey).setValue(weddingTips);
                                                         databaseReference.child("weddingTips").child(weddingTipsKey).child("image").updateChildren(map);
                                                         isCompleted = true;

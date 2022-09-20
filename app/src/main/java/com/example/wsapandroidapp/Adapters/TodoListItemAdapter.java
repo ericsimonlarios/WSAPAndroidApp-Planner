@@ -79,6 +79,7 @@ public class TodoListItemAdapter extends RecyclerView.Adapter<TodoListItemAdapte
         mDatabase = FirebaseDatabase.getInstance().getReference().child("TodoChecklistItems").child(userId).child(todo.getTitleKey());
 
         int newPos = holder.getBindingAdapterPosition();
+
         checked = Boolean.parseBoolean(String.valueOf(item.get(newPos).getChecklist().get(1)));
         String listItemName = String.valueOf(item.get(newPos).getChecklist().get(0));
         holder.chklistItem.setText(listItemName);
@@ -134,7 +135,6 @@ public class TodoListItemAdapter extends RecyclerView.Adapter<TodoListItemAdapte
         int newPosition = holder.getBindingAdapterPosition();
         item.remove(newPosition);
         notifyItemRemoved(newPosition);
-        Toast.makeText(context, String.valueOf(newPosition), Toast.LENGTH_SHORT).show();
         Toast.makeText(context, "Task Deleted", Toast.LENGTH_SHORT).show();
     }
 
@@ -150,6 +150,13 @@ public class TodoListItemAdapter extends RecyclerView.Adapter<TodoListItemAdapte
 
     public void chkBoxListener(@NonNull ViewHolder holder){
         listName = holder.chklistItem.getText().toString();
+        if(todo.isChecked()){
+            holder.chkBoxList.setChecked(true);
+            holder.chklistItem.setPaintFlags(holder.chklistItem.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+            holder.chklistItem.setTextColor(context.getColor(R.color.gray));
+            holder.chkListCard.setBackgroundTintList(ContextCompat.getColorStateList(context, R.color.light_gray));
+            holder.chklistItem.setEnabled(false);
+        }
         if(checked){
             holder.chkBoxList.setChecked(checked);
             holder.chklistItem.setPaintFlags(holder.chklistItem.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
