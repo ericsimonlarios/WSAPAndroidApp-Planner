@@ -78,8 +78,10 @@ public class EditNote extends AppCompatActivity {
                     @Override
                     public void onSuccess(Void unused) {
                         Toast.makeText(EditNote.this,"Note Saved", Toast.LENGTH_SHORT).show();
-                        onBackPressed();
-
+                        Intent intent = new Intent(EditNote.this, Planner_notes.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
 
                     }
                 }).addOnFailureListener(new OnFailureListener() {
@@ -87,7 +89,6 @@ public class EditNote extends AppCompatActivity {
                     public void onFailure(@NonNull Exception e) {
                         Toast.makeText(EditNote.this,"Error, Try Again", Toast.LENGTH_SHORT).show();
                         spinner.setVisibility(View.GONE);
-
 
                     }
                 });
