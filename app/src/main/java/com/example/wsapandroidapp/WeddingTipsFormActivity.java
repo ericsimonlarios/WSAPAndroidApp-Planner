@@ -2,16 +2,12 @@ package com.example.wsapandroidapp;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.app.Dialog;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
-import android.speech.RecognizerIntent;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -30,6 +26,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.wsapandroidapp.Adapters.AdminWeddingTipsAdapter;
 import com.example.wsapandroidapp.Adapters.ImgArrayAdapter;
 import com.example.wsapandroidapp.Classes.ComponentManager;
 import com.example.wsapandroidapp.Classes.Credentials;
@@ -51,7 +48,7 @@ import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-import java.net.URI;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -66,7 +63,6 @@ public class WeddingTipsFormActivity extends AppCompatActivity {
     private Button btnSubmit;
     Context context;
 
-    private boolean isImageChanged = false;
     private boolean isUpdateMode;
 
     private LoadingDialog loadingDialog;
@@ -75,7 +71,7 @@ public class WeddingTipsFormActivity extends AppCompatActivity {
     private FirebaseDatabase firebaseDatabase;
     private StorageReference storageReference;
     private DatabaseReference databaseReference;
-    private FirebaseStorage firebaseStorage;
+
     Query weddingTipsQuery;
     boolean isListening;
     WeddingTips weddingTip;
@@ -83,7 +79,7 @@ public class WeddingTipsFormActivity extends AppCompatActivity {
     String selectedWeddingTipsId = "";
     String image = "";
     int getPos;
-
+    ImgArrayAdapter imgArrayAdapter;
 
     private String topicLabel, author, description, tips;
     private List<Uri> imgArray = new ArrayList<>();
@@ -96,7 +92,6 @@ public class WeddingTipsFormActivity extends AppCompatActivity {
     private Map<String, Object> map;
     private int counter;
     private int counterUpdate;
-    private int imagePos;
     private boolean isCompleted;
 
     @Override
@@ -409,9 +404,8 @@ public class WeddingTipsFormActivity extends AppCompatActivity {
                     if(isCompleted) {
                         loadingDialog.dismissDialog();
                         Toast.makeText(WeddingTipsFormActivity.this, "Updated Successfully", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(WeddingTipsFormActivity.this, AdminWeddingTipsActivity.class);
-                        startActivity(intent);
-                        finish();
+                        newIntent();
+
                     }
                 }
             }
@@ -441,9 +435,7 @@ public class WeddingTipsFormActivity extends AppCompatActivity {
                                                     if(isCompleted) {
                                                         loadingDialog.dismissDialog();
                                                         Toast.makeText(WeddingTipsFormActivity.this, "Updated Successfully", Toast.LENGTH_SHORT).show();
-                                                        Intent intent = new Intent(WeddingTipsFormActivity.this, AdminWeddingTipsActivity.class);
-                                                        startActivity(intent);
-                                                        finish();
+                                                        newIntent();
                                                     }
                                                 }
                                             }
@@ -501,7 +493,6 @@ public class WeddingTipsFormActivity extends AppCompatActivity {
                                             Intent intent = new Intent(WeddingTipsFormActivity.this, AdminWeddingTipsActivity.class);
                                             finish();
                                             startActivity(intent);
-
                                         }
                                     }
                                 });
@@ -540,7 +531,6 @@ public class WeddingTipsFormActivity extends AppCompatActivity {
                                 imgArrayUpdate2.add(imgSnapshot.getValue().toString());
                                 Uri myUri = Uri.parse(imgSnapshot.getValue().toString());
                                 tipsImagesArrayList.add(myUri);
-                               // imgArrayUpdate.add(myUri);
 
                             }
                         }
@@ -558,6 +548,16 @@ public class WeddingTipsFormActivity extends AppCompatActivity {
                 Log.e("TAG: " + context.getClass(), "onCancelled", error.toException());
             }
         };
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    public void newIntent()
+    {
+        Intent intent = new Intent(WeddingTipsFormActivity.this, AdminWeddingTipsActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+
     }
 
 }

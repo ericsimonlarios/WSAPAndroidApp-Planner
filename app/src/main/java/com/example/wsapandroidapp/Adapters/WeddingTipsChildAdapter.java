@@ -59,7 +59,7 @@ public class WeddingTipsChildAdapter extends RecyclerView.Adapter<WeddingTipsChi
         TextView tvItemOverLay = holder.tvItemOverlay;
         View disableOverlay = holder.disableOverlay;
         if(tipsImagesArrayList.size() == 1){
-            Glide.with(context).load(tipsImagesArrayList.get(position)).into(tvTipsPhoto);
+            Glide.with(context).load(tipsImagesArrayList.get(position)).centerCrop().into(tvTipsPhoto);
             tvTipsPhoto.setOnClickListener(view -> {
                 Intent intent = new Intent(context, TipsImagesActivity.class);
                 intent.putExtra("image", weddingTips.get(parentAdapter.getBindingAdapterPosition()).getId());
@@ -67,8 +67,8 @@ public class WeddingTipsChildAdapter extends RecyclerView.Adapter<WeddingTipsChi
             });
         }
         else if(tipsImagesArrayList.size() == 2){
-            Glide.with(context).load(tipsImagesArrayList.get(0)).into(tvTipsPhoto);
-            Glide.with(context).load(tipsImagesArrayList.get(1)).into(tvTipsPhoto1);
+            Glide.with(context).load(tipsImagesArrayList.get(0)).centerCrop().into(tvTipsPhoto);
+            Glide.with(context).load(tipsImagesArrayList.get(1)).centerCrop().into(tvTipsPhoto1);
             tvTipsPhoto.setOnClickListener(view -> {
                 Intent intent = new Intent(context, TipsImagesActivity.class);
                 intent.putExtra("image", weddingTips.get(parentAdapter.getBindingAdapterPosition()).getId());
@@ -76,9 +76,9 @@ public class WeddingTipsChildAdapter extends RecyclerView.Adapter<WeddingTipsChi
             });
         }
         else{
-            Glide.with(context).load(tipsImagesArrayList.get(0)).into(tvTipsPhoto);
-            Glide.with(context).load(tipsImagesArrayList.get(1)).into(tvTipsPhoto1);
-            Glide.with(context).load(tipsImagesArrayList.get(2)).into(tvTipsPhoto2);
+            Glide.with(context).load(tipsImagesArrayList.get(0)).centerCrop().into(tvTipsPhoto);
+            Glide.with(context).load(tipsImagesArrayList.get(1)).centerCrop().into(tvTipsPhoto1);
+            Glide.with(context).load(tipsImagesArrayList.get(2)).centerCrop().into(tvTipsPhoto2);
             tvTipsPhoto.setOnClickListener(view -> {
                 Intent intent = new Intent(context, TipsImagesActivity.class);
                 intent.putExtra("image", weddingTips.get(parentAdapter.getBindingAdapterPosition()).getId());

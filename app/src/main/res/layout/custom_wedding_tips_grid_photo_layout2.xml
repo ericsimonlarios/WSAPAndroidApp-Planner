@@ -106,10 +106,10 @@
                             android:id="@+id/tvItemOverlay"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:autoSizeTextType="uniform"
+                            android:textSize="50sp"
                             android:gravity="center"
                             android:textColor="@color/white"
-                            android:text="" />
+                            android:text="+1" />
                      </com.google.android.material.card.MaterialCardView>
                  </androidx.constraintlayout.widget.ConstraintLayout>
              </com.google.android.material.card.MaterialCardView>
