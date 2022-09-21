@@ -213,9 +213,7 @@ public class WeddingTipsFormActivity extends AppCompatActivity {
         });
 
         imgClose.setOnClickListener(view ->{
-            Intent intent = new Intent(this, AdminWeddingTipsActivity.class);
-            startActivity(intent);
-            finish();
+           newIntent();
         });
 
         btnChooseImage.setOnClickListener(view ->{
@@ -295,6 +293,7 @@ public class WeddingTipsFormActivity extends AppCompatActivity {
                 @Override
                 public void passImg(int posImg) {
                     getPos = posImg;
+
                     imgArrayUpdate2.remove(getPos);
                 }
             });
