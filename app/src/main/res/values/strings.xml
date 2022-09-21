@@ -2,7 +2,7 @@
     <string name="app_name">WSAP</string>
     <string name="wsap">Wedding Suppliers Association of the Philippines</string>
 
-    <string name="firebase_RTDB_url">https://wsap-mobile-app-planner-default-rtdb.asia-southeast1.firebasedatabase.app/</string>
+    <string name="firebase_RTDB_url">https://wsap-mobile-app-default-rtdb.asia-southeast1.firebasedatabase.app/</string>
 
     <string name="lorem_ipsum">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.</string>
 

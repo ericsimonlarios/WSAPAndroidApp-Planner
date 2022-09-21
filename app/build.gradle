@@ -7,7 +7,7 @@ android {
     compileSdk 32
 
     defaultConfig {
-        applicationId "com.wsap.mobileappplanner"
+        applicationId "com.example.wsapandroidapp"
         minSdk 24
         targetSdk 32
         versionCode 1
