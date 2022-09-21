@@ -214,7 +214,6 @@ public class TodoChecklistActivity extends AppCompatActivity {
                         }
                     }
                 }
-                getPos();
             }
 
             @Override
@@ -378,9 +377,9 @@ public class TodoChecklistActivity extends AppCompatActivity {
                         }
 
                     }
-                    getPos();
                     callAdapter(list);
                     callFinishedAdapter(finishedList);
+                    getPos();
                     loadingDialog.dismissDialog();
             }
             @Override
