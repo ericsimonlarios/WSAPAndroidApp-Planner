@@ -85,6 +85,7 @@ public class TodoChecklistActivity extends AppCompatActivity {
 
     private DatabaseReference mDatabase, childRef, getChildRef;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -468,5 +469,4 @@ public class TodoChecklistActivity extends AppCompatActivity {
             filterSearch(etSearch.getText().toString());
         }
     }
-
 }
