@@ -17,6 +17,8 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -25,6 +27,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.wsapandroidapp.Adapters.AdminWeddingTipsAdapter;
+import com.example.wsapandroidapp.Classes.ComponentManager;
 import com.example.wsapandroidapp.Classes.Enums;
 import com.example.wsapandroidapp.DataModel.TipsImages;
 import com.example.wsapandroidapp.DataModel.WeddingTips;
@@ -50,21 +53,22 @@ public class AdminWeddingTipsActivity extends AppCompatActivity {
     MessageDialog messageDialog;
     ConfirmationDialog confirmationDialog;
 
+    ComponentManager componentManager;
     FirebaseDatabase firebaseDatabase;
 
     Query weddingTipsQuery;
     boolean isListening;
 
-    List<WeddingTips> weddingTips = new ArrayList<>();
+    List<WeddingTips> weddingTips = new ArrayList<>(), weddingTipsCopy = new ArrayList<>();
     List<String> tipsImgList = new ArrayList<>();
     List tipsImagesArrayList = new ArrayList<>();
     List tipsImagesList = new ArrayList<>();
 
 
-   WeddingTips selectedWeddingTips = new WeddingTips();
-   AdminWeddingTipsAdapter adminWeddingTipsAdapter;
+    AdminWeddingTipsAdapter adminWeddingTipsAdapter;
+    String searchWeddingTips = "";
 
-    TipsImages tipsImages;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,7 +76,6 @@ public class AdminWeddingTipsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_admin_wedding_tips);
 
         etSearch = findViewById(R.id.etSearch);
-        etSearch.setVisibility(View.GONE);
         wedTipsTitle = findViewById(R.id.wedTipsTitle);
         tvMessage = findViewById(R.id.tvMessage);
         imgAdd = findViewById(R.id.imgAdd);
@@ -94,7 +97,61 @@ public class AdminWeddingTipsActivity extends AppCompatActivity {
 
         isListening = true;
         weddingTipsQuery.addValueEventListener(getWeddingTips());
+
+        componentManager = new ComponentManager(context);
+        componentManager.setInputRightDrawable(etSearch, true, Enums.VOICE_RECOGNITION);
+        componentManager.setVoiceRecognitionListener(() -> startActivityForResult(componentManager.voiceRecognitionIntent(), Enums.VOICE_RECOGNITION_REQUEST_CODE));
+        etSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                searchWeddingTips = editable != null ? editable.toString() : "";
+
+                filterWeddingTips();
+            }
+        });
     }
+    @SuppressLint("NotifyDataSetChanged")
+    private void filterWeddingTips() {
+        List<WeddingTips> weddingTipsTemp = new ArrayList<>(weddingTipsCopy);
+
+        weddingTips.clear();
+
+        for (int i = 0; i < weddingTipsTemp.size(); i++) {
+            WeddingTips weddingTip = weddingTipsTemp.get(i);
+
+            boolean isTopic = searchWeddingTips.trim().length() == 0 ||
+                    weddingTip.getTopic().toLowerCase().contains(searchWeddingTips.toLowerCase());
+
+            boolean isDescription = searchWeddingTips.trim().length() == 0 ||
+                    weddingTip.getDescription().toLowerCase().contains(searchWeddingTips.toLowerCase());
+
+            boolean isTips = searchWeddingTips.trim().length() == 0 ||
+                    weddingTip.getTips().toLowerCase().contains(searchWeddingTips.toLowerCase());
+            if (isTopic || isDescription || isTips) weddingTips.add(weddingTip);
+        }
+
+        if (weddingTips.size() == 0) {
+            tvMessage.setVisibility(View.VISIBLE);
+
+            tvMessage.setText(getString(R.string.no_record, "Record"));
+        } else tvMessage.setVisibility(View.GONE);
+        tvMessage.bringToFront();
+
+        etSearch.setVisibility(View.VISIBLE);
+        adminWeddingTipsAdapter.notifyDataSetChanged();
+
+    }
+
     private ValueEventListener getWeddingTips() {
         return new ValueEventListener() {
             @SuppressLint("NotifyDataSetChanged")
@@ -113,15 +170,17 @@ public class AdminWeddingTipsActivity extends AppCompatActivity {
                             for (DataSnapshot imgSnapshot : dataSnapshot.child("image").getChildren()) {
                                 tipsImagesArrayList.add(imgSnapshot.getValue().toString());
                             }
+                            weddingTipsCopy = new ArrayList<>(weddingTips);
                             tipsImagesList.add(tipsImagesArrayList);
                         }
+
                 }
 
                 LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
                 adminWeddingTipsAdapter = new AdminWeddingTipsAdapter(context, weddingTips, tipsImagesList);
                 recyclerView.setLayoutManager(linearLayoutManager);
                 recyclerView.setAdapter(adminWeddingTipsAdapter);
-
+                filterWeddingTips();
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
@@ -132,6 +191,16 @@ public class AdminWeddingTipsActivity extends AppCompatActivity {
                 messageDialog.showDialog();
             }
         };
+    }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == Enums.VOICE_RECOGNITION_REQUEST_CODE && resultCode == RESULT_OK) {
+            assert data != null;
+            etSearch.setText(data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS).get(0));
+
+            filterWeddingTips();
+        }
     }
 
     @Override

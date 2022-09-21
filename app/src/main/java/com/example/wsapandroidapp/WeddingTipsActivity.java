@@ -204,4 +204,5 @@ public class WeddingTipsActivity extends AppCompatActivity {
 
         super.onDestroy();
     }
+
 }

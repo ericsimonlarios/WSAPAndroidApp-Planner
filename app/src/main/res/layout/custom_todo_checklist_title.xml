@@ -7,30 +7,34 @@
     android:layout_margin="5dp"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/listTitleCV"
-        style="@style/item_card_bordered"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_margin="6dp"
+        android:clickable="true"
+        android:focusable="true"
+        app:cardElevation="3dp"
+        app:cardCornerRadius="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:clickable="true"
-        app:cardCornerRadius="0dp"
-        app:strokeColor="@color/black"
         app:layout_constraintTop_toTopOf="parent"
-        android:focusable="true">
-
+        app:layout_constraintBottom_toTopOf="@+id/checkListItemsLayout">
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/conLayout2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="10dp">
+            android:padding="5dp">
 
             <ImageView
                 android:id="@+id/itemDisplayManager"
-                android:paddingVertical="10dp"
                 android:layout_width="36dp"
                 android:layout_height="match_parent"
+                android:paddingVertical="10dp"
                 android:src="@drawable/ic_baseline_arrow_drop_up_24"
                 app:layout_constraintBottom_toBottomOf="@+id/constraintLayout13"
                 app:layout_constraintStart_toStartOf="parent"
@@ -78,8 +82,8 @@
                 android:id="@+id/imgView18"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_baseline_add_24"
                 android:padding="5dp"
+                android:src="@drawable/ic_baseline_add_24"
                 app:layout_constraintBottom_toBottomOf="@+id/menuItem"
                 app:layout_constraintEnd_toStartOf="@+id/menuItem"
                 app:layout_constraintTop_toTopOf="@+id/menuItem"
@@ -88,35 +92,44 @@
             <ImageView
                 android:id="@+id/menuItem"
                 android:layout_width="32dp"
-                android:padding="5dp"
                 android:layout_height="wrap_content"
+                android:padding="5dp"
                 android:src="@drawable/ic_baseline_more_vert_24"
                 app:layout_constraintBottom_toBottomOf="@+id/constraintLayout13"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/constraintLayout13" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-
+        <View
+            android:id="@+id/disableOverlay"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            android:background="@color/transparent_light_gray"
+            />
+        </FrameLayout>
     </com.google.android.material.card.MaterialCardView>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:animateLayoutChanges="true"
         android:id="@+id/checkListItemsLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:animateLayoutChanges="true"
         android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/listTitleCV">
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/listTitleCV"
+        app:layout_constraintStart_toStartOf="@+id/listTitleCV"
+        >
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/materialCardView2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_margin="6dp"
             android:backgroundTint="@color/yellow"
-            app:strokeWidth="1dp"
-            app:cardCornerRadius="0dp"
-            app:strokeColor="@color/black"
+            app:cardCornerRadius="3dp"
+            app:cardElevation="4dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
@@ -128,30 +141,30 @@
         </com.google.android.material.card.MaterialCardView>
 
 
-<!--        <androidx.constraintlayout.widget.ConstraintLayout-->
-<!--            android:id="@+id/constraintLayout14"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="match_parent"-->
-<!--            android:paddingVertical="10dp"-->
-<!--            android:clickable="true"-->
-<!--            android:focusable="true"-->
-<!--            app:layout_constraintEnd_toEndOf="parent"-->
-<!--            app:layout_constraintStart_toStartOf="parent"-->
-<!--            app:layout_constraintTop_toBottomOf="@+id/materialCardView2">-->
+        <!--        <androidx.constraintlayout.widget.ConstraintLayout-->
+        <!--            android:id="@+id/constraintLayout14"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="match_parent"-->
+        <!--            android:paddingVertical="10dp"-->
+        <!--            android:clickable="true"-->
+        <!--            android:focusable="true"-->
+        <!--            app:layout_constraintEnd_toEndOf="parent"-->
+        <!--            app:layout_constraintStart_toStartOf="parent"-->
+        <!--            app:layout_constraintTop_toBottomOf="@+id/materialCardView2">-->
 
-<!--            <TextView-->
-<!--                style="@style/activity_title"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_marginLeft="10sp"-->
-<!--                android:text="@string/add_task"-->
-<!--                android:textColor="@color/primary"-->
-<!--                android:textSize="14sp"-->
-<!--                app:layout_constraintBottom_toBottomOf="@+id/imgView18"-->
-<!--                app:layout_constraintStart_toEndOf="@id/imgView18"-->
-<!--                app:layout_constraintTop_toTopOf="@+id/imgView18" />-->
+        <!--            <TextView-->
+        <!--                style="@style/activity_title"-->
+        <!--                android:layout_width="wrap_content"-->
+        <!--                android:layout_height="wrap_content"-->
+        <!--                android:layout_marginLeft="10sp"-->
+        <!--                android:text="@string/add_task"-->
+        <!--                android:textColor="@color/primary"-->
+        <!--                android:textSize="14sp"-->
+        <!--                app:layout_constraintBottom_toBottomOf="@+id/imgView18"-->
+        <!--                app:layout_constraintStart_toEndOf="@id/imgView18"-->
+        <!--                app:layout_constraintTop_toTopOf="@+id/imgView18" />-->
 
-<!--        </androidx.constraintlayout.widget.ConstraintLayout>-->
+        <!--        </androidx.constraintlayout.widget.ConstraintLayout>-->
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

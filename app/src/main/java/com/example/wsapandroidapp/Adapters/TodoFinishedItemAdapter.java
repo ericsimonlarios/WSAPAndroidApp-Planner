@@ -1,11 +1,12 @@
 package com.example.wsapandroidapp.Adapters;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -15,6 +16,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -32,7 +34,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -42,7 +43,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
-public class TodoChkListAdapter extends RecyclerView.Adapter<TodoChkListAdapter.ViewHolder>{
+public class TodoFinishedItemAdapter extends RecyclerView.Adapter<TodoFinishedItemAdapter.ViewHolder> {
+
     private final List<Todo> dataSet;
     private final Context context;
     private Boolean addNew;
@@ -56,16 +58,24 @@ public class TodoChkListAdapter extends RecyclerView.Adapter<TodoChkListAdapter.
     Date date;
     private final String TAG = "Error";
 
+    public TodoFinishedItemAdapter(Context context, List<Todo> dataSet){
+        this.dataSet = dataSet;
+        this.context = context;
+    }
+
     public static class ViewHolder extends RecyclerView.ViewHolder{
+
         TextView listTitle, chkListDate;
-        MaterialCardView listTitleCV;
+        MaterialCardView listTitleCV, materialCardView2;
         ConstraintLayout conLayout1, conLayout2, checkListItemsLayout;
         ImageView itemDisplayManager, menuItem;
+        View disableOverlay;
         final ImageView imgView18;
         RecyclerView checkListItems;
+
         public ViewHolder(View view){
             super(view);
-
+            materialCardView2 = view.findViewById(R.id.materialCardView2);
             listTitle = view.findViewById(R.id.listTitle);
             chkListDate = view.findViewById(R.id.chkListDate);
             listTitleCV = view.findViewById(R.id.listTitleCV);
@@ -73,25 +83,21 @@ public class TodoChkListAdapter extends RecyclerView.Adapter<TodoChkListAdapter.
             conLayout2 = view.findViewById(R.id.conLayout2);
             itemDisplayManager = view.findViewById(R.id.itemDisplayManager);
             menuItem = view.findViewById(R.id.menuItem);
+            disableOverlay = view.findViewById(R.id.disableOverlay);
             checkListItemsLayout = view.findViewById(R.id.checkListItemsLayout);
             checkListItems = view.findViewById(R.id.checkListItems);
             imgView18 = view.findViewById(R.id.imgView18);
-        }
-    }
 
-    public TodoChkListAdapter(Context context, List<Todo> dataSet) {
-        this.dataSet = dataSet;
-        this.context = context;
+        }
     }
 
     @NonNull
     @Override
-    public TodoChkListAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public TodoFinishedItemAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.custom_todo_checklist_title, parent, false);
         return new ViewHolder(view);
     }
 
-    @SuppressLint("NonConstantResourceId")
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         addNew = false;
@@ -118,10 +124,13 @@ public class TodoChkListAdapter extends RecyclerView.Adapter<TodoChkListAdapter.
         });
 
         loadingDialog = new LoadingDialog(context);
+        disableElements(holder);
 
         holder.menuItem.setOnClickListener(view ->{
             PopupMenu popupMenu = new PopupMenu(context, holder.menuItem);
             popupMenu.getMenuInflater().inflate(R.menu.topbar_menu, popupMenu.getMenu());
+            Menu menuOpts = popupMenu.getMenu();
+            menuOpts.getItem(0).setTitle("Unmark as done");
             popupMenu.setOnMenuItemClickListener(item -> {
                 int id = item.getItemId();
                 switch (id){
@@ -135,7 +144,7 @@ public class TodoChkListAdapter extends RecyclerView.Adapter<TodoChkListAdapter.
                     }
                     case R.id.finished:{
                         databaseReference = FirebaseDatabase.getInstance().getReference();
-                        databaseReference.child("TodoChecklist").child(userId).child(todo.getTitleKey()).child("checked").setValue(true);
+                        databaseReference.child("TodoChecklist").child(userId).child(todo.getTitleKey()).child("checked").setValue(false);
                         break;
                     }
                 }
@@ -144,30 +153,7 @@ public class TodoChkListAdapter extends RecyclerView.Adapter<TodoChkListAdapter.
             popupMenu.show();
 
         });
-        DateFormat formatDate = new SimpleDateFormat("MMMM dd, yyyy", Locale.ENGLISH);
-        try {
-            date = formatDate.parse(dateTime.getDateText());
-            if(todo.getDateFormat().compareTo(date) == 0){
-                holder.chkListDate.setTextColor(context.getColor(R.color.yellow));
-            }else if (todo.getDateFormat().compareTo(date) > 0){
-                holder.chkListDate.setTextColor(context.getColor(R.color.green));
-            }else{
-                holder.chkListDate.setTextColor(context.getColor(R.color.red));
-            }
 
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-
-        holder.imgView18.setOnClickListener(v -> {
-            addNew = true;
-            getLatestList(holder, addNew, todo, todoList);
-            Drawable drawable = ResourcesCompat.getDrawable(res, R.drawable.ic_baseline_arrow_drop_down_24, null);
-            holder.itemDisplayManager.setImageDrawable(drawable);
-            holder.checkListItemsLayout.setVisibility(View.VISIBLE);
-            holder.itemDisplayManager.setTag(R.drawable.ic_baseline_arrow_drop_down_24);
-        });
 
         loadingDialog.dismissDialog();
         getLatestList(holder, addNew, todo, todoList);
@@ -180,6 +166,11 @@ public class TodoChkListAdapter extends RecyclerView.Adapter<TodoChkListAdapter.
         todoListItemAdapter = new TodoListItemAdapter(todoList, context, todo);
         holder.checkListItems.setAdapter(todoListItemAdapter);
 
+    }
+
+    public void disableElements(ViewHolder holder){
+        holder.disableOverlay.setVisibility(View.VISIBLE);
+        holder.chkListDate.setTextColor(context.getColor(R.color.black));
     }
 
     public void dropDownManager(ViewHolder holder, Resources res){
@@ -204,7 +195,7 @@ public class TodoChkListAdapter extends RecyclerView.Adapter<TodoChkListAdapter.
         }
     }
 
-    public void getLatestList(ViewHolder holder, Boolean addNew, Todo todo,List<Todo> todoList){
+    public void getLatestList(ViewHolder holder, Boolean addNew, Todo todo, List<Todo> todoList){
         if(todo.getTitleKey() != null || !todo.getTitleKey().equals("")){
             DatabaseReference getRef = mDatabase.child("TodoChecklistItems").child(userId);
             getRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -261,7 +252,7 @@ public class TodoChkListAdapter extends RecyclerView.Adapter<TodoChkListAdapter.
         void onDelete(Todo todo);
     }
 
-    public void setOnOptionsListener(TodoChkListAdapter.onOptionsListener onOptionsListener){
+    public void setOnOptionsListener(TodoFinishedItemAdapter.onOptionsListener onOptionsListener){
         this.onOptionsListener = onOptionsListener;
     }
 
@@ -269,5 +260,4 @@ public class TodoChkListAdapter extends RecyclerView.Adapter<TodoChkListAdapter.
     public int getItemCount() {
         return dataSet.size();
     }
-
 }

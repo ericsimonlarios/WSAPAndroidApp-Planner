@@ -106,7 +106,6 @@ public class AdminWeddingTipsAdapter extends RecyclerView.Adapter<AdminWeddingTi
             firebaseStorage = FirebaseStorage.getInstance();
             databaseReference = firebaseDatabase.getReference();
             if(weddingTips.get(getPos).getId() != null){
-                Toast.makeText(context, String.valueOf(weddingTips.get(getPos).getId()), Toast.LENGTH_SHORT).show();
                 counter = 0;
                 for(int i = 0; tipsImagesList.get(getPos).size() > i; i++){
                     String deleteImg = tipsImagesList.get(getPos).get(i).toString();
