@@ -3,6 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.wsapandroidapp">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -13,7 +16,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.WSAPAndroidApp"
         tools:targetApi="31">
-        <activity
+       <activity
             android:name=".WeddingDressPickerActivity"
             android:exported="false"
             android:screenOrientation="portrait"
@@ -24,10 +27,28 @@
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity" />
         <activity
-            android:name=".NotepadActivity"
-            android:exported="false"
-            android:screenOrientation="portrait"
-            tools:ignore="LockedOrientationActivity" />
+            android:name=".AdminWeddingTipsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".WeddingTipsFormActivity"
+            android:exported="false" />
+        <activity
+
+            android:name=".TipsImagesActivity"
+            android:exported="false" />
+        <activity
+            android:name=".EditNote"
+            android:exported="false" />
+        <activity
+            android:name=".Addnote"
+            android:exported="false" />
+        <activity
+            android:name=".NoteDetails"
+            android:exported="false" />
+        <activity
+            android:name=".Planner_notes"
+            android:exported="false" />
+
         <activity
             android:name=".SuppliersComparativeSheetActivity"
             android:exported="false"
@@ -58,6 +79,9 @@
             android:exported="false"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity" />
+        <activity
+            android:name=".WeddingTipsDetailsActivity"
+            android:exported="false" />
         <activity
             android:name=".AdminExpoDivisionsActivity"
             android:exported="false"
@@ -178,6 +202,15 @@
             android:exported="false"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity" />
+
+        <activity
+            android:name=".TodoChecklistActivity"
+            android:exported="false"
+            />
+        <activity
+            android:name=".BudgetPlanActivity"
+            android:exported="false" />
+
         <activity
             android:name=".TopicsActivity"
             android:exported="false"
@@ -245,8 +278,8 @@
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
     </application>
+    
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-
     <uses-permission android:name="android.permission.INTERNET" />
 
 </manifest>

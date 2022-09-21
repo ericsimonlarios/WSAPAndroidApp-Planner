@@ -16,14 +16,14 @@
     <color name="yellow">#f1ce36</color>
     <color name="black_50">#88000000</color>
     <color name="black_85">#DD000000</color>
-
+    <color name="transparent_light_gray">#B3FFFFFF</color>
     <color name="splash_screen_background">#FEFEFD</color>
     <color name="primary">#CC9933</color>
     <color name="primary_75">#BBCC9933</color>
     <color name="secondary">#8E6B24</color>
     <color name="primary_text">#765126</color>
     <color name="secondary_text">#B88A2F</color>
-
+    <color name="transparent">#00FFFFFF</color>
     <color name="text_on_light">#151515</color>
     <color name="text_on_light_accent">#0C0C0C</color>
     <color name="text_on_light_accent_1">#5E5E5E</color>
@@ -50,5 +50,6 @@
 
     <color name="email_address">#CC9933</color>
     <color name="email_address_ripple">#8E6B24</color>
+    <color name= "transparent_black">#7F000000</color>
 
 </resources>

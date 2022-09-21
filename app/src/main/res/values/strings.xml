@@ -2,7 +2,7 @@
     <string name="app_name">WSAP</string>
     <string name="wsap">Wedding Suppliers Association of the Philippines</string>
 
-    <string name="firebase_RTDB_url">https://wsap-mobile-app-default-rtdb.asia-southeast1.firebasedatabase.app/</string>
+    <string name="firebase_RTDB_url">https://wsap-mobile-app-planner-default-rtdb.asia-southeast1.firebasedatabase.app/</string>
 
     <string name="lorem_ipsum">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.</string>
 
@@ -10,13 +10,16 @@
     <string name="new_version_prompt">Please update the application to access the new features.</string>
     <string name="current_version_italicized"><i>Current Version v%.2f</i></string>
     <string name="latest_version_italicized"><i>Latest Version v%.2f</i></string>
-
+    <string name="finished_task">Finished Task</string>
     <string name="live">Live</string>
     <string name="app_status_title">Under %s</string>
     <string name="app_status_prompt">We are sorry.\nPlease come back again later.</string>
-
+    <string name="title">Insert checklist title here</string>
+    <string name="due_date">Pick a due date</string>
+    <string name="item">item</string>
     <string name="fd_on_cancelled">Failed to get %s.</string>
-
+    <string name="add_task">Add new task</string>
+    <string name="insert_text">Insert task here</string>
     <string name="loading">Loading, please wait…</string>
     <string name="sign_up_loading">Signing up, please wait…</string>
     <string name="message_prompt">This is a message prompt.</string>
@@ -79,7 +82,6 @@
     <string name="same_email_address_error">The new email address should not be the same as the current email address.</string>
     <string name="sign_out">Sign out</string>
     <string name="email_verification_link_failed">Failed to send the email verification link.</string>
-
     <string name="home">Home</string>
     <string name="expos">Expos</string>
     <string name="suppliers">Suppliers</string>
@@ -113,7 +115,7 @@
     <string name="select">Select</string>
 
     <string name="no_record">No %s</string>
-
+    <string name="back_button">Back</string>
     <string name="expo_post_title">Tarlac Wedding Expo 2022</string>
     <string name="expo_post_schedule">%s\n<b>%d-%d</b>\n%d</string>
 
@@ -180,10 +182,11 @@
     <string name="wedding_timeline">Wedding Timeline Checklist</string>
     <string name="suppliers_checklist">Suppliers Checklist</string>
     <string name="suppliers_comparative_sheet">Suppliers Comparative Sheet</string>
-    <string name="todo_checklist">To-do Checklist</string>
-    <string name="notepad">Notepad</string>
     <string name="alcohol_calculator">Alcohol Calculator</string>
     <string name="wedding_dress_picker">Wedding Dress Picker</string>
+    <string name="notes">Notes</string>
+    <string name="todo_checklist">To-Do Checklist</string>
+    <string name="checklist">Checklist</string>
     <string name="appointments">Appointments</string>
     <string name="schedules">Schedules</string>
     <string name="guests">Guests</string>
@@ -227,6 +230,8 @@
 
     <string name="exhibitor_label">Exhibitor Label</string>
 
+    <string name="weddingTips_label">Topic</string>
+    <string name="titleLabel">Checklist Title</string>
     <string name="move_category">Move Category</string>
     <string name="select_category">Select Category</string>
 
@@ -259,6 +264,11 @@
     <string name="all_exhibitors">All Exhibitors</string>
     <string name="unselected_exhibitors">Unselected Exhibitors</string>
     <string name="selected_exhibitors">Selected Exhibitors</string>
+
+    <string name="tips_title_dummy">Reception Tips</string>
+    <string name="date_created">August 19, 2022</string>
+    <string name="see_more"><u>See more</u></string>
+
 
     <string name="target_wedding_date">Target Wedding Date</string>
     <string name="target_wedding_date_dummy">January 01, 2023</string>
@@ -338,4 +348,24 @@
         <item>resendLinkCountdown</item>
         <item>isAnonymous</item>
     </string-array>
+
+    <string-array name="todoSortArray">
+        <item>All</item>
+        <item>Today</item>
+        <item>Past</item>
+        <item>Future</item>
+        <item>A-Z</item>
+        <item>Z-A</item>
+    </string-array>
+
+    <string name="title_activity_note_details">NoteDetails</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+    <string name="hello_first_fragment">Hello first fragment</string>
+    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+
 </resources>

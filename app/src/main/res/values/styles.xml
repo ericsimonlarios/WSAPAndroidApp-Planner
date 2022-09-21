@@ -304,6 +304,22 @@
         <item name="cardCornerRadius">16dp</item>
     </style>
 
+    <style name="item_card_bordered">
+        <item name="cardElevation">5dp</item>
+        <item name="strokeWidth">1dp</item>
+        <item name="strokeColor">@color/primary</item>
+        <item name="cornerRadius">10dp</item>
+    </style>
+    <style name="photo_card_bordered">
+        <item name="strokeWidth">.5dp</item>
+        <item name="strokeColor">@color/primary</item>
+        <item name="cornerRadius">1dp</item>
+    </style>
+
+    <style name="transparent_edit_text" parent="activity_title">
+        <item name="android:background">@color/transparent</item>
+    </style>
+
     <style name="flat_item_card_md">
         <item name="cardElevation">0dp</item>
         <item name="cardCornerRadius">8dp</item>
@@ -319,6 +335,11 @@
     <style name="item_text_title" parent="home_item_text_category">
         <item name="android:textSize">20sp</item>
         <item name="android:lineSpacingExtra">2dp</item>
+    </style>
+
+    <style name="date_text">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/black</item>
     </style>
 
     <style name="item_count" parent="item_text_title">
@@ -344,6 +365,12 @@
         <item name="android:textSize">12sp</item>
     </style>
 
+    <style name="description_tips" parent="common_text">
+        <item name="android:textAlignment">textStart</item>
+        <item name="android:textSize">13sp</item>
+        <item name= "android:lineSpacingExtra">3sp</item>
+    </style>
+
     <style name="expo_post_schedule">
         <item name="android:fontFamily">@font/libre_baskerville</item>
         <item name="android:textSize">12sp</item>
@@ -360,6 +387,12 @@
 
     <style name="more_info_blue" parent="more_info">
         <item name="android:textColor">@color/blue_l1</item>
+    </style>
+
+    <style name="AppDialogTheme" parent="Theme.AppCompat.Light.Dialog">
+        <!-- Customize your theme here. -->
+        <item name="windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
     </style>
 
 </resources>

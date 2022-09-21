@@ -16,7 +16,7 @@ import com.example.wsapandroidapp.Classes.Enums;
 import com.example.wsapandroidapp.DataModel.MenuCategoryImage;
 import com.example.wsapandroidapp.DialogClasses.ConfirmationDialog;
 import com.example.wsapandroidapp.DialogClasses.MessageDialog;
-import com.example.wsapandroidapp.NotepadActivity;
+import com.example.wsapandroidapp.Planner_notes;
 import com.example.wsapandroidapp.R;
 import com.example.wsapandroidapp.SuppliersChecklistActivity;
 import com.example.wsapandroidapp.SuppliersComparativeSheetActivity;
@@ -79,9 +79,9 @@ public class PlannerFragment extends Fragment {
                 new MenuCategoryImage(getString(R.string.wedding_timeline), R.drawable.wedding_timeline, new Intent(context, WeddingTimelineActivity.class)),
                 new MenuCategoryImage(getString(R.string.suppliers_checklist), R.drawable.suppliers, new Intent(context, SuppliersChecklistActivity.class)),
                 new MenuCategoryImage(getString(R.string.suppliers_comparative_sheet), R.drawable.suppliers, new Intent(context, SuppliersComparativeSheetActivity.class)),
-                new MenuCategoryImage(getString(R.string.todo_checklist), R.drawable.todo_checklist, new Intent(context, TodoChecklistActivity.class)),
                 new MenuCategoryImage(getString(R.string.budget_allocation_plan), R.drawable.budget_plan, new Intent(context, BudgetAllocationPlanActivity.class)),
-                new MenuCategoryImage(getString(R.string.notepad), R.drawable.notepad, new Intent(context, NotepadActivity.class))
+                new MenuCategoryImage(getString(R.string.notes), R.drawable.suppliers, new Intent(context, Planner_notes.class)),
+                new MenuCategoryImage(getString(R.string.todo_checklist), R.drawable.todo, new Intent(context, TodoChecklistActivity.class))
         );
 
         GridLayoutManager gridLayoutManager = new GridLayoutManager(context, 2, GridLayoutManager.VERTICAL, false);
@@ -93,11 +93,13 @@ public class PlannerFragment extends Fragment {
             if (isAnonymous && !menuCategoryImage.getCategory().equals(getString(R.string.wedding_tips))) {
                 confirmationDialog.setMessage(getString(R.string.non_anonymous_sign_in_prompt));
                 confirmationDialog.showDialog();
-            } else if (isComingSoon(menuCategoryImage)) {
-                messageDialog.setMessage(getString(R.string.coming_soon));
-                messageDialog.setMessageType(Enums.INFO_MESSAGE);
-                messageDialog.showDialog();
-            } else startActivity(menuCategoryImage.getIntent());
+            }
+//            else if (menuCategoryImage.getCategory().equals(getString(R.string.wedding_tips))) {
+//                messageDialog.setMessage(getString(R.string.coming_soon));
+//                messageDialog.setMessageType(Enums.INFO_MESSAGE);
+//                messageDialog.showDialog();
+//            }
+            else startActivity(menuCategoryImage.getIntent());
         });
 
         return view;
