@@ -79,7 +79,7 @@ public class TodoChecklistActivity extends AppCompatActivity {
     ConfirmationDialog confirmationDialog;
     DateTime dateTime;
     Date date;
-    int pos = 0;
+    int pos;
     String searchSupplier = "";
     boolean isSearched;
 
@@ -213,6 +213,7 @@ public class TodoChecklistActivity extends AppCompatActivity {
                         }
                     }
                 }
+                getPos();
             }
 
             @Override
@@ -225,6 +226,8 @@ public class TodoChecklistActivity extends AppCompatActivity {
     public void getPos(){
         if(isSearched){
             searchItem = items;
+            finishedRV.setVisibility(View.GONE);
+            constraintLayout15.setVisibility(View.GONE);
         }else{
             searchItem = list;
         }
@@ -248,6 +251,7 @@ public class TodoChecklistActivity extends AppCompatActivity {
                     return 0;
                 });
                 callAdapter(searchItem);
+                callFinishedAdapter(finishedList);
                 break;
             }
             case 1:{
@@ -262,6 +266,7 @@ public class TodoChecklistActivity extends AppCompatActivity {
                     }
                 }
                 callAdapter(test);
+                callFinishedAdapter(finishedList);
                 break;
             }
             case 2:{
@@ -276,6 +281,7 @@ public class TodoChecklistActivity extends AppCompatActivity {
                     }
                 }
                 callAdapter(test);
+                callFinishedAdapter(finishedList);
                 break;
             }
             case 3:{
@@ -290,29 +296,19 @@ public class TodoChecklistActivity extends AppCompatActivity {
                     }
                 }
                 callAdapter(test);
+                callFinishedAdapter(finishedList);
                 break;
             }
             case 4:{
                 searchItem.sort((o1, o2) -> o1.getListTitle().compareToIgnoreCase(o2.getListTitle()));
                 callAdapter(searchItem);
+                callFinishedAdapter(finishedList);
                 break;
             }
             case 5:{
                 searchItem.sort((o1, o2) -> o2.getListTitle().compareToIgnoreCase(o1.getListTitle()));
                 callAdapter(searchItem);
-                break;
-            }
-            default:{
-                searchItem.sort((o1, o2) -> {
-                    try {
-                        date = formatDate.parse(dateTime.getDateText());
-                        return o2.getDateFormat().compareTo(date);
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-                    return 0;
-                });
-                callAdapter(searchItem);
+                callFinishedAdapter(finishedList);
                 break;
             }
         }
@@ -350,15 +346,15 @@ public class TodoChecklistActivity extends AppCompatActivity {
             }
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                list.sort((o1, o2) -> {
-                    try {
-                        return o2.getDateFormat().compareTo(o1.getDateFormat());
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-                    return 0;
-                });
-                callAdapter(list);
+//                list.sort((o1, o2) -> {
+//                    try {
+//                        return o2.getDateFormat().compareTo(o1.getDateFormat());
+//                    } catch (ParseException e) {
+//                        e.printStackTrace();
+//                    }
+//                    return 0;
+//                });
+//                callAdapter(list);
             }
         };
     }
@@ -425,7 +421,7 @@ public class TodoChecklistActivity extends AppCompatActivity {
     }
 
     public void callFinishedAdapter(List<Todo> finishedList){
-        if(finishedList.size() != 0 ){
+        if(finishedList.size() != 0 && !isSearched){
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(TodoChecklistActivity.this, LinearLayoutManager.VERTICAL, false);
             finishedRV.setLayoutManager(linearLayoutManager);
             finishedItemAdapter = new TodoFinishedItemAdapter(TodoChecklistActivity.this, finishedList);
